@@ -110,6 +110,95 @@ namespace boilersGraphics.Test
             Assert.That(x.Element("Data").Value, Is.EqualTo("M 0,0 L 10,10"));
         }
 
+        // ---- Phase 2-e: FUI テキスト要素 ----
+
+        [Test, RequiresThread(ApartmentState.STA)]
+        public void MonoTextBlock_共通テキスト属性がXMLに含まれる()
+        {
+            var vm = new boilersGraphics.ViewModels.Text.MonoTextBlockViewModel();
+            vm.Text.Value = "0xCAFE";
+            vm.FontSize.Value = 18;
+            vm.LetterSpacing.Value = 2.5;
+            vm.IsWordWrap.Value = true;
+
+            var x = ObjectSerializer.ExtractItem(vm);
+
+            Assert.That(x.Element("Type").Value, Is.EqualTo(typeof(boilersGraphics.ViewModels.Text.MonoTextBlockViewModel).FullName));
+            Assert.That(x.Element("Text").Value, Is.EqualTo("0xCAFE"));
+            Assert.That(x.Element("FontFamily"), Is.Not.Null);
+            Assert.That(x.Element("FontSize").Value, Is.EqualTo("18"));
+            Assert.That(x.Element("Foreground"), Is.Not.Null);
+            Assert.That(x.Element("LetterSpacing").Value, Is.EqualTo("2.5"));
+            Assert.That(x.Element("TextOpacity").Value, Is.EqualTo("1"));
+            Assert.That(x.Element("IsWordWrap").Value, Is.EqualTo("true"));
+        }
+
+        [Test, RequiresThread(ApartmentState.STA)]
+        public void TextElement_Backgroundがnullなら省略される()
+        {
+            var vm = new boilersGraphics.ViewModels.Text.MonoTextBlockViewModel();
+            vm.Background.Value = null;
+
+            var x = ObjectSerializer.ExtractItem(vm);
+            Assert.That(x.Element("Background"), Is.Null);
+        }
+
+        [Test, RequiresThread(ApartmentState.STA)]
+        public void TextElement_LineHeightがnullなら省略される()
+        {
+            var vm = new boilersGraphics.ViewModels.Text.MonoTextBlockViewModel();
+            vm.LineHeight.Value = null;
+
+            var x = ObjectSerializer.ExtractItem(vm);
+            Assert.That(x.Element("LineHeight"), Is.Null);
+        }
+
+        [Test, RequiresThread(ApartmentState.STA)]
+        public void DataGenerator_固有プロパティがXMLに含まれる()
+        {
+            var vm = new boilersGraphics.ViewModels.Text.DataGeneratorTextBlockViewModel();
+            vm.Type.Value = boilersGraphics.Models.Text.DataGeneratorType.Uuid;
+            vm.Seed.Value = 4242;
+            vm.IsSeedLocked.Value = true;
+            vm.Count.Value = 12;
+            vm.Separator.Value = ", ";
+            vm.Layout.Value = boilersGraphics.Models.Text.DataGeneratorLayout.MultiLine;
+
+            var x = ObjectSerializer.ExtractItem(vm);
+
+            Assert.That(x.Element("DataGenType").Value, Is.EqualTo("Uuid"));
+            Assert.That(x.Element("Seed").Value, Is.EqualTo("4242"));
+            Assert.That(x.Element("IsSeedLocked").Value, Is.EqualTo("true"));
+            Assert.That(x.Element("Count").Value, Is.EqualTo("12"));
+            Assert.That(x.Element("DataGenSeparator").Value, Is.EqualTo(", "));
+            Assert.That(x.Element("DataGenLayout").Value, Is.EqualTo("MultiLine"));
+        }
+
+        [Test, RequiresThread(ApartmentState.STA)]
+        public void NumberSequence_固有プロパティがXMLに含まれる()
+        {
+            var vm = new boilersGraphics.ViewModels.Text.NumberSequenceBlockViewModel();
+            vm.Start.Value = 5;
+            vm.End.Value = 25;
+            vm.Step.Value = 0.5;
+            vm.Format.Value = "F2";
+            vm.Separator.Value = "::";
+            vm.Direction.Value = boilersGraphics.Models.Text.NumberSequenceDirection.Grid;
+            vm.GridRows.Value = 4;
+            vm.GridColumns.Value = 3;
+
+            var x = ObjectSerializer.ExtractItem(vm);
+
+            Assert.That(x.Element("Start").Value, Is.EqualTo("5"));
+            Assert.That(x.Element("End").Value, Is.EqualTo("25"));
+            Assert.That(x.Element("Step").Value, Is.EqualTo("0.5"));
+            Assert.That(x.Element("NumFormat").Value, Is.EqualTo("F2"));
+            Assert.That(x.Element("NumSeqSeparator").Value, Is.EqualTo("::"));
+            Assert.That(x.Element("Direction").Value, Is.EqualTo("Grid"));
+            Assert.That(x.Element("GridRows").Value, Is.EqualTo("4"));
+            Assert.That(x.Element("GridColumns").Value, Is.EqualTo("3"));
+        }
+
         // ---- Effect 系 ----
 
         [Test, RequiresThread(ApartmentState.STA)]

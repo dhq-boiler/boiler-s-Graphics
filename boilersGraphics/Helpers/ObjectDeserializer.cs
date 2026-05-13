@@ -448,7 +448,7 @@ public class ObjectDeserializer
         return points;
     }
 
-    private static DesignerItemViewModelBase ExtractDesignerItemViewModelBase(DiagramViewModel diagramViewModel,
+    internal static DesignerItemViewModelBase ExtractDesignerItemViewModelBase(DiagramViewModel diagramViewModel,
         XElement designerItemElm)
     {
         if (!(DeserializeInstance(designerItemElm) is DesignerItemViewModelBase))
@@ -616,6 +616,64 @@ public class ObjectDeserializer
             {
                 //Do nothing. No need to do anything.
             }
+        }
+
+        // Phase 2-e: FUI テキスト要素のデシリアライズ (Q-4 案 A: <DesignerItems> 配下に並ぶ)。
+        // Activator.CreateInstance で生成済みの VM に対し、保存済みの共通テキスト属性 + 派生固有プロパティを書き戻す。
+        // 派生プロパティ (Type / Seed / Count / ... など) を書き戻すと VM 側の Skip(1) Subscribe が走り、
+        // 決定論的な Generator で Text が同じ値に再生成されるため、最後に書き戻す Text と一致する。
+        if (item is boilersGraphics.ViewModels.Text.TextElementBaseViewModel textElem)
+        {
+            if (designerItemElm.Element("Text") is { } textEl) textElem.Text.Value = textEl.Value;
+            if (designerItemElm.Element("FontFamily") is { } ff) textElem.FontFamily.Value = ff.Value;
+            if (designerItemElm.Element("FontSize") is { } fs) textElem.FontSize.Value = int.Parse(fs.Value);
+            if (designerItemElm.Element("Foreground") is { } fgElm && fgElm.Nodes().AsValueEnumerable().Any())
+                textElem.Foreground.Value =
+                    WpfObjectSerializer.Deserialize(fgElm.Nodes().AsValueEnumerable().First().ToString()) as Brush;
+            if (designerItemElm.Element("Background") is { } bgElm && bgElm.Nodes().AsValueEnumerable().Any())
+                textElem.Background.Value =
+                    WpfObjectSerializer.Deserialize(bgElm.Nodes().AsValueEnumerable().First().ToString()) as Brush;
+            if (designerItemElm.Element("LineHeight") is { } lh)
+                textElem.LineHeight.Value = double.Parse(lh.Value, System.Globalization.CultureInfo.InvariantCulture);
+            if (designerItemElm.Element("LetterSpacing") is { } ls)
+                textElem.LetterSpacing.Value = double.Parse(ls.Value, System.Globalization.CultureInfo.InvariantCulture);
+            if (designerItemElm.Element("TextOpacity") is { } to)
+                textElem.TextOpacity.Value = double.Parse(to.Value, System.Globalization.CultureInfo.InvariantCulture);
+            if (designerItemElm.Element("IsWordWrap") is { } ww) textElem.IsWordWrap.Value = bool.Parse(ww.Value);
+        }
+
+        if (item is boilersGraphics.ViewModels.Text.DataGeneratorTextBlockViewModel datagen)
+        {
+            if (designerItemElm.Element("DataGenType") is { } t &&
+                Enum.TryParse<boilersGraphics.Models.Text.DataGeneratorType>(t.Value, out var dgType))
+                datagen.Type.Value = dgType;
+            if (designerItemElm.Element("Seed") is { } seed) datagen.Seed.Value = int.Parse(seed.Value);
+            if (designerItemElm.Element("IsSeedLocked") is { } locked) datagen.IsSeedLocked.Value = bool.Parse(locked.Value);
+            if (designerItemElm.Element("Count") is { } c) datagen.Count.Value = int.Parse(c.Value);
+            if (designerItemElm.Element("DataGenSeparator") is { } sep) datagen.Separator.Value = sep.Value;
+            if (designerItemElm.Element("DataGenLayout") is { } lay &&
+                Enum.TryParse<boilersGraphics.Models.Text.DataGeneratorLayout>(lay.Value, out var dgLay))
+                datagen.Layout.Value = dgLay;
+            // Text を改めて Generator 結果と同期 (DataGenSeparator/Layout 等の Subscribe 順序差を埋める)
+            datagen.Regenerate();
+        }
+
+        if (item is boilersGraphics.ViewModels.Text.NumberSequenceBlockViewModel numseq)
+        {
+            if (designerItemElm.Element("Start") is { } start)
+                numseq.Start.Value = double.Parse(start.Value, System.Globalization.CultureInfo.InvariantCulture);
+            if (designerItemElm.Element("End") is { } end)
+                numseq.End.Value = double.Parse(end.Value, System.Globalization.CultureInfo.InvariantCulture);
+            if (designerItemElm.Element("Step") is { } step)
+                numseq.Step.Value = double.Parse(step.Value, System.Globalization.CultureInfo.InvariantCulture);
+            if (designerItemElm.Element("NumFormat") is { } fmt) numseq.Format.Value = fmt.Value;
+            if (designerItemElm.Element("NumSeqSeparator") is { } sep) numseq.Separator.Value = sep.Value;
+            if (designerItemElm.Element("Direction") is { } dir &&
+                Enum.TryParse<boilersGraphics.Models.Text.NumberSequenceDirection>(dir.Value, out var nsDir))
+                numseq.Direction.Value = nsDir;
+            if (designerItemElm.Element("GridRows") is { } gr) numseq.GridRows.Value = int.Parse(gr.Value);
+            if (designerItemElm.Element("GridColumns") is { } gc) numseq.GridColumns.Value = int.Parse(gc.Value);
+            numseq.Regenerate();
         }
 
         if (item is LetterDesignerItemViewModel letter)

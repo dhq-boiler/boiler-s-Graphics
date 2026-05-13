@@ -236,6 +236,52 @@ internal class ObjectSerializer
                 list.Add(new XElement("AutoLineBreak", letter.IsAutoLineBreak.Value));
             }
 
+            // Phase 2-e: FUI テキスト要素 (Q-4 案 A: <DesignerItems> 配下に並べる、共通プロパティ + 派生型固有プロパティ)。
+            // Text は MonoTextBlock では手入力、DataGenerator / NumberSequence では Generator で再現可能なので
+            // 「共通テキスト属性 + 派生固有プロパティ」を保存して、Text は読み込み後の再生成 (or 上書き) に任せる。
+            if (designerItem is boilersGraphics.ViewModels.Text.TextElementBaseViewModel textElem)
+            {
+                list.Add(new XElement("Text", textElem.Text.Value ?? string.Empty));
+                list.Add(new XElement("FontFamily", textElem.FontFamily.Value));
+                list.Add(new XElement("FontSize", textElem.FontSize.Value));
+                list.Add(new XElement("Foreground",
+                    XElement.Parse(WpfObjectSerializer.Serialize(textElem.Foreground.Value))));
+                if (textElem.Background.Value is not null)
+                {
+                    list.Add(new XElement("Background",
+                        XElement.Parse(WpfObjectSerializer.Serialize(textElem.Background.Value))));
+                }
+                if (textElem.LineHeight.Value.HasValue)
+                {
+                    list.Add(new XElement("LineHeight", textElem.LineHeight.Value.Value));
+                }
+                list.Add(new XElement("LetterSpacing", textElem.LetterSpacing.Value));
+                list.Add(new XElement("TextOpacity", textElem.TextOpacity.Value));
+                list.Add(new XElement("IsWordWrap", textElem.IsWordWrap.Value));
+            }
+
+            if (designerItem is boilersGraphics.ViewModels.Text.DataGeneratorTextBlockViewModel datagen)
+            {
+                list.Add(new XElement("DataGenType", datagen.Type.Value.ToString()));
+                list.Add(new XElement("Seed", datagen.Seed.Value));
+                list.Add(new XElement("IsSeedLocked", datagen.IsSeedLocked.Value));
+                list.Add(new XElement("Count", datagen.Count.Value));
+                list.Add(new XElement("DataGenSeparator", datagen.Separator.Value ?? string.Empty));
+                list.Add(new XElement("DataGenLayout", datagen.Layout.Value.ToString()));
+            }
+
+            if (designerItem is boilersGraphics.ViewModels.Text.NumberSequenceBlockViewModel numseq)
+            {
+                list.Add(new XElement("Start", numseq.Start.Value));
+                list.Add(new XElement("End", numseq.End.Value));
+                list.Add(new XElement("Step", numseq.Step.Value));
+                list.Add(new XElement("NumFormat", numseq.Format.Value ?? string.Empty));
+                list.Add(new XElement("NumSeqSeparator", numseq.Separator.Value ?? string.Empty));
+                list.Add(new XElement("Direction", numseq.Direction.Value.ToString()));
+                list.Add(new XElement("GridRows", numseq.GridRows.Value));
+                list.Add(new XElement("GridColumns", numseq.GridColumns.Value));
+            }
+
             if (designerItem is NPolygonViewModel polygon) list.Add(new XElement("Data", polygon.Data.Value));
 
             if (designerItem is PartInstanceViewModel partInstance)
