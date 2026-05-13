@@ -571,6 +571,11 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                     ClipCommand.RaiseCanExecuteChanged();
 
                     PropertyCommand.RaiseCanExecuteChanged();
+
+                    PromoteToPartCommand.RaiseCanExecuteChanged();
+                    EditPartDefinitionCommand.RaiseCanExecuteChanged();
+                    ClonePartDefinitionCommand.RaiseCanExecuteChanged();
+                    DetachPartCommand.RaiseCanExecuteChanged();
                 })
                 .AddTo(_CompositeDisposable);
 
@@ -4839,6 +4844,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 ExecuteRemoveItemCommand(item);
 
             ExecuteAddItemCommand(result.Instance);
+            result.Instance.IsSelected.Value = true;
         }
         finally
         {
