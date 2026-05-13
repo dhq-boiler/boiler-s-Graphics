@@ -1,8 +1,8 @@
-# Phase 2-a: テキスト・データ要素 設計仕様書 (ドラフト)
+# Phase 2-a: テキスト・データ要素 設計仕様書 (確定版 v1.0)
 
-> このドキュメントは `docs/FUI_DESIGNER_INTENT.md` Phase 2 の **サブフェーズ 2-a** に対応する設計仕様書ドラフトである。
-> 実装着手前に作者 (dhq_boiler) のレビューを経て確定する。
-> 確定前の項目は **オープン問題 (§10)** に集約してある。
+> このドキュメントは `docs/FUI_DESIGNER_INTENT.md` Phase 2 の **サブフェーズ 2-a** に対応する設計仕様書である (確定版 v1.0)。
+> §10 のオープン問題は Q-1 〜 Q-11 すべて確定済み (2026-05-13)。
+> §12 が Phase 2-b 実装時のクイックリファレンス。
 
 ---
 
@@ -218,17 +218,21 @@ NumberSequenceBlock   : TextElementBase + (Start, End, Step, Format, Separator, 
 
 ---
 
-## 9. Phase 2 のサブフェーズ分割案
+## 9. Phase 2 のサブフェーズ分割 (Q-11 採用 案 B 反映済み)
 
-- **2-a**: 設計仕様書 (本ドキュメント) を確定 (§10 のオープン問題を全件確定)
-- **2-b**: `TextElementBase` 抽象クラス + `MonoTextBlock` の最小実装 + ツールバー追加
-- **2-c**: `DataGeneratorTextBlock` 実装 (5 種の Type すべて)
+### Phase 2 (今リリース対象)
+- **2-a**: 設計仕様書 (本ドキュメント) を確定 — Q-1 〜 Q-11 全件確定で **完了**
+- **2-b**: `TextElementBase` 抽象クラス + `MonoTextBlock` の最小実装 + JetBrains Mono 同梱 (Q-1, Q-8) + ツールバー追加
+- **2-c**: `DataGeneratorTextBlock` 実装 (8 種の Type すべて、Q-2 / Q-3 ハイブリッド Seed 含む)
 - **2-d**: `NumberSequenceBlock` 実装
-- **2-e**: `TextMatrixBlock` 実装
-- **2-f**: `TextOnPathBlock` 実装
-- **2-g**: シリアライズ対応 + プロジェクト保存/読み込み
-- **2-h**: Phase 1 のパーツ機構と統合 (Binding ターゲットとして使える)
-- **2-i**: チュートリアル整備 (`docs/fui/phase2-tutorial.md`)
+- **2-e**: シリアライズ対応 (`<DesignerItems>` 配下、Q-4)
+- **2-f**: Phase 1 のパーツ機構と統合 (主要プロパティを ExposedProperty Binding ターゲット化、Q-9)
+- **2-g**: チュートリアル整備 (`docs/fui/phase2-tutorial.md`)
+
+### Phase 2.5 (後送り、Q-11)
+- **2.5-a**: `TextMatrixBlock` 実装 (Q-6 3 モード)
+- **2.5-b**: `TextOnPathBlock` 実装 (Q-7 既存 PolyBezier 利用)
+- **2.5-c**: シリアライズ拡張 + チュートリアル更新
 
 ---
 
@@ -236,69 +240,87 @@ NumberSequenceBlock   : TextElementBase + (Start, End, Step, Format, Separator, 
 
 実装着手前に作者と合意したい設計判断:
 
-### Q-1. `MonoTextBlock` は既存 `LetterDesignerItemViewModel` の派生 / 拡張 / 完全新規のいずれにするか?
-- **案 A**: 完全新規 (`TextElementBase` を新たに作り、Letter ファミリには手を出さない)
-  - メリット: 既存 Letter の挙動を一切壊さない。FUI 特化機能を素直に増やせる。
-  - デメリット: 似たコードが Letter / TextElement で並ぶ可能性。
-- **案 B**: 既存 `AbstractLetterDesignerItemViewModel` を拡張して共通基底化
-  - メリット: 共通コード集約。
-  - デメリット: 既存 Letter への影響を慎重に評価する必要がある。
-- **案 C**: 既存 Letter に新プロパティだけ生やす (LineHeight / LetterSpacing 等)
-  - メリット: 「モノスペーステキスト」を新クラスとして増やさない。
-  - デメリット: Letter が肥大化。Letter / FUI 特化の責務が混ざる。
+### Q-1. `MonoTextBlock` は既存 `LetterDesignerItemViewModel` の派生 / 拡張 / 完全新規のいずれにするか? ✅ **確定**
+- **採用: 案 A (完全新規 / `TextElementBase` を新たに作る)**
+- 確定日: 2026-05-13 (作者判断)
+- **採用理由**: 既存 Letter の挙動を一切壊さない方針 (§2.1 既存コードへの敬意) と一致。Letter ファミリは触らず、FUI 特化のテキスト系は新基底で素直に分離する。
+- **不採用**: 案 B (AbstractLetter 共通基底化) — 既存 Letter への影響評価が重い / 案 C (Letter に直接プロパティ追加) — Letter が肥大化し責務が混ざる
 
-### Q-2. ダミーデータの Type は §3.2 の 8 種で十分か、足し引きあるか?
-- 候補: Hex / Binary / IPv4 / IPv6 / UUID / Timestamp / RandomCode / LogLine
-- 追加候補: MAC アドレス、Base64、Color hex (`#FF00AA`)、座標タプル (`(x, y, z)`)、ASCII art ノイズ
-- 削除候補: なし (作者判断)
+### Q-2. ダミーデータの Type は §3.2 の 8 種で十分か? ✅ **確定**
+- **採用: 8 種 (Hex / Binary / IPv4 / IPv6 / UUID / Timestamp / RandomCode / LogLine) で確定**
+- 確定日: 2026-05-13 (作者判断)
+- **採用理由**: スコープを最小に抑えてリリースまで早く到達するため。追加 Type (MAC / Base64 / Color hex / 座標タプル / ASCII art ノイズ) は Phase 2.5 以降で必要に応じて足す。
 
-### Q-3. DataGenerator の Seed 仕様
-- **案 A**: Seed は明示的な int (ユーザーが「Seed = 42」と入力)。同じ Seed → 同じ出力。
-- **案 B**: Seed は自動 (要素生成時に乱数決定、保存時に固定)。ユーザーが「再生成」ボタンを押すと新しい Seed に振り直し。
-- **案 C**: A + B のハイブリッド (デフォルトは B、必要なら明示指定に切り替え可)
+### Q-3. DataGenerator の Seed 仕様 ✅ **確定**
+- **採用: 案 C (ハイブリッド)**
+- 確定日: 2026-05-13 (作者判断)
+- **具体仕様**:
+  - デフォルトは **自動 Seed** (要素生成時に乱数決定、ファイルに保存して再現)
+  - UI に「Seed をロックして明示指定する」モード切り替えを用意
+  - 「再生成」ボタンは常に押せる (自動モードなら新しい Seed、明示モードなら入力値で再生成)
+- **採用理由**: 「見た目をキープしたい」ケースと「気軽にダミーデータを試したい」ケースの両方に対応できる。
 
-### Q-4. シリアライズの方式
-- **案 A**: `<DesignerItems>` 配下に `<MonoTextBlock>` 等を並べる (既存と同じ)
-- **案 B**: `<TextElements>` セクションを新規追加して区別する
-- **案 C**: パーツ機構と同じく、専用セクション + Id 索引方式
+### Q-4. シリアライズの方式 ✅ **確定**
+- **採用: 案 A (`<DesignerItems>` 配下に並べる)**
+- 確定日: 2026-05-13 (作者判断)
+- **採用理由**: 既存の Rectangle / Ellipse / Letter と同じ扱いになり、ObjectSerializer / ObjectDeserializer の拡張が最小。Letter ファミリと一貫性のある形式。
 
-### Q-5. DataGenerator の再生成は同期 / 非同期どちらか?
-- **案 A**: 常に同期 (UI スレッドで即時計算)。Count が小さい場合は問題なし、巨大な場合は UI ブロック懸念。
-- **案 B**: Count が一定以上で非同期。タスクで生成して Dispatcher 経由で UI 更新。
-- **案 C**: 常に非同期 (Reactive Stream 風)。
+### Q-5. DataGenerator / NumberSequence の再生成は同期 / 非同期どちらか? ✅ **確定**
+- **採用: 案 A (常に同期)**
+- 確定日: 2026-05-13 (作者判断)
+- **採用理由**: Count が小さい間はシンプルでチラつきなし。Phase 5+ で大量要素アニメーションをやる段階でボトルネックが出たら他案に振り直す方針。コードパスを最初から二重化しない。
 
-### Q-6. テキストマトリクスのセル内容指定 (§3.3)
-- **案 A**: 単純な連番 (`r * Columns + c` の数値)
-- **案 B**: DataGenerator を埋め込み (各セルが独立)
-- **案 C**: 任意の文字列リストを直接指定 (改行区切り)
-- **案 D**: A + B + C すべてサポート (ユーザーがモード切替)
+### Q-6. TextMatrix のセル内容指定 ✅ **確定**
+- **採用: 案 D (3 モード全部サポート)**
+- 確定日: 2026-05-13 (作者判断)
+- **具体仕様**: 連番モード / DataGenerator 埋め込みモード / 任意文字列リストモードの 3 つを UI で切り替え可能。各モードは独立しているため Phase 2.5 内で段階実装可能。
+- **採用理由**: FUI の表現幅が一番広くなる。3 モードどれも独立なので、実装は重くなるが切り出しやすい。
 
-### Q-7. テキストパスの実装方式
-- **案 A**: WPF の `Path.Data` をベースに、各文字を `RotateTransform` で配置 (ジオメトリ計算は自前)
-- **案 B**: 既存の `PolyBezierViewModel` を Path として利用できるようにする (パーツ機構と統合)
-- **案 C**: SkiaSharp / D2D など外部ライブラリ依存 (重い → 不採用候補)
+### Q-7. TextOnPath の実装方式 ✅ **確定**
+- **採用: 案 B (既存 `PolyBezierViewModel` を Path として利用)**
+- 確定日: 2026-05-13 (作者判断)
+- **採用理由**: 「パスを描いて → そのパスにテキストを乗せる」という自然なフローになる。Phase 1 のパーツ機構とも統合しやすい。外部ライブラリ依存も避けられる (§2.1 既存コード尊重)。
+- **不採用**: 案 A (自前計算) — UX が重複しがち / 案 C (SkiaSharp / D2D) — §2.1 既存コード尊重原則に反する
 
-### Q-8. デフォルトフォント
-- 候補: JetBrains Mono / IBM Plex Mono / Cascadia Code / Source Code Pro / Consolas / MS Gothic
-- システムに無いフォントを指定したらどうフォールバック?
-- ライセンス的に同梱できるフォントはあるか? (JetBrains Mono は OFL、IBM Plex は OFL、Cascadia Code は OFL、Source Code Pro は OFL、Consolas は Microsoft 同梱)
+### Q-8. デフォルトフォント ✅ **確定**
+- **採用: JetBrains Mono を同梱、デフォルトに設定**
+- 確定日: 2026-05-13 (作者判断)
+- **ライセンス**: OFL — リポジトリ同梱可
+- **フォールバックチェーン**: JetBrains Mono → Cascadia Code → Consolas → MS Gothic
+- **採用理由**: エンジニアリング色の強いグリフ、リガチャ豊富で FUI 進化計画の世界観に合う。
+- **実装上の注意**:
+  - フォントファイル (`.ttf` or `.otf`) を `boilersGraphics/Fonts/` に配置し、`pack://application:,,,/boilersGraphics;component/Fonts/#JetBrains Mono` で参照
+  - インストール済みフォントを優先しないように、リソースから埋め込みフォントを使う設計
+  - 既存 `FontFamilyEx` の選択肢にも追加
 
-### Q-9. Phase 1 パーツ機構との統合粒度
-- TextElement の各プロパティを ExposedProperty の Binding ターゲットにできる必要がある
-- Binding が対応すべき型: string / int / double / Brush / Boolean (Phase 1-c の §5.2 と整合済み)
-- 追加で必要な型は?
-  - `DataGeneratorType` (enum) を ExposedProperty.Enum で扱う?
-  - `Format string` を ExposedProperty.String で扱う?
-- ExposedProperty が現状 `IsArray` のみ持つので、`Point[]` / `Double[]` 等が必要になるユースケースが Phase 2 で発生するか?
+### Q-9. Phase 1 パーツ機構との統合粒度 ✅ **確定**
+- **採用: 主要プロパティのみ ExposedProperty で公開可能**
+- 確定日: 2026-05-13 (作者判断)
+- **公開可能プロパティ (Phase 2 スコープ)**:
+  - MonoTextBlock: Text / FontSize / Foreground / Background / LetterSpacing
+  - DataGenerator: Seed / Count / Separator
+  - NumberSequence: Start / End / Step / Format / Separator
+- **非公開プロパティ (Phase 2 スコープ)**: Type / FontFamily / Layout / Direction / Side / Rotation 等の「骨格」部分
+- **採用理由**: Phase 1 の 8 型 (Double / Int / Boolean / Point / Color / Brush / String / Enum) でカバー可能。ExposedProperty 側の型追加が不要でスコープがクリーン。
+- **影響**: Phase 1 の `IsArray` フラグはそのまま使う。Point[] / Double[] 等の配列ユースケースは Phase 2 では発生しない。
 
-### Q-10. UI 文言・ツールバーアイコン
-- ツールバーアイコンは何を使うか? (Material Design Icons 候補)
-- 各要素の UI 表記 (日本語) を本文中の案 (「モノスペーステキスト」等) で問題ないか?
+### Q-10. UI 文言 ✅ **確定**
+- **採用: 仕様書の 5 つの名前をそのまま UI 表記に**
+  - 「モノスペーステキスト」
+  - 「データジェネレータ」
+  - 「テキストマトリクス」 (Phase 2.5)
+  - 「テキストパス」 (Phase 2.5)
+  - 「数値列」
+- 確定日: 2026-05-13 (作者判断)
+- **ツールバーアイコン**: Material Design Icons から選定 (Phase 2-b 実装時に確定)
+- **採用理由**: 既存 boilersGraphics の日本語 UI と一貫。FUI 制作者にも意味が伝わる。
 
-### Q-11. Phase 2 のスコープを Phase 1 同様に「ロードマップ」として残しつつ、最小実装 (例: MonoTextBlock + DataGenerator のみ) を先にリリースする選択肢
-- **案 A**: 全項目を Phase 2 内で実装してからリリース
-- **案 B**: MonoTextBlock + DataGenerator のみで一旦リリース、TextMatrix / TextOnPath / NumberSequence は Phase 2.5 として後送り
-- どちらが作者の制作実感に合うか?
+### Q-11. Phase 2 のリリース粒度 ✅ **確定**
+- **採用: 案 B (最小実装で一旦リリース)**
+- 確定日: 2026-05-13 (作者判断)
+- **Phase 2 スコープ**: MonoTextBlock + DataGenerator + NumberSequence の 3 要素
+- **Phase 2.5 スコープ (後送り)**: TextMatrix + TextOnPath
+- **採用理由**: develop ブランチに長期滞在を避ける。「数値モノ表現」(NumberSequence) は FUI の肝なので Phase 2 内に含める。TextMatrix / TextOnPath はその次のリリースで安定して足す。
 
 ---
 
@@ -306,20 +328,35 @@ NumberSequenceBlock   : TextElementBase + (Start, End, Step, Format, Separator, 
 
 このドキュメントが以下を満たすことをもって Phase 2-a 完了とする:
 
-- [ ] §10 のオープン問題すべてに作者の判断が反映されている (Q-1〜Q-11 全件確定)
-- [ ] §4 のデータモデル図がレビュー済み
-- [ ] §6 のシリアライズ仕様が既存形式と矛盾しない
-- [ ] このドキュメントが `docs/fui/phase2-text-data-elements.md` に保存されている
-- [ ] 後続の Phase 2-b 以降で参照されるべき既存コード位置がリストアップされている (§7)
-- [ ] Phase 1 のパーツ機構との統合点が明示されている (§5.3, §9)
+- [x] §10 のオープン問題すべてに作者の判断が反映されている (Q-1〜Q-11 全件確定)
+- [x] §4 のデータモデル図がレビュー済み (Q-1 で `TextElementBase` 新規確定 / Q-9 で公開プロパティ確定)
+- [x] §6 のシリアライズ仕様が既存形式と矛盾しない (Q-4 で `<DesignerItems>` 配下に決定)
+- [x] このドキュメントが `docs/fui/phase2-text-data-elements.md` に保存されている
+- [x] 後続の Phase 2-b 以降で参照されるべき既存コード位置がリストアップされている (§7)
+- [x] Phase 1 のパーツ機構との統合点が明示されている (§5.3, §9, Q-9)
+
+**Phase 2-a 完了。Phase 2-b (実装着手) に進む準備が整った。**
 
 ---
 
 ## 12. 確定事項サマリー (Phase 2-b 実装時のクイックリファレンス)
 
-Phase 2-a 完了時に本セクションに追記する (Phase 1-a と同じパターン)。
+| 項目 | 確定内容 |
+|---|---|
+| 実装方針 | 完全新規 `TextElementBase` 派生 (既存 Letter ファミリに手を出さない) |
+| 公開パラメータ型 | Phase 1 の 8 型をそのまま流用 (型追加なし) |
+| DataGenerator Type | 8 種 (Hex / Binary / IPv4 / IPv6 / UUID / Timestamp / RandomCode / LogLine) |
+| Seed 仕様 | ハイブリッド (デフォルト自動、UI でロックして明示指定モードに切替可) |
+| シリアライズ | `<DesignerItems>` 配下に `<MonoTextBlock>` 等として並べる |
+| 再生成方式 | 常に同期 (Phase 5+ でボトルネック出たら振り直し) |
+| TextMatrix セル内容 | 3 モード (連番 / DataGenerator 埋め込み / 任意文字列) すべて対応 (Phase 2.5) |
+| TextOnPath 実装方式 | 既存 `PolyBezierViewModel` を Path として利用 (Phase 2.5) |
+| デフォルトフォント | JetBrains Mono 同梱 (OFL)、フォールバック Cascadia Code → Consolas → MS Gothic |
+| パーツ統合粒度 | 主要プロパティのみ ExposedProperty 公開可能 (骨格部分は非公開) |
+| UI 文言 | モノスペーステキスト / データジェネレータ / テキストマトリクス / テキストパス / 数値列 |
+| Phase 2 スコープ | MonoTextBlock + DataGenerator + NumberSequence (TextMatrix / TextOnPath は Phase 2.5) |
 
 ---
 
-*Last updated: 2026-05-13 (ドラフト v0.1)*
-*Author: Claude (for review by dhq_boiler)*
+*Last updated: 2026-05-13 (確定版 v1.0)*
+*Reviewer: dhq_boiler*
