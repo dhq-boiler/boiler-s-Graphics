@@ -12,8 +12,15 @@ namespace boilersGraphics.Models.Text;
 [Serializable]
 public abstract class TextElementBase : BindableBase
 {
+    /// <summary>
+    /// Phase 2-a §Q-8 デフォルトフォント。アプリ同梱の JetBrains Mono を優先し、
+    /// 見つからなければシステムフォントへフォールバック (Cascadia → Consolas → MS Gothic)。
+    /// </summary>
+    public const string DefaultFontFamily =
+        "pack://application:,,,/boilersGraphics;component/Fonts/#JetBrains Mono, Cascadia Code, Consolas, MS Gothic";
+
     private string _Text = string.Empty;
-    private string _FontFamily = "Consolas";
+    private string _FontFamily = DefaultFontFamily;
     private int _FontSize = 12;
     private Brush _Foreground = Brushes.White;
     private Brush _Background;

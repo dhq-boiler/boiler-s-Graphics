@@ -35,7 +35,8 @@ public class MonoTextBlockViewModelTest
     {
         var vm = new MonoTextBlockViewModel();
         Assert.That(vm.Text.Value, Is.EqualTo(string.Empty));
-        Assert.That(vm.FontFamily.Value, Is.EqualTo("Consolas"));
+        Assert.That(vm.FontFamily.Value, Is.EqualTo(TextElementBase.DefaultFontFamily));
+        Assert.That(vm.FontFamily.Value, Does.Contain("JetBrains Mono"));
         Assert.That(vm.FontSize.Value, Is.EqualTo(12));
         Assert.That(vm.Foreground.Value, Is.EqualTo(Brushes.White));
         Assert.That(vm.Background.Value, Is.Null);

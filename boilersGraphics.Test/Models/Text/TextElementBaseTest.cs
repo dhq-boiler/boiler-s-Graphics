@@ -16,7 +16,8 @@ public class TextElementBaseTest
         var m = new MonoTextBlock();
 
         Assert.That(m.Text, Is.EqualTo(string.Empty));
-        Assert.That(m.FontFamily, Is.EqualTo("Consolas"));
+        Assert.That(m.FontFamily, Is.EqualTo(TextElementBase.DefaultFontFamily));
+        Assert.That(m.FontFamily, Does.Contain("JetBrains Mono"));
         Assert.That(m.FontSize, Is.EqualTo(12));
         Assert.That(m.Foreground, Is.EqualTo(Brushes.White));
         Assert.That(m.Background, Is.Null);
