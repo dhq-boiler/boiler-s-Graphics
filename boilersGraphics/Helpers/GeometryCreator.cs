@@ -351,6 +351,25 @@ public static class GeometryCreator
     }
 
     /// <summary>
+    /// Phase 3-d: Anchor 接続版ベジエコネクタ用の PathGeometry を生成する純関数。
+    /// Begin → BeginControl → EndControl → End の標準キュービックベジエ。
+    /// 既存 <see cref="CreateBezierCurve"/> は触らない (Phase 3-d 新規コネクタ専用)。
+    /// </summary>
+    public static PathGeometry CreateAnchorBezier(Point begin, Point beginControl, Point endControl, Point end)
+    {
+        var figure = new PathFigure
+        {
+            StartPoint = begin,
+            IsFilled = false,
+            IsClosed = false,
+        };
+        figure.Segments.Add(new BezierSegment(beginControl, endControl, end, true));
+        var geometry = new PathGeometry();
+        geometry.Figures.Add(figure);
+        return geometry;
+    }
+
+    /// <summary>
     /// Phase 3-c: 直角コネクタ (L 字) の PathGeometry を生成する純関数。
     /// Begin → Mids[0] → Mids[1] → ... → End の折れ線を、CornerRadius > 0 のとき各折れ点を ArcSegment で丸める。
     /// CornerRadius が隣接する辺の半分より大きい場合は、辺の半分まで自動的にクランプ。

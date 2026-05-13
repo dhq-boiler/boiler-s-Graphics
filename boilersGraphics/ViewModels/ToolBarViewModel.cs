@@ -54,6 +54,7 @@ public class ToolBarViewModel
     public TextOnPathBlockBehavior TextOnPathBlockBehavior { get; } = new();
     public AddAnchorBehavior AddAnchorBehavior { get; } = new();
     public NDrawOrthogonalConnectorBehavior NDrawOrthogonalConnectorBehavior { get; } = new();
+    public NDrawAnchorBezierConnectorBehavior NDrawAnchorBezierConnectorBehavior { get; } = new();
     public NDrawPolygonBehavior NDrawPolygonBehavior { get; private set; }
     public NDrawBezierCurveBehavior NDrawBezierCurveBehavior { get; } = new();
     public SetSnapPointBehavior SetSnapPointBehavior { get; } = new();
@@ -306,6 +307,18 @@ public class ToolBarViewModel
                 ChangeHitTestToDisable();
                 SelectOneToolItem("orthogonal");
             })));
+        // Phase 3-d: 新規ベジエコネクタツール (Q-1 案 B 完全新規、既存 BezierCurve とは別ツール、Q-10 採用名)
+        // 専用アイコン: MDI vector-bezier
+        ToolItems.Add(new ToolItemData("anchorbezier", "pack://application:,,,/Assets/img/anchorbezier_dark.png",
+            "ベジエコネクタ", new DelegateCommand(() =>
+            {
+                MainWindowViewModel.Instance.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(NDrawAnchorBezierConnectorBehavior))
+                    Behaviors.Add(NDrawAnchorBezierConnectorBehavior);
+                ChangeHitTestToDisable();
+                SelectOneToolItem("anchorbezier");
+            })));
         ToolItems.Add(new ToolItemData("brush", "pack://application:,,,/Assets/img/brush_dark.png",
             Resources.Tool_Brush, new DelegateCommand(() =>
             {
@@ -466,6 +479,7 @@ public class ToolBarViewModel
             case "textonpath":
             case "anchor":
             case "orthogonal":
+            case "anchorbezier":
             case "polygon":
             case "bezier":
             case "snappoint":

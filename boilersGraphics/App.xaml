@@ -46,6 +46,7 @@
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/TextOnPathBlockDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/AnchorDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/OrthogonalConnectorDataTemplate.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/AnchorBezierConnectorDataTemplate.xaml" />
 
                 <ResourceDictionary Source="/Btl.Controls.MyControls;component/Resources/AllBrushes.xaml" />
                 <ResourceDictionary Source="/Btl.Controls.MyControls;component/Resources/brush.scroll.down.xaml" />
