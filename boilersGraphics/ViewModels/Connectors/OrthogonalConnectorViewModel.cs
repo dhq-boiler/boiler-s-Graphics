@@ -27,6 +27,15 @@ public class OrthogonalConnectorViewModel : ConnectorBaseViewModel
     public BindableReactiveProperty<string> BeginAnchorRef { get; } = new(string.Empty);
     public BindableReactiveProperty<string> EndAnchorRef { get; } = new(string.Empty);
 
+    /// <summary>
+    /// Phase 3-h §5.7 / Q-9: ExposedProperty Binding ターゲット用の Points[0] 双方向プロキシ。
+    /// 内部の Points (ObservableCollection&lt;Point&gt;) は Reflection ベースの Binding から
+    /// 名前指定できないので、BindableReactiveProperty&lt;Point&gt; として公開する。
+    /// </summary>
+    public BindableReactiveProperty<Point> BeginPoint { get; } = new();
+    /// <summary>Phase 3-h: Points[1] 双方向プロキシ。詳細は <see cref="BeginPoint"/> 参照。</summary>
+    public BindableReactiveProperty<Point> EndPoint { get; } = new();
+
     private AnchorFollower _beginFollower;
     private AnchorFollower _endFollower;
 
@@ -51,7 +60,22 @@ public class OrthogonalConnectorViewModel : ConnectorBaseViewModel
         RoutingMode.Skip(1).Subscribe(_ => RefreshPath()).AddTo(_CompositeDisposable);
         CornerRadius.Skip(1).Subscribe(_ => RefreshPath()).AddTo(_CompositeDisposable);
         MidPoints.CollectionChanged += (_, _) => RefreshPath();
-        Points.CollectionChanged += (_, _) => RefreshPath();
+        Points.CollectionChanged += (_, _) =>
+        {
+            RefreshPath();
+            // Phase 3-h: BeginPoint / EndPoint プロキシを Points 側変化に追従させる。
+            if (Points.Count > 0 && BeginPoint.Value != Points[0]) BeginPoint.Value = Points[0];
+            if (Points.Count > 1 && EndPoint.Value != Points[1]) EndPoint.Value = Points[1];
+        };
+        // Phase 3-h: BeginPoint / EndPoint プロキシからの逆方向書き戻し。Skip(1) で初期値ループを防止。
+        BeginPoint.Skip(1).Subscribe(p =>
+        {
+            if (Points.Count > 0 && Points[0] != p) Points[0] = p;
+        }).AddTo(_CompositeDisposable);
+        EndPoint.Skip(1).Subscribe(p =>
+        {
+            if (Points.Count > 1 && Points[1] != p) Points[1] = p;
+        }).AddTo(_CompositeDisposable);
     }
 
     /// <summary>

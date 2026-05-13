@@ -75,6 +75,15 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
         { "EdgeThickness", new BindableReactiveProperty<bool>(false) },
         { "EdgeBrush", new BindableReactiveProperty<bool>(false) },
         { "FillBrush", new BindableReactiveProperty<bool>(false) },
+        // Phase 3-h §5.7 / Q-9: Phase 3 で追加された公開可能プロパティ。
+        { "BeginPoint", new BindableReactiveProperty<bool>(false) },
+        { "EndPoint", new BindableReactiveProperty<bool>(false) },
+        { "BeginControlPoint", new BindableReactiveProperty<bool>(false) },
+        { "EndControlPoint", new BindableReactiveProperty<bool>(false) },
+        { "CornerRadius", new BindableReactiveProperty<bool>(false) },
+        { "RelativeX", new BindableReactiveProperty<bool>(false) },
+        { "RelativeY", new BindableReactiveProperty<bool>(false) },
+        { "IsNode", new BindableReactiveProperty<bool>(false) },
     };
 
     public BindableReactiveProperty<bool> IsLeftExposed => _exposureFlags["Left"];
@@ -84,6 +93,15 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
     public BindableReactiveProperty<bool> IsEdgeThicknessExposed => _exposureFlags["EdgeThickness"];
     public BindableReactiveProperty<bool> IsEdgeBrushExposed => _exposureFlags["EdgeBrush"];
     public BindableReactiveProperty<bool> IsFillBrushExposed => _exposureFlags["FillBrush"];
+    // Phase 3-h §5.7: Phase 3 公開可能プロパティのフラグ (XAML から DataTrigger で参照)。
+    public BindableReactiveProperty<bool> IsBeginPointExposed => _exposureFlags["BeginPoint"];
+    public BindableReactiveProperty<bool> IsEndPointExposed => _exposureFlags["EndPoint"];
+    public BindableReactiveProperty<bool> IsBeginControlPointExposed => _exposureFlags["BeginControlPoint"];
+    public BindableReactiveProperty<bool> IsEndControlPointExposed => _exposureFlags["EndControlPoint"];
+    public BindableReactiveProperty<bool> IsCornerRadiusExposed => _exposureFlags["CornerRadius"];
+    public BindableReactiveProperty<bool> IsRelativeXExposed => _exposureFlags["RelativeX"];
+    public BindableReactiveProperty<bool> IsRelativeYExposed => _exposureFlags["RelativeY"];
+    public BindableReactiveProperty<bool> IsIsNodeExposed => _exposureFlags["IsNode"];
 
     public ReactiveCommand<string> TogglePropertyExposureCommand { get; }
 
@@ -272,6 +290,12 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
         if (Definition is null || string.IsNullOrEmpty(propertyName)) return;
         if (SelectedItem.Value is not SelectableDesignerItemViewModelBase item) return;
         if (!_exposureFlags.ContainsKey(propertyName)) return;
+        // Phase 3-h §5.7 / Q-9: 公開可能プロパティが Phase 3 で増えたが、すべての型が持つわけではない
+        // (例: NRectangle には CornerRadius / BeginPoint がない)。
+        // 持たないプロパティのトグルを無視して、無効な Binding 作成を防ぐ。
+        if (item.GetType().GetProperty(propertyName,
+                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance) is null)
+            return;
 
         var existing = FindExposedPropertyFor(item, propertyName);
         if (existing is not null)
@@ -331,6 +355,12 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
     {
         "EdgeBrush" => ExposedPropertyType.Brush,
         "FillBrush" => ExposedPropertyType.Brush,
+        // Phase 3-h §5.7 / Q-9: Point / Bool 系を追加。残りはデフォルト Double。
+        "BeginPoint" => ExposedPropertyType.Point,
+        "EndPoint" => ExposedPropertyType.Point,
+        "BeginControlPoint" => ExposedPropertyType.Point,
+        "EndControlPoint" => ExposedPropertyType.Point,
+        "IsNode" => ExposedPropertyType.Boolean,
         _ => ExposedPropertyType.Double,
     };
 

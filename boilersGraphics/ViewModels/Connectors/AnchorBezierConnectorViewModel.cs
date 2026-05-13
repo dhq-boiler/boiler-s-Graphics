@@ -22,6 +22,10 @@ public class AnchorBezierConnectorViewModel : ConnectorBaseViewModel
     public BindableReactiveProperty<string> BeginAnchorRef { get; } = new(string.Empty);
     public BindableReactiveProperty<string> EndAnchorRef { get; } = new(string.Empty);
 
+    /// <summary>Phase 3-h §5.7 / Q-9: Points[0] / Points[1] の Binding ターゲット用双方向プロキシ。</summary>
+    public BindableReactiveProperty<Point> BeginPoint { get; } = new();
+    public BindableReactiveProperty<Point> EndPoint { get; } = new();
+
     private AnchorFollower _beginFollower;
     private AnchorFollower _endFollower;
 
@@ -45,7 +49,20 @@ public class AnchorBezierConnectorViewModel : ConnectorBaseViewModel
     {
         BeginControlPoint.Skip(1).Subscribe(_ => RefreshPath()).AddTo(_CompositeDisposable);
         EndControlPoint.Skip(1).Subscribe(_ => RefreshPath()).AddTo(_CompositeDisposable);
-        Points.CollectionChanged += (_, _) => RefreshPath();
+        Points.CollectionChanged += (_, _) =>
+        {
+            RefreshPath();
+            if (Points.Count > 0 && BeginPoint.Value != Points[0]) BeginPoint.Value = Points[0];
+            if (Points.Count > 1 && EndPoint.Value != Points[1]) EndPoint.Value = Points[1];
+        };
+        BeginPoint.Skip(1).Subscribe(p =>
+        {
+            if (Points.Count > 0 && Points[0] != p) Points[0] = p;
+        }).AddTo(_CompositeDisposable);
+        EndPoint.Skip(1).Subscribe(p =>
+        {
+            if (Points.Count > 1 && Points[1] != p) Points[1] = p;
+        }).AddTo(_CompositeDisposable);
     }
 
     /// <summary>
