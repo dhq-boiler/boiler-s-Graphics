@@ -83,6 +83,49 @@ public class PartInstanceViewModelTest
     }
 
     [Test]
+    public void ExposedParameterCount_初期値は0_HasExposedParametersはfalse()
+    {
+        var vm = new PartInstanceViewModel();
+        Assert.That(vm.ExposedParameterCount.Value, Is.EqualTo(0));
+        Assert.That(vm.HasExposedParameters.Value, Is.False);
+    }
+
+    [Test]
+    public void GetOrCreateParameterValue_ExposedParameterCountが増えてHasExposedParametersがtrue()
+    {
+        var vm = new PartInstanceViewModel();
+        vm.GetOrCreateParameterValue(Guid.NewGuid(), 1.0);
+
+        Assert.That(vm.ExposedParameterCount.Value, Is.EqualTo(1));
+        Assert.That(vm.HasExposedParameters.Value, Is.True);
+    }
+
+    [Test]
+    public void GetOrCreateParameterValue_同じキーで再呼び出ししてもCountは増えない()
+    {
+        var vm = new PartInstanceViewModel();
+        var epId = Guid.NewGuid();
+        vm.GetOrCreateParameterValue(epId, 1.0);
+        vm.GetOrCreateParameterValue(epId, 2.0);
+
+        Assert.That(vm.ExposedParameterCount.Value, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void RemoveParameterValue_最後の1件を消すとHasExposedParametersはfalseに戻る()
+    {
+        var vm = new PartInstanceViewModel();
+        var epId = Guid.NewGuid();
+        vm.GetOrCreateParameterValue(epId, 1.0);
+        Assert.That(vm.HasExposedParameters.Value, Is.True);
+
+        vm.RemoveParameterValue(epId);
+
+        Assert.That(vm.ExposedParameterCount.Value, Is.EqualTo(0));
+        Assert.That(vm.HasExposedParameters.Value, Is.False);
+    }
+
+    [Test]
     public void PartInstanceViewModel_CloneはDefinitionIdとParameterValuesをコピーする()
     {
         var defId = Guid.NewGuid();

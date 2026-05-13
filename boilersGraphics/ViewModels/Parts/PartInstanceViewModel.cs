@@ -17,10 +17,15 @@ namespace boilersGraphics.ViewModels.Parts;
 public class PartInstanceViewModel : DesignerItemViewModelBase
 {
     private readonly Dictionary<Guid, BindableReactiveProperty<object>> _parameterValues = new();
+    private readonly BindableReactiveProperty<int> _exposedParameterCount = new(0);
 
     public BindableReactiveProperty<Guid> DefinitionId { get; } = new();
 
     public ReadOnlyDictionary<Guid, BindableReactiveProperty<object>> ParameterValues { get; }
+
+    public IReadOnlyBindableReactiveProperty<int> ExposedParameterCount { get; }
+
+    public IReadOnlyBindableReactiveProperty<bool> HasExposedParameters { get; }
 
     public ReactiveCommand MouseDoubleClickCommand { get; } = new();
 
@@ -31,6 +36,10 @@ public class PartInstanceViewModel : DesignerItemViewModelBase
     public PartInstanceViewModel()
     {
         ParameterValues = new ReadOnlyDictionary<Guid, BindableReactiveProperty<object>>(_parameterValues);
+        ExposedParameterCount = _exposedParameterCount.ToReadOnlyBindableReactiveProperty();
+        HasExposedParameters = _exposedParameterCount
+            .Select(c => c > 0)
+            .ToReadOnlyBindableReactiveProperty();
         IsHitTestVisible.Value = true;
         InitMouseDoubleClick();
     }
@@ -44,6 +53,10 @@ public class PartInstanceViewModel : DesignerItemViewModelBase
         : base(id, parent, left, top)
     {
         ParameterValues = new ReadOnlyDictionary<Guid, BindableReactiveProperty<object>>(_parameterValues);
+        ExposedParameterCount = _exposedParameterCount.ToReadOnlyBindableReactiveProperty();
+        HasExposedParameters = _exposedParameterCount
+            .Select(c => c > 0)
+            .ToReadOnlyBindableReactiveProperty();
         IsHitTestVisible.Value = true;
         InitMouseDoubleClick();
     }
@@ -73,6 +86,7 @@ public class PartInstanceViewModel : DesignerItemViewModelBase
 
         rp = new BindableReactiveProperty<object>(defaultValue);
         _parameterValues[exposedPropertyId] = rp;
+        _exposedParameterCount.Value = _parameterValues.Count;
         return rp;
     }
 
@@ -85,6 +99,7 @@ public class PartInstanceViewModel : DesignerItemViewModelBase
         {
             rp.Dispose();
             _parameterValues.Remove(exposedPropertyId);
+            _exposedParameterCount.Value = _parameterValues.Count;
         }
     }
 
@@ -126,6 +141,7 @@ public class PartInstanceViewModel : DesignerItemViewModelBase
             rp.Dispose();
         _parameterValues.Clear();
 
+        _exposedParameterCount.Dispose();
         DefinitionId.Dispose();
         base.Dispose();
     }
