@@ -1,7 +1,10 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
+using boilersGraphics.ViewModels.Parts;
+using R3;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace boilersGraphics.UserControls;
 
@@ -19,5 +22,17 @@ public partial class DiagramControl : UserControl
     {
         var myDesignerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
         zoomBox.DesignerCanvas = myDesignerCanvas;
+    }
+
+    private void OnDesignerItemPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ClickCount == 2 &&
+            sender is ContentPresenter { Content: PartInstanceViewModel partInstance } &&
+            partInstance.MouseDoubleClickCommand is { } command &&
+            command.CanExecute())
+        {
+            command.Execute(Unit.Default);
+            e.Handled = true;
+        }
     }
 }

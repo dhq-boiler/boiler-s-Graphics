@@ -164,6 +164,7 @@
                             <ItemsControl.Resources>
 
                                 <Style x:Key="designerItemStyle" TargetType="{x:Type ContentPresenter}">
+                                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="OnDesignerItemPreviewMouseLeftButtonDown" />
                                     <Setter Property="attached:CanvasPositionBehavior.TrackPosition" Value="True" />
                                     <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
                                     <Setter Property="attached:SelectionProps.EnabledForSelection" Value="{Binding EnableForSelection.Value}" />
