@@ -282,6 +282,31 @@ internal class ObjectSerializer
                 list.Add(new XElement("GridColumns", numseq.GridColumns.Value));
             }
 
+            // Phase 2.5-a: TextMatrixBlock。プレフィックス TextMatrix* で命名衝突を回避。
+            if (designerItem is boilersGraphics.ViewModels.Text.TextMatrixBlockViewModel matrix)
+            {
+                list.Add(new XElement("TextMatrixRows", matrix.Rows.Value));
+                list.Add(new XElement("TextMatrixColumns", matrix.Columns.Value));
+                list.Add(new XElement("TextMatrixCellMode", matrix.CellMode.Value.ToString()));
+                list.Add(new XElement("TextMatrixSeparator", matrix.Separator.Value ?? string.Empty));
+                list.Add(new XElement("TextMatrixSequenceStart", matrix.SequenceStart.Value));
+                list.Add(new XElement("TextMatrixSequenceFormat", matrix.SequenceFormat.Value ?? string.Empty));
+                list.Add(new XElement("TextMatrixDataGenType", matrix.DataGenType.Value.ToString()));
+                list.Add(new XElement("TextMatrixDataGenSeed", matrix.DataGenSeed.Value));
+                list.Add(new XElement("TextMatrixCustomItems", matrix.CustomItems.Value ?? string.Empty));
+            }
+
+            // Phase 2.5-b: TextOnPathBlock。プレフィックス TextOnPath* で命名衝突を回避。
+            if (designerItem is boilersGraphics.ViewModels.Text.TextOnPathBlockViewModel onPath)
+            {
+                if (onPath.PathReferenceId.Value.HasValue)
+                    list.Add(new XElement("TextOnPathReferenceId", onPath.PathReferenceId.Value.Value));
+                list.Add(new XElement("TextOnPathStartOffset", onPath.StartOffset.Value));
+                list.Add(new XElement("TextOnPathSpacing", onPath.Spacing.Value));
+                list.Add(new XElement("TextOnPathSide", onPath.Side.Value.ToString()));
+                list.Add(new XElement("TextOnPathRotation", onPath.Rotation.Value.ToString()));
+            }
+
             if (designerItem is NPolygonViewModel polygon) list.Add(new XElement("Data", polygon.Data.Value));
 
             if (designerItem is PartInstanceViewModel partInstance)

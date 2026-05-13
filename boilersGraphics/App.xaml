@@ -42,6 +42,8 @@
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/MonoTextBlockDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/DataGeneratorTextBlockDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/NumberSequenceBlockDataTemplate.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/TextMatrixBlockDataTemplate.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/TextOnPathBlockDataTemplate.xaml" />
 
                 <ResourceDictionary Source="/Btl.Controls.MyControls;component/Resources/AllBrushes.xaml" />
                 <ResourceDictionary Source="/Btl.Controls.MyControls;component/Resources/brush.scroll.down.xaml" />

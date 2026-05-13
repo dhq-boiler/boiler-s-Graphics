@@ -50,6 +50,8 @@ public class ToolBarViewModel
     public MonoTextBlockBehavior MonoTextBlockBehavior { get; } = new();
     public DataGeneratorTextBlockBehavior DataGeneratorTextBlockBehavior { get; } = new();
     public NumberSequenceBlockBehavior NumberSequenceBlockBehavior { get; } = new();
+    public TextMatrixBlockBehavior TextMatrixBlockBehavior { get; } = new();
+    public TextOnPathBlockBehavior TextOnPathBlockBehavior { get; } = new();
     public NDrawPolygonBehavior NDrawPolygonBehavior { get; private set; }
     public NDrawBezierCurveBehavior NDrawBezierCurveBehavior { get; } = new();
     public SetSnapPointBehavior SetSnapPointBehavior { get; } = new();
@@ -257,6 +259,28 @@ public class ToolBarViewModel
                 ChangeHitTestToDisable();
                 SelectOneToolItem("numseq");
             })));
+        // Phase 2.5-a: テキストマトリクスツール (Q-10 採用名)
+        // 専用アイコン: MDI grid (Phase 2.5-a 実装時に追加)
+        ToolItems.Add(new ToolItemData("textmatrix", "pack://application:,,,/Assets/img/textmatrix_dark.png",
+            "テキストマトリクス", new DelegateCommand(() =>
+            {
+                MainWindowViewModel.Instance.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(TextMatrixBlockBehavior)) Behaviors.Add(TextMatrixBlockBehavior);
+                ChangeHitTestToDisable();
+                SelectOneToolItem("textmatrix");
+            })));
+        // Phase 2.5-b: テキストパスツール (Q-10 採用名)
+        // 専用アイコン: MDI vector-curve (PolyBezier との対比で曲線)
+        ToolItems.Add(new ToolItemData("textonpath", "pack://application:,,,/Assets/img/textonpath_dark.png",
+            "テキストパス", new DelegateCommand(() =>
+            {
+                MainWindowViewModel.Instance.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(TextOnPathBlockBehavior)) Behaviors.Add(TextOnPathBlockBehavior);
+                ChangeHitTestToDisable();
+                SelectOneToolItem("textonpath");
+            })));
         ToolItems.Add(new ToolItemData("brush", "pack://application:,,,/Assets/img/brush_dark.png",
             Resources.Tool_Brush, new DelegateCommand(() =>
             {
@@ -413,6 +437,8 @@ public class ToolBarViewModel
             case "monotext":
             case "datagen":
             case "numseq":
+            case "textmatrix":
+            case "textonpath":
             case "polygon":
             case "bezier":
             case "snappoint":
