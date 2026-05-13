@@ -1,6 +1,7 @@
 using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
+using boilersGraphics.Helpers.Anchors;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using boilersGraphics.ViewModels.Connectors;
@@ -76,7 +77,14 @@ public class AnchorBezierConnectorAdorner : Adorner
                 _item.BeginControlPoint.Value = bc;
                 _item.EndControlPoint.Value = ec;
 
+                // Phase 3-e: Begin/End それぞれで近くのアンカーを探して AnchorRef を設定
+                var beginRef = AnchorSnap.FindNearestAnchorRef(diagram, _startPoint.Value);
+                var endRef = AnchorSnap.FindNearestAnchorRef(diagram, _endPoint.Value);
+                if (beginRef is not null) _item.BeginAnchorRef.Value = beginRef;
+                if (endRef is not null) _item.EndAnchorRef.Value = endRef;
+
                 _item.AddPointP2(diagram, _endPoint.Value);
+                _item.StartAnchorFollowers();
                 _item.RefreshPath();
                 _item.SnapPoint0VM.Value.IsHitTestVisible.Value = true;
                 _item.SnapPoint1VM.Value.IsHitTestVisible.Value = true;

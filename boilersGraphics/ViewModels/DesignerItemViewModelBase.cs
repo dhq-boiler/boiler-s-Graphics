@@ -73,6 +73,12 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
 
     public BindableReactiveProperty<bool> RenderingEnabled { get; } = new(true);
 
+    /// <summary>
+    /// Phase 3-a / Q-11 案 B: グラフモード用フラグ。true のときこの図形は「ノード」として扱われ、
+    /// 選択時に関連コネクタがハイライトされる (Phase 3-g UI で利用)。デフォルト false。
+    /// </summary>
+    public BindableReactiveProperty<bool> IsNode { get; } = new(false);
+
     public virtual bool IsResizable => true;
 
     public BindableReactiveProperty<string> Pool { get; private set; } = new();

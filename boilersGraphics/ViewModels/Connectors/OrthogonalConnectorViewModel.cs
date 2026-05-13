@@ -1,4 +1,5 @@
 using boilersGraphics.Helpers;
+using boilersGraphics.Helpers.Anchors;
 using boilersGraphics.Models.Connectors;
 using ObservableCollections;
 using R3;
@@ -26,6 +27,9 @@ public class OrthogonalConnectorViewModel : ConnectorBaseViewModel
     public BindableReactiveProperty<string> BeginAnchorRef { get; } = new(string.Empty);
     public BindableReactiveProperty<string> EndAnchorRef { get; } = new(string.Empty);
 
+    private AnchorFollower _beginFollower;
+    private AnchorFollower _endFollower;
+
     public OrthogonalConnectorViewModel()
     {
         WireRefreshTriggers();
@@ -48,6 +52,25 @@ public class OrthogonalConnectorViewModel : ConnectorBaseViewModel
         CornerRadius.Skip(1).Subscribe(_ => RefreshPath()).AddTo(_CompositeDisposable);
         MidPoints.CollectionChanged += (_, _) => RefreshPath();
         Points.CollectionChanged += (_, _) => RefreshPath();
+    }
+
+    /// <summary>
+    /// Phase 3-e: Owner 設定後に呼ぶことで、BeginAnchorRef / EndAnchorRef の追従を起動する。
+    /// 多重呼び出しは前回の Follower を Dispose してから再起動する。
+    /// </summary>
+    public void StartAnchorFollowers()
+    {
+        if (Owner is null) return;
+        _beginFollower?.Dispose();
+        _endFollower?.Dispose();
+        _beginFollower = new AnchorFollower(Owner, BeginAnchorRef, p =>
+        {
+            if (Points is not null && Points.Count > 0) Points[0] = p;
+        });
+        _endFollower = new AnchorFollower(Owner, EndAnchorRef, p =>
+        {
+            if (Points is not null && Points.Count > 1) Points[1] = p;
+        });
     }
 
     /// <summary>現在の Points / RoutingMode / MidPoints / CornerRadius から PathGeometryNoRotate を再構築する。</summary>
