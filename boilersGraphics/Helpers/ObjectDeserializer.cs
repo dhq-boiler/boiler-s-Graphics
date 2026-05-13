@@ -1,10 +1,13 @@
 ﻿using boilersGraphics.Exceptions;
 using boilersGraphics.Helpers.Parts;
 using boilersGraphics.Models;
+using boilersGraphics.Models.Connectors;
 using boilersGraphics.Models.Parts;
 using boilersGraphics.Properties;
 using boilersGraphics.ViewModels;
+using boilersGraphics.ViewModels.Anchors;
 using boilersGraphics.ViewModels.ColorCorrect;
+using boilersGraphics.ViewModels.Connectors;
 using boilersGraphics.ViewModels.Parts;
 using System;
 using System.Collections.Generic;
@@ -242,6 +245,27 @@ public class ObjectDeserializer
                 diagramViewModel.PartDefinitions.Add(vm);
             }
         }
+
+        FinalizeAnchorsAndFollowers(diagramViewModel);
+    }
+
+    /// <summary>
+    /// Phase 3-f §6.2: 全 LayerItem のロード完了後に呼ばれるファイナライゼーション。
+    /// AnchorViewModel.RebindOwner() を呼んで Owner DesignerItem との R3 Subscribe を確立し、
+    /// 新規コネクタ (Orthogonal / AnchorBezier) の StartAnchorFollowers() で AnchorRef 追従を起動する。
+    /// 順序を分けているのは、AllItems が全アイテム揃ってからでないと OwnerId 逆引きが失敗するため。
+    /// </summary>
+    private static void FinalizeAnchorsAndFollowers(DiagramViewModel diagramViewModel)
+    {
+        if (diagramViewModel is null) return;
+        var allItems = diagramViewModel.AllItems.Value;
+        if (allItems is null) return;
+        foreach (var anchor in allItems.AsValueEnumerable().OfType<AnchorViewModel>())
+            anchor.RebindOwner();
+        foreach (var ortho in allItems.AsValueEnumerable().OfType<OrthogonalConnectorViewModel>())
+            ortho.StartAnchorFollowers();
+        foreach (var anchorBezier in allItems.AsValueEnumerable().OfType<AnchorBezierConnectorViewModel>())
+            anchorBezier.StartAnchorFollowers();
     }
 
     /// <summary>
@@ -282,6 +306,7 @@ public class ObjectDeserializer
         DesignerItemViewModelBase designerItemObj = null;
         ConnectorBaseViewModel connectorObj = null;
         SnapPointViewModel snapPointObj = null;
+        AnchorViewModel anchorObj = null;
         if (layerItem.Descendants("Item").AsValueEnumerable().First().Descendants("DesignerItem").AsValueEnumerable().Count() >= 1)
             designerItemObj = ExtractDesignerItemViewModelBase(diagramViewModel,
                 layerItem.Descendants("Item").AsValueEnumerable().First().Descendants("DesignerItem").AsValueEnumerable().First());
@@ -291,7 +316,11 @@ public class ObjectDeserializer
         if (layerItem.Descendants("Item").AsValueEnumerable().First().Descendants("SnapPointItem").AsValueEnumerable().Count() >= 1)
             snapPointObj = ExtractSnapPointViewModel(diagramViewModel,
                 layerItem.Descendants("Item").AsValueEnumerable().First().Descendants("SnapPointItem").AsValueEnumerable().First());
-        var item = EitherNotNull(designerItemObj, EitherNotNull(connectorObj, snapPointObj));
+        // Phase 3-f §6.2: AnchorItem ノード分岐 (DesignerItem / Connector / SnapPoint いずれにも該当しない)。
+        if (layerItem.Descendants("Item").AsValueEnumerable().First().Descendants("AnchorItem").AsValueEnumerable().Count() >= 1)
+            anchorObj = ExtractAnchorViewModel(diagramViewModel,
+                layerItem.Descendants("Item").AsValueEnumerable().First().Descendants("AnchorItem").AsValueEnumerable().First());
+        var item = EitherNotNull(designerItemObj, EitherNotNull(connectorObj, EitherNotNull(snapPointObj, anchorObj)));
         if (item is null)
             throw new UnexpectedException("All of them are null.");
         var layerItemObj = new LayerItem(item, layerObj, layerItem.Element("Name").Value);
@@ -387,7 +416,7 @@ public class ObjectDeserializer
         return item;
     }
 
-    private static ConnectorBaseViewModel ExtractConnectorBaseViewModel(DiagramViewModel diagramViewModel,
+    internal static ConnectorBaseViewModel ExtractConnectorBaseViewModel(DiagramViewModel diagramViewModel,
         XElement connectorElm)
     {
         var instance = DeserializeInstance(connectorElm);
@@ -398,7 +427,10 @@ public class ObjectDeserializer
         item.ID = Guid.Parse(connectorElm.Element("ID").Value);
         item.ParentID = Guid.Parse(connectorElm.Element("ParentID").Value);
         item.Points = new ObservableCollection<Point>();
-        if (item is StraightConnectorViewModel || item is BezierCurveViewModel)
+        if (item is StraightConnectorViewModel
+            || item is BezierCurveViewModel
+            || item is OrthogonalConnectorViewModel
+            || item is AnchorBezierConnectorViewModel)
             item.AddPoints(diagramViewModel, Point.Parse(connectorElm.Element("BeginPoint").Value),
                 Point.Parse(connectorElm.Element("EndPoint").Value));
         item.ZIndex.Value = int.Parse(connectorElm.Element("ZIndex").Value);
@@ -431,8 +463,73 @@ public class ObjectDeserializer
             bezier.ControlPoint2.Value = Point.Parse(connectorElm.Element("ControlPoint2").Value);
         }
 
+        // Phase 3-f §6.2: OrthogonalConnectorViewModel の固有プロパティ復元。
+        // PathGeometryNoRotate は MidPoints / CornerRadius の Subscribe で RefreshPath() が走るため
+        // 明示的な保存値は使わずに再計算結果に任せる (StraightConnector / BezierCurve とは異なる方針)。
+        if (item is OrthogonalConnectorViewModel ortho)
+        {
+            if (connectorElm.Element("OrthogonalRoutingMode") is { } rmElm
+                && Enum.TryParse<OrthogonalRoutingMode>(rmElm.Value, out var rm))
+                ortho.RoutingMode.Value = rm;
+            if (connectorElm.Element("OrthogonalCornerRadius") is { } crElm)
+                ortho.CornerRadius.Value = double.Parse(crElm.Value, System.Globalization.CultureInfo.InvariantCulture);
+            if (connectorElm.Element("OrthogonalMidPoints") is { } midPointsElm)
+            {
+                ortho.MidPoints.Clear();
+                foreach (var mp in midPointsElm.Elements("MidPoint"))
+                {
+                    var x = double.Parse(mp.Attribute("X").Value, System.Globalization.CultureInfo.InvariantCulture);
+                    var y = double.Parse(mp.Attribute("Y").Value, System.Globalization.CultureInfo.InvariantCulture);
+                    ortho.MidPoints.Add(new Point(x, y));
+                }
+            }
+            if (connectorElm.Element("OrthogonalBeginAnchorRef") is { } obae)
+                ortho.BeginAnchorRef.Value = obae.Value;
+            if (connectorElm.Element("OrthogonalEndAnchorRef") is { } oeae)
+                ortho.EndAnchorRef.Value = oeae.Value;
+            ortho.RefreshPath();
+        }
+
+        // Phase 3-f §6.2: AnchorBezierConnectorViewModel の固有プロパティ復元。
+        if (item is AnchorBezierConnectorViewModel anchorBezier)
+        {
+            if (connectorElm.Element("AnchorBezierBeginControl") is { } abbc)
+                anchorBezier.BeginControlPoint.Value = Point.Parse(abbc.Value);
+            if (connectorElm.Element("AnchorBezierEndControl") is { } abec)
+                anchorBezier.EndControlPoint.Value = Point.Parse(abec.Value);
+            if (connectorElm.Element("AnchorBezierBeginAnchorRef") is { } abbae)
+                anchorBezier.BeginAnchorRef.Value = abbae.Value;
+            if (connectorElm.Element("AnchorBezierEndAnchorRef") is { } abeae)
+                anchorBezier.EndAnchorRef.Value = abeae.Value;
+            anchorBezier.RefreshPath();
+        }
+
         item.InitIsSelectedOnSnapPoints();
 
+        return item;
+    }
+
+    /// <summary>
+    /// Phase 3-f §6.2: AnchorViewModel の復元。Owner は呼び出し側で設定する前提で
+    /// Properties (OwnerId / RelativeX/Y / AnchorName) のみ書き戻す。
+    /// RebindOwner() は ReadObjectsFromXML の最後で一括実行される
+    /// (AllItems がロード完了するまで Owner DesignerItem が見つからないため)。
+    /// </summary>
+    internal static AnchorViewModel ExtractAnchorViewModel(DiagramViewModel diagramViewModel, XElement anchorElm)
+    {
+        if (!(DeserializeInstance(anchorElm) is AnchorViewModel item))
+            return null;
+        item.ID = Guid.Parse(anchorElm.Element("ID").Value);
+        item.ParentID = Guid.Parse(anchorElm.Element("ParentID").Value);
+        item.ZIndex.Value = int.Parse(anchorElm.Element("ZIndex").Value);
+        item.OwnerId.Value = Guid.Parse(anchorElm.Element("AnchorOwnerId").Value);
+        item.RelativeX.Value = double.Parse(anchorElm.Element("AnchorRelativeX").Value,
+            System.Globalization.CultureInfo.InvariantCulture);
+        item.RelativeY.Value = double.Parse(anchorElm.Element("AnchorRelativeY").Value,
+            System.Globalization.CultureInfo.InvariantCulture);
+        if (anchorElm.Element("AnchorName") is { } nameElm)
+            item.AnchorName.Value = nameElm.Value;
+        item.Owner = diagramViewModel;
         return item;
     }
 
@@ -495,6 +592,9 @@ public class ObjectDeserializer
             item.StrokeMiterLimit.Value = double.Parse(designerItemElm.Element("StrokeMiterLimit").Value);
         if (designerItemElm.Elements("StrokeDashArray").AsValueEnumerable().Any())
             item.StrokeDashArray.Value = DoubleCollection.Parse(designerItemElm.Element("StrokeDashArray").Value);
+        // Phase 3-f: Q-11 案 B / Phase 3-g UI 用 IsNode フラグ。デフォルト false なので、ある時だけ書き戻す。
+        if (designerItemElm.Element("IsNode") is { } isNodeElm && bool.TryParse(isNodeElm.Value, out var isNode))
+            item.IsNode.Value = isNode;
         item.EdgeThickness.Value = double.Parse(designerItemElm.Element("EdgeThickness").Value);
         item.RotationAngle.Value = designerItemElm.Element("RotationAngle") is not null
             ? double.Parse(designerItemElm.Element("RotationAngle").Value)
