@@ -116,4 +116,46 @@ public class PartDefinitionsRegistryTest
         Assert.That(result.OrphanedInstances, Has.Count.EqualTo(1));
         Assert.That(result.OrphanedInstances[0], Is.SameAs(orphan));
     }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void PromoteToPart_Undo_PartDefinitionsが空に戻る()
+    {
+        var vm = CreateViewModel();
+        var r = new NRectangleViewModel(10, 20, 30, 40);
+        vm.AddItemCommand.Execute(r);
+        r.IsSelected.Value = true;
+
+        vm.PromoteToPartCommand.Execute();
+        Assert.That(vm.PartDefinitions, Has.Count.EqualTo(1), "Promote 直後は PartDefinitions に 1 件");
+
+        vm.UndoCommand.Execute();
+
+        Assert.That(vm.PartDefinitions, Has.Count.EqualTo(0), "Undo で PartDefinitions が空に戻る (孤児定義が残らない)");
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void ClonePartDefinition_Undo_PartDefinitionsが1件に戻る()
+    {
+        var vm = CreateViewModel();
+        var r = new NRectangleViewModel(10, 20, 30, 40);
+        vm.AddItemCommand.Execute(r);
+        r.IsSelected.Value = true;
+        vm.PromoteToPartCommand.Execute();
+
+        // Promote 後の唯一の PartInstance を選択 (Clone は PartInstance 選択前提)
+        var instance = System.Linq.Enumerable.First(
+            System.Linq.Enumerable.OfType<PartInstanceViewModel>(
+                System.Linq.Enumerable.Select(
+                    System.Linq.Enumerable.SelectMany(vm.Layers, l => l.Children),
+                    c => ((LayerItem)c).Item.Value)));
+        instance.IsSelected.Value = true;
+
+        var beforeCloneCount = vm.PartDefinitions.Count; // 1
+        vm.ClonePartDefinitionCommand.Execute();
+        Assert.That(vm.PartDefinitions, Has.Count.EqualTo(beforeCloneCount + 1), "Clone で PartDefinitions が 1 件増える");
+
+        vm.UndoCommand.Execute();
+
+        Assert.That(vm.PartDefinitions, Has.Count.EqualTo(beforeCloneCount), "Undo で Clone 分が消える (孤児定義が残らない)");
+    }
 }

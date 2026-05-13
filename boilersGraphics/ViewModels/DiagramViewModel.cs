@@ -4904,7 +4904,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         try
         {
             var result = boilersGraphics.Helpers.Parts.PartOperations.Promote(selected, name);
-            PartDefinitions.Add(result.Definition);
+            // Recorder 経由で Add する。Undo 時に Definition もキャンバスから消える。
+            MainWindowVM.Recorder.Current.ExecuteAdd(PartDefinitions, result.Definition);
 
             foreach (var item in selected)
                 ExecuteRemoveItemCommand(item);
@@ -4981,7 +4982,16 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
         var newName = GenerateCloneName(definition.Name.Value);
         var clone = boilersGraphics.Helpers.Parts.PartOperations.Clone(definition, newName);
-        PartDefinitions.Add(clone);
+
+        MainWindowVM.Recorder.BeginRecode();
+        try
+        {
+            MainWindowVM.Recorder.Current.ExecuteAdd(PartDefinitions, clone);
+        }
+        finally
+        {
+            MainWindowVM.Recorder.EndRecode();
+        }
 
         OpenPartEditor(clone);
     }

@@ -22,8 +22,18 @@ internal static class PartOperations
         var definition = new PartDefinitionViewModel();
         definition.Name.Value = name;
 
+        // Clone every item into Definition.Items. We must NOT take the
+        // selected items by reference here: the caller will remove (and
+        // Dispose) the originals from the layer after Promote returns,
+        // which would otherwise leave Disposed instances inside
+        // Definition.Items and make subsequent edits in PartEditor throw
+        // ObjectDisposedException at the first ReactiveProperty access.
+        // Detach / Clone follow the same defensive-clone pattern.
         foreach (var item in items)
-            definition.Items.Add(item);
+        {
+            if (item.Clone() is DesignerItemViewModelBase clone)
+                definition.Items.Add(clone);
+        }
 
         var instance = new PartInstanceViewModel(definition.Id.Value)
         {

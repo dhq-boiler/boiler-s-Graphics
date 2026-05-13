@@ -177,8 +177,10 @@ public class PartOperationsTest
     public void Clone_BindingのTargetItemIdがクローンした図形のIdにマッピングされる()
     {
         var r = new NRectangleViewModel(0, 0, 10, 10);
-        var originalId = r.ID;
         var promoted = PartOperations.Promote(new DesignerItemViewModelBase[] { r }, "元");
+        // Phase 1-c-9 以降、Promote は Definition.Items にクローンを入れるので
+        // bindings は Definition 内部の (クローン側) Id を指す前提で書く。
+        var definitionItemId = promoted.Definition.Items[0].ID;
         var ep = new ExposedPropertyViewModel(new ExposedProperty
         {
             Name = "幅",
@@ -186,7 +188,7 @@ public class PartOperationsTest
         });
         ep.Bindings.Add(new BindingViewModel(new Binding
         {
-            TargetItemId = originalId,
+            TargetItemId = definitionItemId,
             TargetProperty = "Width"
         }));
         promoted.Definition.ExposedProperties.Add(ep);
@@ -195,12 +197,44 @@ public class PartOperationsTest
 
         var clonedItemId = clone.Items[0].ID;
         Assert.That(clone.ExposedProperties[0].Bindings[0].TargetItemId.Value, Is.EqualTo(clonedItemId));
-        Assert.That(clone.ExposedProperties[0].Bindings[0].TargetItemId.Value, Is.Not.EqualTo(originalId));
+        Assert.That(clone.ExposedProperties[0].Bindings[0].TargetItemId.Value, Is.Not.EqualTo(definitionItemId));
     }
 
     [Test]
     public void Clone_nullでArgumentNullExceptionをスローする()
     {
         Assert.Throws<ArgumentNullException>(() => PartOperations.Clone(null, "新"));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void Promote_Definition_Itemsはオリジナルとは別インスタンスになる()
+    {
+        var original = new NRectangleViewModel(0, 0, 10, 10);
+
+        var result = PartOperations.Promote(new DesignerItemViewModelBase[] { original }, "P1");
+
+        Assert.That(result.Definition.Items, Has.Count.EqualTo(1));
+        Assert.That(result.Definition.Items[0], Is.Not.SameAs(original));
+        Assert.That(result.Definition.Items[0], Is.TypeOf<NRectangleViewModel>());
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void Promote_オリジナルをDisposeしてもDefinition_Itemsは無事に読める()
+    {
+        boilersGraphics.App.IsTest = true;
+        var original = new NRectangleViewModel(0, 0, 10, 10);
+
+        var result = PartOperations.Promote(new DesignerItemViewModelBase[] { original }, "P1");
+        // Promote 直後にオリジナル側を Dispose しても、Definition.Items の側は別オブジェクトなので無事。
+        original.Dispose();
+
+        var def = result.Definition;
+        Assert.That(def.Items, Has.Count.EqualTo(1));
+        Assert.DoesNotThrow(() =>
+        {
+            var _ = def.Items[0].Width.Value;
+            var __ = def.Items[0].Left.Value;
+            var ___ = def.Items[0].IsSelected.Value;
+        });
     }
 }
