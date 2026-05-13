@@ -80,6 +80,34 @@
 
 ![draw_letter_vertical](https://user-images.githubusercontent.com/7916855/129468596-4fecea05-ea50-4c43-97d1-d55093d0d440.gif)
 
+### モノスペーステキスト・データジェネレータ・数値列 (FUI 向け)
+
+FUI (Fictional User Interface) 制作向けに、等幅フォント前提のテキスト・自動生成ダミーデータ・連番列を素早く配置できる 3 つの専用ツールが追加されています。デフォルトフォントとして JetBrains Mono をアプリ同梱しています。
+
+> 詳しい使い方とプロパティ仕様は [docs/fui/phase2-tutorial.md](docs/fui/phase2-tutorial.md) を参照してください。
+
+#### モノスペーステキスト
+
+1. 画面左側のツールから「モノスペーステキスト」ツールを選択します。
+2. キャンパス上でドラッグして配置範囲を決定します。
+3. `Text` プロパティに表示したい文字列 (複数行可) を設定すると、等幅フォントで描画されます。
+
+#### データジェネレータ
+
+1. 画面左側のツールから「データジェネレータ」ツールを選択します。
+2. キャンパス上でドラッグして配置範囲を決定します。
+3. 配置直後に Hex × 8 件のダミーデータが自動生成されます。
+4. `Type` (Hex / Binary / IPv4 / IPv6 / UUID / Timestamp / RandomCode / LogLine の 8 種)、`Seed`、`Count`、`Separator`、`Layout` を変更すると同期的に再生成されます。
+
+#### 数値列
+
+1. 画面左側のツールから「数値列」ツールを選択します。
+2. キャンパス上でドラッグして配置範囲を決定します。
+3. デフォルト設定 (`0..10` Step `1` Horizontal) で生成された連番列が表示されます。
+4. `Start` / `End` / `Step` / `Format` (`"D3"` / `"X4"` / `"F2"` 等の .NET 書式指定子) / `Separator` / `Direction` (Horizontal / Vertical / Grid) を変更すると同期的に再生成されます。
+
+> これら 3 要素は Phase 1 のパーツ機構と統合されており、`ExposedProperty` で主要プロパティ (MonoText: Text/FontSize/Foreground/Background/LetterSpacing、DataGen: Seed/Count/Separator、NumSeq: Start/End/Step/Format/Separator) を公開して再利用パーツの一部にできます。
+
 ## 描画補助点（スナップポイント）を設置する
 
 1. 画面左側のツールからスナップポイントツールを選択します。

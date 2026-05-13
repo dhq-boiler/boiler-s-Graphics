@@ -112,13 +112,22 @@
 - 既存テストがすべて緑 ([[project_test_baseline]] を維持)。新規追加機能には対応する単体テストを追加。
 - 1.2-e で挙げたサンプル部品が 1 つ以上、機構の上で動作することを確認 (PoC として円環 or 目盛りのどちらかを最初に実装)。
 
-### Phase 2: テキスト・データ要素 (FUI の魂)
+### Phase 2: テキスト・データ要素 (FUI の魂) ✅ 完了
 FUI らしさの肝は「微細な技術テキスト」と「データっぽい数値・コード」が大量に配置されていること。
-- **モノスペースフォントのテキストブロック** (デフォルトで JetBrains Mono / IBM Plex Mono / Source Code Pro 等を想定)
-- **ダミーテキスト / ダミーデータジェネレータ**: hex 列、binary 列、IP アドレス、UUID、タイムスタンプ、ランダムコード、ログ行風文字列
-- **テーブル / 行列風レイアウト**: 行数・列数・セル幅指定で作れる
-- **テキストパス (パスに沿った文字列)**: 円周に沿った文字列は FUI 必須
-- **カウンター / 数値ロガー**: 連番、増減数値の自動生成
+
+#### Phase 2 で実装した要素 (確定版 v1.0 Q-11 案 B スコープ)
+- **モノスペーステキスト (`MonoTextBlock`)**: JetBrains Mono 同梱 (OFL) + Cascadia Code → Consolas → MS Gothic フォールバックチェーン
+- **データジェネレータ (`DataGeneratorTextBlock`)**: 8 種 (Hex / Binary / IPv4 / IPv6 / UUID / Timestamp / RandomCode / LogLine)、ハイブリッド Seed (Q-3 案 C)
+- **数値列 (`NumberSequenceBlock`)**: Start / End / Step / Format / Separator / Direction (Horizontal / Vertical / Grid)
+- Phase 1 のパーツ機構と統合 (`RenderedItems` 経由の値伝搬機構、ExposedProperty 公開可能プロパティを Q-9 で確定)
+
+#### Phase 2.5 (後送り)
+- **テキストマトリクス (`TextMatrixBlock`)**: 3 モード (連番 / DataGenerator 埋め込み / 任意文字列リスト)
+- **テキストパス (`TextOnPathBlock`)**: 既存 `PolyBezierViewModel` を Path として利用
+
+#### 参考ドキュメント
+- 設計仕様書: [`fui/phase2-text-data-elements.md`](./fui/phase2-text-data-elements.md)
+- チュートリアル: [`fui/phase2-tutorial.md`](./fui/phase2-tutorial.md)
 
 ### Phase 3: 接続線・関係表現
 要素同士を「配線」して関係を示すのは FUI の重要言語。
@@ -280,5 +289,5 @@ WPF 出力イメージ:
 
 ---
 
-*Last updated: 2026-05-12*
+*Last updated: 2026-05-13 (Phase 2 完了 / Phase 2-g チュートリアル追加)*
 *Author: dhq_boiler*
