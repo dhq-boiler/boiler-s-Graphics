@@ -222,7 +222,7 @@ Phase 2 の 3 要素は Phase 1 のパーツ機構の上で **そのまま** 動
 | Foreground デフォルト白 | ダークテーマ前提。白キャンバス上では視認できないため、Background を濃色にするかソース改変で対応 |
 | 再生成は常に同期 | Q-5 案 A: Count が小さい想定でチラつき回避を優先。Phase 5+ で大量配置時のボトルネックが出たら別案 |
 | アニメーション未対応 | Phase 5 (モーション/アニメーション) スコープ |
-| TextMatrix / TextOnPath は Phase 2.5 | Q-11 案 B により後送り (`phase2-text-data-elements.md` §9 参照) |
+| TextMatrix / TextOnPath は Phase 2.5 で実装済み | [`phase2-5-tutorial.md`](./phase2-5-tutorial.md) を参照 |
 
 ---
 
@@ -241,6 +241,7 @@ Phase 2 の 3 要素は Phase 1 のパーツ機構の上で **そのまま** 動
 ## 11. 関連ドキュメント
 
 - 設計仕様書: [`phase2-text-data-elements.md`](./phase2-text-data-elements.md)
+- Phase 2.5 チュートリアル: [`phase2-5-tutorial.md`](./phase2-5-tutorial.md)
 - Phase 1 チュートリアル: [`phase1-tutorial.md`](./phase1-tutorial.md)
 - Phase 1 設計仕様書: [`phase1-parametric-components.md`](./phase1-parametric-components.md)
 - 設計者意図: [`../FUI_DESIGNER_INTENT.md`](../FUI_DESIGNER_INTENT.md)

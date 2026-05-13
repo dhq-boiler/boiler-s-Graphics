@@ -108,6 +108,27 @@ FUI (Fictional User Interface) 制作向けに、等幅フォント前提のテ�
 
 > これら 3 要素は Phase 1 のパーツ機構と統合されており、`ExposedProperty` で主要プロパティ (MonoText: Text/FontSize/Foreground/Background/LetterSpacing、DataGen: Seed/Count/Separator、NumSeq: Start/End/Step/Format/Separator) を公開して再利用パーツの一部にできます。
 
+### テキストマトリクス・テキストパス (FUI Phase 2.5)
+
+Phase 2.5 で「行 × 列の格子状にテキストを並べる」テキストマトリクスと、「PolyBezier に沿って 1 文字ずつ文字を並べる」テキストパスが追加されています。
+
+> 詳しい使い方とプロパティ仕様は [docs/fui/phase2-5-tutorial.md](docs/fui/phase2-5-tutorial.md) を参照してください。
+
+#### テキストマトリクス
+
+1. 画面左側のツールから「テキストマトリクス」ツールを選択します。
+2. キャンパス上でドラッグして配置範囲を決定します。
+3. デフォルト 4×4 の連番テーブルが表示されます。
+4. `CellMode` (Sequential / DataGenerator / CustomList の 3 モード)、`Rows` / `Columns` / `Separator` / 各モード固有のプロパティを変更すると同期的に再生成されます。
+
+#### テキストパス
+
+1. 先にベジエ曲線ツールでパスを描いておきます。
+2. 画面左側のツールから「テキストパス」ツールを選択します。
+3. キャンパス上でドラッグして配置範囲を決定します。
+4. 配置後、`PathReferenceId` に参照する PolyBezier の `ID` (Guid) を設定すると、`Text` が PolyBezier に沿って 1 文字ずつ並びます。
+5. `StartOffset` / `Spacing` / `Side` (Above/On/Below) / `Rotation` (Tangent/Upright) で配置を調整できます。
+
 ## 描画補助点（スナップポイント）を設置する
 
 1. 画面左側のツールからスナップポイントツールを選択します。
