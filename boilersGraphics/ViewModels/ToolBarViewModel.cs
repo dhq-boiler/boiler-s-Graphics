@@ -49,6 +49,7 @@ public class ToolBarViewModel
     public LetterVerticalBehavior LetterVerticalBehavior { get; } = new();
     public MonoTextBlockBehavior MonoTextBlockBehavior { get; } = new();
     public DataGeneratorTextBlockBehavior DataGeneratorTextBlockBehavior { get; } = new();
+    public NumberSequenceBlockBehavior NumberSequenceBlockBehavior { get; } = new();
     public NDrawPolygonBehavior NDrawPolygonBehavior { get; private set; }
     public NDrawBezierCurveBehavior NDrawBezierCurveBehavior { get; } = new();
     public SetSnapPointBehavior SetSnapPointBehavior { get; } = new();
@@ -245,6 +246,17 @@ public class ToolBarViewModel
                 ChangeHitTestToDisable();
                 SelectOneToolItem("datagen");
             })));
+        // Phase 2-d: 数値列ツール (Q-10 採用名)
+        // アイコンは既存 A_dark.png を流用 (専用アイコンは後で差し替え予定)
+        ToolItems.Add(new ToolItemData("numseq", "pack://application:,,,/Assets/img/A_dark.png",
+            "数値列", new DelegateCommand(() =>
+            {
+                MainWindowViewModel.Instance.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(NumberSequenceBlockBehavior)) Behaviors.Add(NumberSequenceBlockBehavior);
+                ChangeHitTestToDisable();
+                SelectOneToolItem("numseq");
+            })));
         ToolItems.Add(new ToolItemData("brush", "pack://application:,,,/Assets/img/brush_dark.png",
             Resources.Tool_Brush, new DelegateCommand(() =>
             {
@@ -400,6 +412,7 @@ public class ToolBarViewModel
             case "letter-vertical":
             case "monotext":
             case "datagen":
+            case "numseq":
             case "polygon":
             case "bezier":
             case "snappoint":
