@@ -8,6 +8,9 @@ using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using R3;
 using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
 using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels.Parts;
@@ -59,6 +62,31 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
 
     public ReactiveCommand<ExposedPropertyViewModel> RemoveExposedPropertyCommand { get; }
 
+    /// <summary>
+    /// Phase 1 フォローアップ A: 内部図形の各プロパティの公開状態を選択中図形に対して動的に判定する。
+    /// 'Left' / 'Top' / 'Width' / 'Height' / 'EdgeThickness' / 'EdgeBrush' / 'FillBrush' をキーに持つ。
+    /// </summary>
+    private readonly Dictionary<string, BindableReactiveProperty<bool>> _exposureFlags = new()
+    {
+        { "Left", new BindableReactiveProperty<bool>(false) },
+        { "Top", new BindableReactiveProperty<bool>(false) },
+        { "Width", new BindableReactiveProperty<bool>(false) },
+        { "Height", new BindableReactiveProperty<bool>(false) },
+        { "EdgeThickness", new BindableReactiveProperty<bool>(false) },
+        { "EdgeBrush", new BindableReactiveProperty<bool>(false) },
+        { "FillBrush", new BindableReactiveProperty<bool>(false) },
+    };
+
+    public BindableReactiveProperty<bool> IsLeftExposed => _exposureFlags["Left"];
+    public BindableReactiveProperty<bool> IsTopExposed => _exposureFlags["Top"];
+    public BindableReactiveProperty<bool> IsWidthExposed => _exposureFlags["Width"];
+    public BindableReactiveProperty<bool> IsHeightExposed => _exposureFlags["Height"];
+    public BindableReactiveProperty<bool> IsEdgeThicknessExposed => _exposureFlags["EdgeThickness"];
+    public BindableReactiveProperty<bool> IsEdgeBrushExposed => _exposureFlags["EdgeBrush"];
+    public BindableReactiveProperty<bool> IsFillBrushExposed => _exposureFlags["FillBrush"];
+
+    public ReactiveCommand<string> TogglePropertyExposureCommand { get; }
+
     public BindableReactiveProperty<SelectableDesignerItemViewModelBase> SelectedItem { get; } = new();
 
     public event Action<IDialogResult> RequestClose;
@@ -104,6 +132,15 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
         RemoveExposedPropertyCommand = new ReactiveCommand<ExposedPropertyViewModel>();
         RemoveExposedPropertyCommand
             .Subscribe(RemoveExposedProperty)
+            .AddTo(_disposables);
+
+        TogglePropertyExposureCommand = new ReactiveCommand<string>();
+        TogglePropertyExposureCommand
+            .Subscribe(TogglePropertyExposure)
+            .AddTo(_disposables);
+
+        SelectedItem
+            .Subscribe(_ => RecomputeExposureFlags())
             .AddTo(_disposables);
     }
 
@@ -225,6 +262,101 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
             Definition.ExposedProperties.Remove(ep);
     }
 
+    /// <summary>
+    /// Phase 1 フォローアップ A: SelectedItem の指定プロパティを公開/非公開トグルする。
+    /// 非公開→公開: ExposedProperty を新規作成 (DefaultValue は現在値) + Binding を 1 件作成。
+    /// 公開→非公開: 該当する Binding を 1 件のみ持つ ExposedProperty を削除。
+    /// </summary>
+    internal void TogglePropertyExposure(string propertyName)
+    {
+        if (Definition is null || string.IsNullOrEmpty(propertyName)) return;
+        if (SelectedItem.Value is not SelectableDesignerItemViewModelBase item) return;
+        if (!_exposureFlags.ContainsKey(propertyName)) return;
+
+        var existing = FindExposedPropertyFor(item, propertyName);
+        if (existing is not null)
+        {
+            if (Diagram is not null)
+                Diagram.RemoveExposedPropertyFromDefinition(Definition, existing);
+            else
+                Definition.ExposedProperties.Remove(existing);
+        }
+        else
+        {
+            var exposedType = MapToExposedType(propertyName);
+            var currentValue = GetCurrentValue(item, propertyName);
+            var ep = new ExposedPropertyViewModel(new ExposedProperty
+            {
+                Name = MakeUniqueExposedName(propertyName),
+                Type = exposedType,
+                DefaultValue = currentValue,
+            });
+            ep.Bindings.Add(new BindingViewModel(new Binding
+            {
+                TargetItemId = item.ID,
+                TargetProperty = propertyName,
+            }));
+
+            if (Diagram is not null)
+                Diagram.AddExposedPropertyToDefinition(Definition, ep);
+            else
+                Definition.ExposedProperties.Add(ep);
+        }
+    }
+
+    internal ExposedPropertyViewModel FindExposedPropertyFor(
+        SelectableDesignerItemViewModelBase item,
+        string propertyName)
+    {
+        if (Definition is null || item is null) return null;
+        foreach (var ep in Definition.ExposedProperties)
+        {
+            foreach (var b in ep.Bindings)
+            {
+                if (b.TargetItemId.Value == item.ID && b.TargetProperty.Value == propertyName)
+                    return ep;
+            }
+        }
+        return null;
+    }
+
+    private void RecomputeExposureFlags()
+    {
+        var item = SelectedItem.Value;
+        foreach (var (name, flag) in _exposureFlags)
+            flag.Value = item is not null && FindExposedPropertyFor(item, name) is not null;
+    }
+
+    private static ExposedPropertyType MapToExposedType(string propertyName) => propertyName switch
+    {
+        "EdgeBrush" => ExposedPropertyType.Brush,
+        "FillBrush" => ExposedPropertyType.Brush,
+        _ => ExposedPropertyType.Double,
+    };
+
+    private static object GetCurrentValue(SelectableDesignerItemViewModelBase item, string propertyName)
+    {
+        var prop = item.GetType().GetProperty(propertyName);
+        var reactive = prop?.GetValue(item);
+        if (reactive is null) return null;
+        var valueProp = reactive.GetType().GetProperty("Value");
+        return valueProp?.GetValue(reactive);
+    }
+
+    private string MakeUniqueExposedName(string baseName)
+    {
+        if (Definition is null) return baseName;
+        var existingNames = new HashSet<string>(
+            Definition.ExposedProperties.Select(ep => ep.Name.Value),
+            StringComparer.Ordinal);
+        if (!existingNames.Contains(baseName)) return baseName;
+        for (var i = 2; ; i++)
+        {
+            var candidate = baseName + i.ToString();
+            if (!existingNames.Contains(candidate)) return candidate;
+        }
+    }
+
     public bool CanCloseDialog() => true;
 
     public void OnDialogClosed()
@@ -247,6 +379,19 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
         Definition.Name
             .Subscribe(name => UpdateTitle(name))
             .AddTo(_disposables);
+
+        Definition.ExposedProperties.CollectionChanged += OnExposedPropertiesChanged;
+        _disposables.Add(Disposable.Create(() =>
+        {
+            if (Definition is not null)
+                Definition.ExposedProperties.CollectionChanged -= OnExposedPropertiesChanged;
+        }));
+        RecomputeExposureFlags();
+    }
+
+    private void OnExposedPropertiesChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        RecomputeExposureFlags();
     }
 
     private void UpdateTitle(string name)
@@ -261,6 +406,8 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
         if (_disposed) return;
         _disposed = true;
         SelectedItem.Dispose();
+        foreach (var flag in _exposureFlags.Values)
+            flag.Dispose();
         _disposables.Dispose();
     }
 }

@@ -390,6 +390,190 @@ public class PartEditorViewModelTest
         Assert.That(vm.Diagram, Is.SameAs(diagram));
     }
 
+    // Phase 1 フォローアップ A: ピンアイコントグル方式 + Binding 自動配線
+
+    private static (PartEditorViewModel vm, PartDefinitionViewModel def, DesignerItemViewModelBase rect)
+        SetupWithRectangle()
+    {
+        boilersGraphics.App.IsTest = true;
+        var vm = new PartEditorViewModel();
+        var defVm = new PartDefinitionViewModel(new PartDefinition { Name = "P" });
+        vm.OnDialogOpened(new DialogParameters
+        {
+            { PartEditorViewModel.PartDefinitionKey, defVm }
+        });
+        vm.AddRectangleCommand.Execute(Unit.Default);
+        var rect = (DesignerItemViewModelBase)defVm.Items[0];
+        vm.SelectItem(rect);
+        return (vm, defVm, rect);
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void TogglePropertyExposure_未公開_新規ExposedPropertyが追加される()
+    {
+        var (vm, def, _) = SetupWithRectangle();
+
+        vm.TogglePropertyExposureCommand.Execute("Left");
+
+        Assert.That(def.ExposedProperties, Has.Count.EqualTo(1));
+        Assert.That(def.ExposedProperties[0].Name.Value, Is.EqualTo("Left"));
+        Assert.That(def.ExposedProperties[0].Type.Value, Is.EqualTo(ExposedPropertyType.Double));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void TogglePropertyExposure_未公開_BindingがSelectedItemに紐づく()
+    {
+        var (vm, def, rect) = SetupWithRectangle();
+
+        vm.TogglePropertyExposureCommand.Execute("Width");
+
+        var ep = def.ExposedProperties[0];
+        Assert.That(ep.Bindings, Has.Count.EqualTo(1));
+        Assert.That(ep.Bindings[0].TargetItemId.Value, Is.EqualTo(rect.ID));
+        Assert.That(ep.Bindings[0].TargetProperty.Value, Is.EqualTo("Width"));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void TogglePropertyExposure_未公開_DefaultValueは現在の図形の値()
+    {
+        var (vm, def, rect) = SetupWithRectangle();
+        rect.Width.Value = 123d;
+
+        vm.TogglePropertyExposureCommand.Execute("Width");
+
+        Assert.That(def.ExposedProperties[0].DefaultValue.Value, Is.EqualTo(123d));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void TogglePropertyExposure_公開済み_再トグルで削除される()
+    {
+        var (vm, def, _) = SetupWithRectangle();
+        vm.TogglePropertyExposureCommand.Execute("Left");
+
+        vm.TogglePropertyExposureCommand.Execute("Left");
+
+        Assert.That(def.ExposedProperties, Is.Empty);
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void TogglePropertyExposure_別図形の同名プロパティは独立に公開できる()
+    {
+        var (vm, def, _) = SetupWithRectangle();
+        vm.TogglePropertyExposureCommand.Execute("Left");
+        vm.AddRectangleCommand.Execute(Unit.Default);
+        var second = (DesignerItemViewModelBase)def.Items[1];
+        vm.SelectItem(second);
+
+        vm.TogglePropertyExposureCommand.Execute("Left");
+
+        Assert.That(def.ExposedProperties, Has.Count.EqualTo(2));
+        // 2 件目はユニーク化された名前になる
+        Assert.That(def.ExposedProperties[1].Name.Value, Is.EqualTo("Left2"));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void TogglePropertyExposure_EdgeBrushはBrush型として公開される()
+    {
+        var (vm, def, _) = SetupWithRectangle();
+
+        vm.TogglePropertyExposureCommand.Execute("EdgeBrush");
+
+        Assert.That(def.ExposedProperties[0].Type.Value, Is.EqualTo(ExposedPropertyType.Brush));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void TogglePropertyExposure_FillBrushはBrush型として公開される()
+    {
+        var (vm, def, _) = SetupWithRectangle();
+
+        vm.TogglePropertyExposureCommand.Execute("FillBrush");
+
+        Assert.That(def.ExposedProperties[0].Type.Value, Is.EqualTo(ExposedPropertyType.Brush));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void TogglePropertyExposure_未サポートのプロパティ名_例外なくスキップされる()
+    {
+        var (vm, def, _) = SetupWithRectangle();
+
+        Assert.DoesNotThrow(() => vm.TogglePropertyExposureCommand.Execute("Unknown"));
+        Assert.That(def.ExposedProperties, Is.Empty);
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void TogglePropertyExposure_SelectedItemなし_例外なくスキップされる()
+    {
+        boilersGraphics.App.IsTest = true;
+        var vm = new PartEditorViewModel();
+        var def = new PartDefinitionViewModel(new PartDefinition { Name = "P" });
+        vm.OnDialogOpened(new DialogParameters
+        {
+            { PartEditorViewModel.PartDefinitionKey, def }
+        });
+
+        Assert.DoesNotThrow(() => vm.TogglePropertyExposureCommand.Execute("Left"));
+        Assert.That(def.ExposedProperties, Is.Empty);
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void IsLeftExposed_初期値はfalse_TogglePropertyExposureでtrueになる()
+    {
+        var (vm, _, _) = SetupWithRectangle();
+        Assert.That(vm.IsLeftExposed.Value, Is.False);
+
+        vm.TogglePropertyExposureCommand.Execute("Left");
+
+        Assert.That(vm.IsLeftExposed.Value, Is.True);
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void IsExposedFlags_別図形を選択するとフラグが再計算される()
+    {
+        var (vm, def, first) = SetupWithRectangle();
+        vm.TogglePropertyExposureCommand.Execute("Left");
+        Assert.That(vm.IsLeftExposed.Value, Is.True);
+
+        vm.AddRectangleCommand.Execute(Unit.Default);
+        var second = (DesignerItemViewModelBase)def.Items[1];
+        vm.SelectItem(second);
+
+        Assert.That(vm.IsLeftExposed.Value, Is.False, "別図形は Left を公開していない");
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void IsExposedFlags_ExposedPropertyを削除するとfalseに戻る()
+    {
+        var (vm, def, _) = SetupWithRectangle();
+        vm.TogglePropertyExposureCommand.Execute("Left");
+        Assert.That(vm.IsLeftExposed.Value, Is.True);
+
+        vm.RemoveExposedPropertyCommand.Execute(def.ExposedProperties[0]);
+
+        Assert.That(vm.IsLeftExposed.Value, Is.False);
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void FindExposedPropertyFor_一致するBindingを持つExposedPropertyを返す()
+    {
+        var (vm, def, rect) = SetupWithRectangle();
+        vm.TogglePropertyExposureCommand.Execute("Height");
+
+        var found = vm.FindExposedPropertyFor(rect, "Height");
+
+        Assert.That(found, Is.Not.Null);
+        Assert.That(found, Is.SameAs(def.ExposedProperties[0]));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void FindExposedPropertyFor_該当なしの場合_nullを返す()
+    {
+        var (vm, _, rect) = SetupWithRectangle();
+
+        var found = vm.FindExposedPropertyFor(rect, "Top");
+
+        Assert.That(found, Is.Null);
+    }
+
     [Test, RequiresThread(ApartmentState.STA)]
     public void OnDialogClosed_例外なくDisposeできる()
     {

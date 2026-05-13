@@ -14,6 +14,20 @@
     <UserControl.Resources>
         <converters:NullToVisibilityConverter x:Key="NullToVisibility" />
         <converters:DoubleToStringConverter x:Key="DoubleToString" />
+        <!--
+            Phase 1 フォローアップ A: プロパティ行右端のピンアイコン用スタイル。
+            親 UserControl 側で対応する IsXxxExposed RP を bind する。
+            DataTrigger は派生スタイル側で書くため、ここでは見た目のベースだけ持つ。
+        -->
+        <Style x:Key="ExposurePinButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="22" />
+            <Setter Property="Height" Value="22" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="#3F3F46" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
     </UserControl.Resources>
     <UserControl.InputBindings>
         <KeyBinding Key="Delete" Command="{Binding DeleteSelectedCommand}" />
@@ -71,6 +85,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="26" />
                         </Grid.ColumnDefinitions>
                         <TextBlock
                             Grid.Column="0"
@@ -83,11 +98,33 @@
                             Padding="4,2"
                             AutomationProperties.AutomationId="LeftTextBox"
                             Text="{Binding Left.Value, Converter={StaticResource DoubleToString}, UpdateSourceTrigger=LostFocus}" />
+                        <Button
+                            Grid.Column="2"
+                            Margin="4,0,0,0"
+                            AutomationProperties.AutomationId="LeftExposurePin"
+                            Command="{Binding DataContext.TogglePropertyExposureCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                            CommandParameter="Left"
+                            Style="{StaticResource ExposurePinButtonStyle}"
+                            ToolTip="このプロパティを公開する">
+                            <TextBlock FontSize="11" Text="●">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="#666666" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DataContext.IsLeftExposed.Value, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                                <Setter Property="Foreground" Value="#1E90FF" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Button>
                     </Grid>
                     <Grid Margin="0,0,0,8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="26" />
                         </Grid.ColumnDefinitions>
                         <TextBlock
                             Grid.Column="0"
@@ -100,6 +137,27 @@
                             Padding="4,2"
                             AutomationProperties.AutomationId="TopTextBox"
                             Text="{Binding Top.Value, Converter={StaticResource DoubleToString}, UpdateSourceTrigger=LostFocus}" />
+                        <Button
+                            Grid.Column="2"
+                            Margin="4,0,0,0"
+                            AutomationProperties.AutomationId="TopExposurePin"
+                            Command="{Binding DataContext.TogglePropertyExposureCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                            CommandParameter="Top"
+                            Style="{StaticResource ExposurePinButtonStyle}"
+                            ToolTip="このプロパティを公開する">
+                            <TextBlock FontSize="11" Text="●">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="#666666" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DataContext.IsTopExposed.Value, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                                <Setter Property="Foreground" Value="#1E90FF" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Button>
                     </Grid>
 
                     <TextBlock
@@ -111,6 +169,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="60" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="26" />
                         </Grid.ColumnDefinitions>
                         <TextBlock
                             Grid.Column="0"
@@ -123,11 +182,33 @@
                             Padding="4,2"
                             AutomationProperties.AutomationId="WidthTextBox"
                             Text="{Binding Width.Value, Converter={StaticResource DoubleToString}, UpdateSourceTrigger=LostFocus}" />
+                        <Button
+                            Grid.Column="2"
+                            Margin="4,0,0,0"
+                            AutomationProperties.AutomationId="WidthExposurePin"
+                            Command="{Binding DataContext.TogglePropertyExposureCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                            CommandParameter="Width"
+                            Style="{StaticResource ExposurePinButtonStyle}"
+                            ToolTip="このプロパティを公開する">
+                            <TextBlock FontSize="11" Text="●">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="#666666" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DataContext.IsWidthExposed.Value, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                                <Setter Property="Foreground" Value="#1E90FF" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Button>
                     </Grid>
                     <Grid Margin="0,0,0,8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="60" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="26" />
                         </Grid.ColumnDefinitions>
                         <TextBlock
                             Grid.Column="0"
@@ -140,6 +221,27 @@
                             Padding="4,2"
                             AutomationProperties.AutomationId="HeightTextBox"
                             Text="{Binding Height.Value, Converter={StaticResource DoubleToString}, UpdateSourceTrigger=LostFocus}" />
+                        <Button
+                            Grid.Column="2"
+                            Margin="4,0,0,0"
+                            AutomationProperties.AutomationId="HeightExposurePin"
+                            Command="{Binding DataContext.TogglePropertyExposureCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                            CommandParameter="Height"
+                            Style="{StaticResource ExposurePinButtonStyle}"
+                            ToolTip="このプロパティを公開する">
+                            <TextBlock FontSize="11" Text="●">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="#666666" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DataContext.IsHeightExposed.Value, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                                <Setter Property="Foreground" Value="#1E90FF" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Button>
                     </Grid>
 
                     <TextBlock
@@ -151,6 +253,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="60" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="26" />
                         </Grid.ColumnDefinitions>
                         <TextBlock
                             Grid.Column="0"
@@ -163,11 +266,33 @@
                             Padding="4,2"
                             AutomationProperties.AutomationId="EdgeThicknessTextBox"
                             Text="{Binding EdgeThickness.Value, Converter={StaticResource DoubleToString}, UpdateSourceTrigger=LostFocus}" />
+                        <Button
+                            Grid.Column="2"
+                            Margin="4,0,0,0"
+                            AutomationProperties.AutomationId="EdgeThicknessExposurePin"
+                            Command="{Binding DataContext.TogglePropertyExposureCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                            CommandParameter="EdgeThickness"
+                            Style="{StaticResource ExposurePinButtonStyle}"
+                            ToolTip="このプロパティを公開する">
+                            <TextBlock FontSize="11" Text="●">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="#666666" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DataContext.IsEdgeThicknessExposed.Value, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                                <Setter Property="Foreground" Value="#1E90FF" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Button>
                     </Grid>
                     <Grid Margin="0,0,0,4">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="60" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="26" />
                         </Grid.ColumnDefinitions>
                         <TextBlock
                             Grid.Column="0"
@@ -187,6 +312,27 @@
                             ToolTip="クリックで枠線の色を編集">
                             <Border Background="{Binding EdgeBrush.Value}" />
                         </Button>
+                        <Button
+                            Grid.Column="2"
+                            Margin="4,0,0,0"
+                            AutomationProperties.AutomationId="EdgeBrushExposurePin"
+                            Command="{Binding DataContext.TogglePropertyExposureCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                            CommandParameter="EdgeBrush"
+                            Style="{StaticResource ExposurePinButtonStyle}"
+                            ToolTip="このプロパティを公開する">
+                            <TextBlock FontSize="11" Text="●">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="#666666" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DataContext.IsEdgeBrushExposed.Value, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                                <Setter Property="Foreground" Value="#1E90FF" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Button>
                     </Grid>
 
                     <TextBlock
@@ -198,6 +344,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="60" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="26" />
                         </Grid.ColumnDefinitions>
                         <TextBlock
                             Grid.Column="0"
@@ -216,6 +363,27 @@
                             Cursor="Hand"
                             ToolTip="クリックで塗りつぶしの色を編集">
                             <Border Background="{Binding FillBrush.Value}" />
+                        </Button>
+                        <Button
+                            Grid.Column="2"
+                            Margin="4,0,0,0"
+                            AutomationProperties.AutomationId="FillBrushExposurePin"
+                            Command="{Binding DataContext.TogglePropertyExposureCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                            CommandParameter="FillBrush"
+                            Style="{StaticResource ExposurePinButtonStyle}"
+                            ToolTip="このプロパティを公開する">
+                            <TextBlock FontSize="11" Text="●">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="#666666" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DataContext.IsFillBrushExposed.Value, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                                <Setter Property="Foreground" Value="#1E90FF" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
                         </Button>
                     </Grid>
                     </StackPanel>
