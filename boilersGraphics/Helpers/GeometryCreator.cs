@@ -350,6 +350,73 @@ public static class GeometryCreator
         return PathGeometry.CreateFromGeometry(geometry);
     }
 
+    /// <summary>
+    /// Phase 3-c: 直角コネクタ (L 字) の PathGeometry を生成する純関数。
+    /// Begin → Mids[0] → Mids[1] → ... → End の折れ線を、CornerRadius > 0 のとき各折れ点を ArcSegment で丸める。
+    /// CornerRadius が隣接する辺の半分より大きい場合は、辺の半分まで自動的にクランプ。
+    /// </summary>
+    public static PathGeometry CreateOrthogonal(Point begin, System.Collections.Generic.IReadOnlyList<Point> mids,
+        Point end, double cornerRadius)
+    {
+        var all = new System.Collections.Generic.List<Point>(2 + (mids?.Count ?? 0));
+        all.Add(begin);
+        if (mids is not null) all.AddRange(mids);
+        all.Add(end);
+
+        var figure = new PathFigure { StartPoint = begin, IsFilled = false, IsClosed = false };
+
+        if (cornerRadius <= 0 || all.Count < 3)
+        {
+            for (var i = 1; i < all.Count; i++)
+                figure.Segments.Add(new LineSegment(all[i], true));
+        }
+        else
+        {
+            // 各折れ点 P[i] (1..N-2) を ArcSegment で丸める。両端は単純な LineSegment。
+            for (var i = 1; i < all.Count - 1; i++)
+            {
+                var p = all[i];
+                var prev = all[i - 1];
+                var next = all[i + 1];
+
+                var inDx = p.X - prev.X;
+                var inDy = p.Y - prev.Y;
+                var inLen = System.Math.Sqrt(inDx * inDx + inDy * inDy);
+                var inUx = inLen > 0 ? inDx / inLen : 0;
+                var inUy = inLen > 0 ? inDy / inLen : 0;
+
+                var outDx = next.X - p.X;
+                var outDy = next.Y - p.Y;
+                var outLen = System.Math.Sqrt(outDx * outDx + outDy * outDy);
+                var outUx = outLen > 0 ? outDx / outLen : 0;
+                var outUy = outLen > 0 ? outDy / outLen : 0;
+
+                var r = System.Math.Min(cornerRadius, System.Math.Min(inLen / 2.0, outLen / 2.0));
+                if (r <= 0)
+                {
+                    figure.Segments.Add(new LineSegment(p, true));
+                    continue;
+                }
+
+                var pIn = new Point(p.X - inUx * r, p.Y - inUy * r);
+                var pOut = new Point(p.X + outUx * r, p.Y + outUy * r);
+
+                figure.Segments.Add(new LineSegment(pIn, true));
+
+                // WPF 座標系 (Y 下向き) で in 方向から out 方向への回転が正の cross なら Clockwise
+                var cross = inUx * outUy - inUy * outUx;
+                var sweep = cross > 0 ? SweepDirection.Clockwise : SweepDirection.Counterclockwise;
+                figure.Segments.Add(new ArcSegment(pOut, new Size(r, r), 0, false, sweep, true));
+            }
+            // 最後の End まで
+            figure.Segments.Add(new LineSegment(end, true));
+        }
+
+        var geometry = new PathGeometry();
+        geometry.Figures.Add(figure);
+        return geometry;
+    }
+
     public static PathGeometry CreateCombineGeometry(PolyBezierViewModel pb)
     {
         Point oneIntersection;

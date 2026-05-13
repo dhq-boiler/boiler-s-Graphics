@@ -1,0 +1,21 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:connectors="clr-namespace:boilersGraphics.ViewModels.Connectors">
+    <!-- Phase 3-c: L 字コネクタの最小 DataTemplate。
+         PathGeometryNoRotate.Value を Path.Data に bind し、絶対座標のまま描画する。 -->
+    <DataTemplate DataType="{x:Type connectors:OrthogonalConnectorViewModel}">
+        <Canvas Background="Transparent">
+            <Path
+                Data="{Binding PathGeometryNoRotate.Value}"
+                IsHitTestVisible="True"
+                Stroke="{Binding EdgeBrush.Value}"
+                StrokeDashArray="{Binding StrokeDashArray.Value}"
+                StrokeEndLineCap="{Binding StrokeEndLineCap.Value}"
+                StrokeLineJoin="{Binding StrokeLineJoin.Value}"
+                StrokeMiterLimit="{Binding StrokeMiterLimit.Value}"
+                StrokeStartLineCap="{Binding StrokeStartLineCap.Value}"
+                StrokeThickness="{Binding EdgeThickness.Value}" />
+        </Canvas>
+    </DataTemplate>
+</ResourceDictionary>

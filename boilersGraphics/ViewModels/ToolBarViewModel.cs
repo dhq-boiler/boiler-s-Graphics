@@ -53,6 +53,7 @@ public class ToolBarViewModel
     public TextMatrixBlockBehavior TextMatrixBlockBehavior { get; } = new();
     public TextOnPathBlockBehavior TextOnPathBlockBehavior { get; } = new();
     public AddAnchorBehavior AddAnchorBehavior { get; } = new();
+    public NDrawOrthogonalConnectorBehavior NDrawOrthogonalConnectorBehavior { get; } = new();
     public NDrawPolygonBehavior NDrawPolygonBehavior { get; private set; }
     public NDrawBezierCurveBehavior NDrawBezierCurveBehavior { get; } = new();
     public SetSnapPointBehavior SetSnapPointBehavior { get; } = new();
@@ -293,6 +294,18 @@ public class ToolBarViewModel
                 ChangeHitTestToDisable();
                 SelectOneToolItem("anchor");
             })));
+        // Phase 3-c: L 字コネクタツール (Q-2 案 A Auto, Q-3 案 B 任意数, Q-4 案 A CornerRadius, Q-10 採用名)
+        // 専用アイコン: MDI vector-polyline
+        ToolItems.Add(new ToolItemData("orthogonal", "pack://application:,,,/Assets/img/orthogonal_dark.png",
+            "L 字コネクタ", new DelegateCommand(() =>
+            {
+                MainWindowViewModel.Instance.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(NDrawOrthogonalConnectorBehavior))
+                    Behaviors.Add(NDrawOrthogonalConnectorBehavior);
+                ChangeHitTestToDisable();
+                SelectOneToolItem("orthogonal");
+            })));
         ToolItems.Add(new ToolItemData("brush", "pack://application:,,,/Assets/img/brush_dark.png",
             Resources.Tool_Brush, new DelegateCommand(() =>
             {
@@ -452,6 +465,7 @@ public class ToolBarViewModel
             case "textmatrix":
             case "textonpath":
             case "anchor":
+            case "orthogonal":
             case "polygon":
             case "bezier":
             case "snappoint":

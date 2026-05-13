@@ -47,6 +47,7 @@ namespace boilersGraphics.Test
             Assert.That(bar.TextMatrixBlockBehavior, Is.Not.Null);
             Assert.That(bar.TextOnPathBlockBehavior, Is.Not.Null);
             Assert.That(bar.AddAnchorBehavior, Is.Not.Null);
+            Assert.That(bar.NDrawOrthogonalConnectorBehavior, Is.Not.Null);
             Assert.That(bar.NDrawBezierCurveBehavior, Is.Not.Null);
             Assert.That(bar.SetSnapPointBehavior, Is.Not.Null);
             Assert.That(bar.EraserBehavior, Is.Not.Null);
@@ -188,6 +189,28 @@ namespace boilersGraphics.Test
             Assert.That(item.IsChecked, Is.True);
 
             foreach (var other in bar.ToolItems.Where(t => t.Name.Value != "anchor"))
+                Assert.That(other.IsChecked, Is.False, $"{other.Name.Value} should be unchecked");
+        }
+
+        [Test, RequiresThread(ApartmentState.STA)]
+        public void ctor_ToolItemsにorthogonalが含まれる()
+        {
+            var bar = ToolBar();
+            var item = bar.ToolItems.SingleOrDefault(t => t.Name.Value == "orthogonal");
+            Assert.That(item, Is.Not.Null, "Phase 3-c: L 字コネクタツールが登録されている");
+            Assert.That(item!.Tooltip.Value, Is.EqualTo("L 字コネクタ"));
+        }
+
+        [Test, RequiresThread(ApartmentState.STA)]
+        public void SelectOneToolItem_orthogonal_他は解除される()
+        {
+            var bar = ToolBar();
+            bar.SelectOneToolItem("orthogonal");
+
+            var item = bar.ToolItems.Single(t => t.Name.Value == "orthogonal");
+            Assert.That(item.IsChecked, Is.True);
+
+            foreach (var other in bar.ToolItems.Where(t => t.Name.Value != "orthogonal"))
                 Assert.That(other.IsChecked, Is.False, $"{other.Name.Value} should be unchecked");
         }
 
