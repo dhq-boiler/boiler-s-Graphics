@@ -199,4 +199,38 @@ public class PartInstanceRenderedItemsTest
         instance.Dispose();
         Assert.That(instance.RenderedItems.Count, Is.EqualTo(0));
     }
+
+    // ---- Phase 2-f-2: HasRenderedItems / IsRenderedItemsEmpty ----
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void HasRenderedItems_初期はfalse_IsEmptyはtrue()
+    {
+        var vm = new PartInstanceViewModel();
+        Assert.That(vm.HasRenderedItems.Value, Is.False);
+        Assert.That(vm.IsRenderedItemsEmpty.Value, Is.True);
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void HasRenderedItems_Initialize後はtrue_IsEmptyはfalse()
+    {
+        var (definition, _, _) = BuildDefinitionWithWidthBinding();
+        var instance = new PartInstanceViewModel();
+
+        instance.InitializeRenderedItems(definition);
+
+        Assert.That(instance.HasRenderedItems.Value, Is.True);
+        Assert.That(instance.IsRenderedItemsEmpty.Value, Is.False);
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void HasRenderedItems_空Definitionなら依然false()
+    {
+        var emptyDef = new PartDefinitionViewModel();
+        var instance = new PartInstanceViewModel();
+
+        instance.InitializeRenderedItems(emptyDef);
+
+        Assert.That(instance.HasRenderedItems.Value, Is.False);
+        Assert.That(instance.IsRenderedItemsEmpty.Value, Is.True);
+    }
 }

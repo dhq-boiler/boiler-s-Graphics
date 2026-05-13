@@ -17,17 +17,44 @@
                 Width="{Binding Width.Value}"
                 Height="{Binding Height.Value}"
                 IsHitTestVisible="False">
-                <Border
-                    BorderBrush="#80808080"
-                    BorderThickness="1"
-                    Background="#10808080"
-                    SnapsToDevicePixels="True" />
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    FontSize="11"
-                    Foreground="#A0808080"
-                    Text="パーツ" />
+                <!--
+                    Phase 2-f-2: PartDefinition.Items のクローン (RenderedItems) を Canvas 上に展開。
+                    各 Item の Canvas.Left / Top / ZIndex を ItemContainerStyle で配線、サイズは各 DataTemplate 任せ。
+                    内容が空のときは下の灰色プレースホルダが見える。
+                -->
+                <ItemsControl ItemsSource="{Binding RenderedItems}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Setter Property="Canvas.Left" Value="{Binding Left.Value}" />
+                            <Setter Property="Canvas.Top" Value="{Binding Top.Value}" />
+                            <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                </ItemsControl>
+
+                <!--
+                    RenderedItems が空の時だけ表示する灰色プレースホルダ。
+                    Definition 未紐付け / 内部 Items 空 / 描画初期化前 のいずれかが原因のときに見える。
+                -->
+                <Grid Visibility="{Binding IsRenderedItemsEmpty.Value, Converter={StaticResource BoolToVisibility}}">
+                    <Border
+                        BorderBrush="#80808080"
+                        BorderThickness="1"
+                        Background="#10808080"
+                        SnapsToDevicePixels="True" />
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="11"
+                        Foreground="#A0808080"
+                        Text="パーツ" />
+                </Grid>
+
                 <!--
                     公開パラメータがある PartInstance に右上の小さな badge を重畳。
                     HasExposedParameters は instance.ParameterValues.Count > 0 のとき true。

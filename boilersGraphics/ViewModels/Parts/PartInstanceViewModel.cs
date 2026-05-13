@@ -32,10 +32,24 @@ public class PartInstanceViewModel : DesignerItemViewModelBase
 
     /// <summary>
     /// Phase 2-f: PartDefinition.Items を ID 引き継ぎでクローンしたインスタンス専用のレンダリング用コレクション。
-    /// DataTemplate がこれを ItemsControl 経由で描画する (UI 配線は別タスク Phase 2-f-2)。
+    /// DataTemplate がこれを ItemsControl 経由で Canvas 上に描画する。
     /// Bindings は ParameterValues の値変更をこれの対応プロパティへ伝搬する。
     /// </summary>
     public ObservableCollection<DesignerItemViewModelBase> RenderedItems { get; } = new();
+
+    private readonly BindableReactiveProperty<bool> _hasRenderedItems = new(false);
+
+    /// <summary>
+    /// Phase 2-f-2: RenderedItems.Count &gt; 0 を反映する派生フラグ。
+    /// 空のときだけ「パーツ」灰色プレースホルダを表示し、内容があれば ItemsControl で覆い隠す。
+    /// </summary>
+    public IReadOnlyBindableReactiveProperty<bool> HasRenderedItems { get; }
+
+    /// <summary>
+    /// Phase 2-f-2: HasRenderedItems の反転 (= 空ならtrue)。標準 BooleanToVisibilityConverter は反転を受け取れないため、
+    /// プレースホルダ Visibility 用に専用プロパティを用意する。
+    /// </summary>
+    public IReadOnlyBindableReactiveProperty<bool> IsRenderedItemsEmpty { get; }
 
     public ReactiveCommand MouseDoubleClickCommand { get; } = new();
 
@@ -50,6 +64,9 @@ public class PartInstanceViewModel : DesignerItemViewModelBase
         HasExposedParameters = _exposedParameterCount
             .Select(c => c > 0)
             .ToReadOnlyBindableReactiveProperty();
+        HasRenderedItems = _hasRenderedItems.ToReadOnlyBindableReactiveProperty();
+        IsRenderedItemsEmpty = _hasRenderedItems.Select(v => !v).ToReadOnlyBindableReactiveProperty(true);
+        RenderedItems.CollectionChanged += (_, _) => _hasRenderedItems.Value = RenderedItems.Count > 0;
         IsHitTestVisible.Value = true;
         InitMouseDoubleClick();
     }
@@ -67,6 +84,9 @@ public class PartInstanceViewModel : DesignerItemViewModelBase
         HasExposedParameters = _exposedParameterCount
             .Select(c => c > 0)
             .ToReadOnlyBindableReactiveProperty();
+        HasRenderedItems = _hasRenderedItems.ToReadOnlyBindableReactiveProperty();
+        IsRenderedItemsEmpty = _hasRenderedItems.Select(v => !v).ToReadOnlyBindableReactiveProperty(true);
+        RenderedItems.CollectionChanged += (_, _) => _hasRenderedItems.Value = RenderedItems.Count > 0;
         IsHitTestVisible.Value = true;
         InitMouseDoubleClick();
     }
@@ -236,6 +256,7 @@ public class PartInstanceViewModel : DesignerItemViewModelBase
             item.Dispose();
         RenderedItems.Clear();
 
+        _hasRenderedItems.Dispose();
         _exposedParameterCount.Dispose();
         DefinitionId.Dispose();
         base.Dispose();
