@@ -47,6 +47,9 @@ public class ToolBarViewModel
     public PictureBehavior PictureBehavior { get; private set; }
     public LetterBehavior LetterBehavior { get; } = new();
     public LetterVerticalBehavior LetterVerticalBehavior { get; } = new();
+    public MonoTextBlockBehavior MonoTextBlockBehavior { get; } = new();
+    public DataGeneratorTextBlockBehavior DataGeneratorTextBlockBehavior { get; } = new();
+    public NumberSequenceBlockBehavior NumberSequenceBlockBehavior { get; } = new();
     public NDrawPolygonBehavior NDrawPolygonBehavior { get; private set; }
     public NDrawBezierCurveBehavior NDrawBezierCurveBehavior { get; } = new();
     public SetSnapPointBehavior SetSnapPointBehavior { get; } = new();
@@ -221,6 +224,39 @@ public class ToolBarViewModel
                 ChangeHitTestToDisable();
                 SelectOneToolItem("letter-vertical");
             })));
+        // Phase 2-b-2: モノスペーステキストツール (Q-10 採用名)
+        // 専用アイコン: MDI console-line (Phase 2-b の差し替え完了)
+        ToolItems.Add(new ToolItemData("monotext", "pack://application:,,,/Assets/img/monotext_dark.png",
+            "モノスペーステキスト", new DelegateCommand(() =>
+            {
+                MainWindowViewModel.Instance.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(MonoTextBlockBehavior)) Behaviors.Add(MonoTextBlockBehavior);
+                ChangeHitTestToDisable();
+                SelectOneToolItem("monotext");
+            })));
+        // Phase 2-c: データジェネレータツール (Q-10 採用名)
+        // 専用アイコン: MDI shuffle-variant
+        ToolItems.Add(new ToolItemData("datagen", "pack://application:,,,/Assets/img/datagen_dark.png",
+            "データジェネレータ", new DelegateCommand(() =>
+            {
+                MainWindowViewModel.Instance.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(DataGeneratorTextBlockBehavior)) Behaviors.Add(DataGeneratorTextBlockBehavior);
+                ChangeHitTestToDisable();
+                SelectOneToolItem("datagen");
+            })));
+        // Phase 2-d: 数値列ツール (Q-10 採用名)
+        // 専用アイコン: MDI numeric
+        ToolItems.Add(new ToolItemData("numseq", "pack://application:,,,/Assets/img/numseq_dark.png",
+            "数値列", new DelegateCommand(() =>
+            {
+                MainWindowViewModel.Instance.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(NumberSequenceBlockBehavior)) Behaviors.Add(NumberSequenceBlockBehavior);
+                ChangeHitTestToDisable();
+                SelectOneToolItem("numseq");
+            })));
         ToolItems.Add(new ToolItemData("brush", "pack://application:,,,/Assets/img/brush_dark.png",
             Resources.Tool_Brush, new DelegateCommand(() =>
             {
@@ -374,6 +410,9 @@ public class ToolBarViewModel
             case "picture":
             case "letter":
             case "letter-vertical":
+            case "monotext":
+            case "datagen":
+            case "numseq":
             case "polygon":
             case "bezier":
             case "snappoint":

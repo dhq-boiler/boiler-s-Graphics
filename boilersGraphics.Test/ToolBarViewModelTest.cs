@@ -41,6 +41,9 @@ namespace boilersGraphics.Test
             Assert.That(bar.NDrawEllipseBehavior, Is.Not.Null);
             Assert.That(bar.LetterBehavior, Is.Not.Null);
             Assert.That(bar.LetterVerticalBehavior, Is.Not.Null);
+            Assert.That(bar.MonoTextBlockBehavior, Is.Not.Null);
+            Assert.That(bar.DataGeneratorTextBlockBehavior, Is.Not.Null);
+            Assert.That(bar.NumberSequenceBlockBehavior, Is.Not.Null);
             Assert.That(bar.NDrawBezierCurveBehavior, Is.Not.Null);
             Assert.That(bar.SetSnapPointBehavior, Is.Not.Null);
             Assert.That(bar.EraserBehavior, Is.Not.Null);
@@ -51,6 +54,72 @@ namespace boilersGraphics.Test
             Assert.That(bar.BlurBehavior, Is.Not.Null);
             Assert.That(bar.ColorCorrectBehavior, Is.Not.Null);
             Assert.That(bar.PolyBezierBehavior, Is.Not.Null);
+        }
+
+        [Test, RequiresThread(ApartmentState.STA)]
+        public void ctor_ToolItemsにmonotextが含まれる()
+        {
+            var bar = ToolBar();
+            var item = bar.ToolItems.SingleOrDefault(t => t.Name.Value == "monotext");
+            Assert.That(item, Is.Not.Null, "Phase 2-b-2: モノスペーステキストツールが登録されている");
+            Assert.That(item!.Tooltip.Value, Is.EqualTo("モノスペーステキスト"));
+        }
+
+        [Test, RequiresThread(ApartmentState.STA)]
+        public void SelectOneToolItem_monotext_他は解除される()
+        {
+            var bar = ToolBar();
+            bar.SelectOneToolItem("monotext");
+
+            var item = bar.ToolItems.Single(t => t.Name.Value == "monotext");
+            Assert.That(item.IsChecked, Is.True);
+
+            foreach (var other in bar.ToolItems.Where(t => t.Name.Value != "monotext"))
+                Assert.That(other.IsChecked, Is.False, $"{other.Name.Value} should be unchecked");
+        }
+
+        [Test, RequiresThread(ApartmentState.STA)]
+        public void ctor_ToolItemsにdatagenが含まれる()
+        {
+            var bar = ToolBar();
+            var item = bar.ToolItems.SingleOrDefault(t => t.Name.Value == "datagen");
+            Assert.That(item, Is.Not.Null, "Phase 2-c: データジェネレータツールが登録されている");
+            Assert.That(item!.Tooltip.Value, Is.EqualTo("データジェネレータ"));
+        }
+
+        [Test, RequiresThread(ApartmentState.STA)]
+        public void SelectOneToolItem_datagen_他は解除される()
+        {
+            var bar = ToolBar();
+            bar.SelectOneToolItem("datagen");
+
+            var item = bar.ToolItems.Single(t => t.Name.Value == "datagen");
+            Assert.That(item.IsChecked, Is.True);
+
+            foreach (var other in bar.ToolItems.Where(t => t.Name.Value != "datagen"))
+                Assert.That(other.IsChecked, Is.False, $"{other.Name.Value} should be unchecked");
+        }
+
+        [Test, RequiresThread(ApartmentState.STA)]
+        public void ctor_ToolItemsにnumseqが含まれる()
+        {
+            var bar = ToolBar();
+            var item = bar.ToolItems.SingleOrDefault(t => t.Name.Value == "numseq");
+            Assert.That(item, Is.Not.Null, "Phase 2-d: 数値列ツールが登録されている");
+            Assert.That(item!.Tooltip.Value, Is.EqualTo("数値列"));
+        }
+
+        [Test, RequiresThread(ApartmentState.STA)]
+        public void SelectOneToolItem_numseq_他は解除される()
+        {
+            var bar = ToolBar();
+            bar.SelectOneToolItem("numseq");
+
+            var item = bar.ToolItems.Single(t => t.Name.Value == "numseq");
+            Assert.That(item.IsChecked, Is.True);
+
+            foreach (var other in bar.ToolItems.Where(t => t.Name.Value != "numseq"))
+                Assert.That(other.IsChecked, Is.False, $"{other.Name.Value} should be unchecked");
         }
 
         [Test, RequiresThread(ApartmentState.STA)]

@@ -73,6 +73,8 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
 
     public BindableReactiveProperty<bool> RenderingEnabled { get; } = new(true);
 
+    public virtual bool IsResizable => true;
+
     public BindableReactiveProperty<string> Pool { get; private set; } = new();
 
     public BindableReactiveProperty<double> Left { get; private set; } = new();

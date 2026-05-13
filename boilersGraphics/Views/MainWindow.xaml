@@ -697,6 +697,14 @@
                                     Command="{Binding DiagramViewModel.ExportCommand}"
                                     Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Export, Mode=OneWay}"
                                     InputGestureText="Ctrl+E" />
+                                <Separator />
+                                <MenuItem
+                                    Command="{Binding DiagramViewModel.ImportPartCommand}"
+                                    Header="パーツをインポート… (.bgpart)" />
+                                <MenuItem
+                                    Command="{Binding DiagramViewModel.RemoveUnusedPartDefinitionsCommand}"
+                                    Header="未使用パーツ定義を削除…" />
+                                <Separator />
                                 <MenuItem
                                     Command="{Binding ExitApplicationCommand}"
                                     Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_ExitApplication, Mode=OneWay}"

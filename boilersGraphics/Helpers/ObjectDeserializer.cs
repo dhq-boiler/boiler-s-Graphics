@@ -1,8 +1,11 @@
 ﻿using boilersGraphics.Exceptions;
+using boilersGraphics.Helpers.Parts;
 using boilersGraphics.Models;
+using boilersGraphics.Models.Parts;
 using boilersGraphics.Properties;
 using boilersGraphics.ViewModels;
 using boilersGraphics.ViewModels.ColorCorrect;
+using boilersGraphics.ViewModels.Parts;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -226,6 +229,50 @@ public class ObjectDeserializer
                 progressBarWithOutputViewModel.Current.Value++;
             }, DispatcherPriority.ApplicationIdle);
         }
+
+        var partDefinitionsElm = root.Elements()
+            .AsValueEnumerable()
+            .Where(x => x.Name == "PartDefinitions")
+            .FirstOrDefault();
+        if (partDefinitionsElm is not null)
+        {
+            foreach (var defElm in partDefinitionsElm.Elements("PartDefinition"))
+            {
+                var vm = ReadPartDefinitionFromXML(diagramViewModel, defElm, assignNewId: false);
+                diagramViewModel.PartDefinitions.Add(vm);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Build a PartDefinitionViewModel from a single &lt;PartDefinition&gt; element.
+    /// Used both by the embedded PartDefinitions section in a .bgff document and by
+    /// the standalone .bgpart import path. When <paramref name="assignNewId"/> is true
+    /// the imported definition gets a fresh Guid, so importing the same file twice
+    /// produces two independent PartDefinitions instead of overwriting.
+    /// </summary>
+    internal static PartDefinitionViewModel ReadPartDefinitionFromXML(
+        DiagramViewModel diagramViewModel,
+        XElement defElm,
+        bool assignNewId)
+    {
+        if (defElm is null) throw new ArgumentNullException(nameof(defElm));
+
+        var def = PartDeserializer.DeserializeDefinition(defElm);
+        if (assignNewId) def.Id = Guid.NewGuid();
+        var vm = new PartDefinitionViewModel(def);
+
+        var itemsElm = defElm.Element("Items");
+        if (itemsElm is not null)
+        {
+            foreach (var designerItemElm in itemsElm.Elements("DesignerItem"))
+            {
+                var item = ExtractDesignerItemViewModelBase(diagramViewModel, designerItemElm);
+                if (item is not null)
+                    vm.Items.Add(item);
+            }
+        }
+        return vm;
     }
 
     private static LayerItem ReadLayerItemFromXML(DiagramViewModel diagramViewModel, Layer layerObj, XElement layerItem)
@@ -401,7 +448,7 @@ public class ObjectDeserializer
         return points;
     }
 
-    private static DesignerItemViewModelBase ExtractDesignerItemViewModelBase(DiagramViewModel diagramViewModel,
+    internal static DesignerItemViewModelBase ExtractDesignerItemViewModelBase(DiagramViewModel diagramViewModel,
         XElement designerItemElm)
     {
         if (!(DeserializeInstance(designerItemElm) is DesignerItemViewModelBase))
@@ -571,6 +618,64 @@ public class ObjectDeserializer
             }
         }
 
+        // Phase 2-e: FUI テキスト要素のデシリアライズ (Q-4 案 A: <DesignerItems> 配下に並ぶ)。
+        // Activator.CreateInstance で生成済みの VM に対し、保存済みの共通テキスト属性 + 派生固有プロパティを書き戻す。
+        // 派生プロパティ (Type / Seed / Count / ... など) を書き戻すと VM 側の Skip(1) Subscribe が走り、
+        // 決定論的な Generator で Text が同じ値に再生成されるため、最後に書き戻す Text と一致する。
+        if (item is boilersGraphics.ViewModels.Text.TextElementBaseViewModel textElem)
+        {
+            if (designerItemElm.Element("Text") is { } textEl) textElem.Text.Value = textEl.Value;
+            if (designerItemElm.Element("FontFamily") is { } ff) textElem.FontFamily.Value = ff.Value;
+            if (designerItemElm.Element("FontSize") is { } fs) textElem.FontSize.Value = int.Parse(fs.Value);
+            if (designerItemElm.Element("Foreground") is { } fgElm && fgElm.Nodes().AsValueEnumerable().Any())
+                textElem.Foreground.Value =
+                    WpfObjectSerializer.Deserialize(fgElm.Nodes().AsValueEnumerable().First().ToString()) as Brush;
+            if (designerItemElm.Element("Background") is { } bgElm && bgElm.Nodes().AsValueEnumerable().Any())
+                textElem.Background.Value =
+                    WpfObjectSerializer.Deserialize(bgElm.Nodes().AsValueEnumerable().First().ToString()) as Brush;
+            if (designerItemElm.Element("LineHeight") is { } lh)
+                textElem.LineHeight.Value = double.Parse(lh.Value, System.Globalization.CultureInfo.InvariantCulture);
+            if (designerItemElm.Element("LetterSpacing") is { } ls)
+                textElem.LetterSpacing.Value = double.Parse(ls.Value, System.Globalization.CultureInfo.InvariantCulture);
+            if (designerItemElm.Element("TextOpacity") is { } to)
+                textElem.TextOpacity.Value = double.Parse(to.Value, System.Globalization.CultureInfo.InvariantCulture);
+            if (designerItemElm.Element("IsWordWrap") is { } ww) textElem.IsWordWrap.Value = bool.Parse(ww.Value);
+        }
+
+        if (item is boilersGraphics.ViewModels.Text.DataGeneratorTextBlockViewModel datagen)
+        {
+            if (designerItemElm.Element("DataGenType") is { } t &&
+                Enum.TryParse<boilersGraphics.Models.Text.DataGeneratorType>(t.Value, out var dgType))
+                datagen.Type.Value = dgType;
+            if (designerItemElm.Element("Seed") is { } seed) datagen.Seed.Value = int.Parse(seed.Value);
+            if (designerItemElm.Element("IsSeedLocked") is { } locked) datagen.IsSeedLocked.Value = bool.Parse(locked.Value);
+            if (designerItemElm.Element("Count") is { } c) datagen.Count.Value = int.Parse(c.Value);
+            if (designerItemElm.Element("DataGenSeparator") is { } sep) datagen.Separator.Value = sep.Value;
+            if (designerItemElm.Element("DataGenLayout") is { } lay &&
+                Enum.TryParse<boilersGraphics.Models.Text.DataGeneratorLayout>(lay.Value, out var dgLay))
+                datagen.Layout.Value = dgLay;
+            // Text を改めて Generator 結果と同期 (DataGenSeparator/Layout 等の Subscribe 順序差を埋める)
+            datagen.Regenerate();
+        }
+
+        if (item is boilersGraphics.ViewModels.Text.NumberSequenceBlockViewModel numseq)
+        {
+            if (designerItemElm.Element("Start") is { } start)
+                numseq.Start.Value = double.Parse(start.Value, System.Globalization.CultureInfo.InvariantCulture);
+            if (designerItemElm.Element("End") is { } end)
+                numseq.End.Value = double.Parse(end.Value, System.Globalization.CultureInfo.InvariantCulture);
+            if (designerItemElm.Element("Step") is { } step)
+                numseq.Step.Value = double.Parse(step.Value, System.Globalization.CultureInfo.InvariantCulture);
+            if (designerItemElm.Element("NumFormat") is { } fmt) numseq.Format.Value = fmt.Value;
+            if (designerItemElm.Element("NumSeqSeparator") is { } sep) numseq.Separator.Value = sep.Value;
+            if (designerItemElm.Element("Direction") is { } dir &&
+                Enum.TryParse<boilersGraphics.Models.Text.NumberSequenceDirection>(dir.Value, out var nsDir))
+                numseq.Direction.Value = nsDir;
+            if (designerItemElm.Element("GridRows") is { } gr) numseq.GridRows.Value = int.Parse(gr.Value);
+            if (designerItemElm.Element("GridColumns") is { } gc) numseq.GridColumns.Value = int.Parse(gc.Value);
+            numseq.Regenerate();
+        }
+
         if (item is LetterDesignerItemViewModel letter)
         {
             letter.LetterString.Value = designerItemElm.Element("LetterString").Value;
@@ -592,6 +697,40 @@ public class ObjectDeserializer
         }
 
         if (item is NPolygonViewModel polygon) polygon.Data.Value = designerItemElm.Element("Data").Value;
+
+        if (item is PartInstanceViewModel partInstance)
+        {
+            var defIdText = designerItemElm.Element("DefinitionId")?.Value;
+            if (!string.IsNullOrEmpty(defIdText) && Guid.TryParse(defIdText, out var defId))
+                partInstance.DefinitionId.Value = defId;
+
+            var pvRoot = designerItemElm.Element("ParameterValues");
+            if (pvRoot is not null)
+            {
+                foreach (var pvElm in pvRoot.Elements("ParameterValue"))
+                {
+                    var epIdText = pvElm.Attribute("ExposedPropertyId")?.Value;
+                    if (string.IsNullOrEmpty(epIdText) || !Guid.TryParse(epIdText, out var epId))
+                        continue;
+                    var typeAttr = pvElm.Attribute("Type")?.Value;
+                    object value = null;
+                    if (!string.IsNullOrEmpty(typeAttr) &&
+                        Enum.TryParse<ExposedPropertyType>(typeAttr, out var epType))
+                        value = PartDeserializer.ParseTypedValue(pvElm, epType);
+                    partInstance.GetOrCreateParameterValue(epId, value);
+                }
+            }
+
+            // Phase 2-f-3: Definition が既に読み込み済みなら即時 Initialize。
+            // PartDefinitions セクションが Layers より後の順で読まれるプロジェクトファイルでは、
+            // ここでは見つからないが、その場合は DiagramViewModel.PartDefinitions の CollectionChanged 経路で後から Initialize される。
+            if (diagramViewModel is not null
+                && diagramViewModel.TryGetPartDefinition(partInstance.DefinitionId.Value, out var partDef))
+            {
+                partInstance.InitializeRenderedItems(partDef);
+            }
+        }
+
         item.UpdatePathGeometryIfEnable(string.Empty, 0, 0, true);
         item.RenderingEnabled.Value = true;
         return item;

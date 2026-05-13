@@ -18,6 +18,7 @@ using R3;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -60,6 +61,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public DiagramViewModel(MainWindowViewModel mainWindowViewModel, bool isPreview = false)
     {
         MainWindowVM = mainWindowViewModel;
+
+        PartDefinitions.CollectionChanged += OnPartDefinitionsCollectionChanged;
 
         if (!App.IsTest)
         {
@@ -108,6 +111,13 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             UniformWidthCommand = new DelegateCommand(() => ExecuteUniformWidthCommand(), () => CanExecuteUniform());
             UniformHeightCommand = new DelegateCommand(() => ExecuteUniformHeightCommand(), () => CanExecuteUniform());
             DuplicateCommand = new DelegateCommand(() => ExecuteDuplicateCommand(), () => CanExecuteDuplicate());
+            PromoteToPartCommand = new DelegateCommand(() => ExecutePromoteToPartCommand(), () => CanExecutePromoteToPart());
+            DetachPartCommand = new DelegateCommand(() => ExecuteDetachPartCommand(), () => CanExecuteDetachPart());
+            ClonePartDefinitionCommand = new DelegateCommand(() => ExecuteClonePartDefinitionCommand(), () => CanExecuteClonePartDefinition());
+            EditPartDefinitionCommand = new DelegateCommand(() => ExecuteEditPartDefinitionCommand(), () => CanExecuteEditPartDefinition());
+            ExportPartCommand = new DelegateCommand(() => ExecuteExportPartCommand(), () => CanExecuteExportPart());
+            ImportPartCommand = new DelegateCommand(() => ExecuteImportPartCommand());
+            RemoveUnusedPartDefinitionsCommand = new DelegateCommand(() => ExecuteRemoveUnusedPartDefinitionsCommand());
             CutCommand = new DelegateCommand(() => ExecuteCutCommand(), () => CanExecuteCut());
             CopyCommand = new DelegateCommand(() => ExecuteCopyCommand(), () => CanExecuteCopy());
             CopyCanvasToClipboardCommand = new DelegateCommand(() => ExecuteCopyCanvasToClipboardCommand());
@@ -567,6 +577,12 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                     ClipCommand.RaiseCanExecuteChanged();
 
                     PropertyCommand.RaiseCanExecuteChanged();
+
+                    PromoteToPartCommand.RaiseCanExecuteChanged();
+                    EditPartDefinitionCommand.RaiseCanExecuteChanged();
+                    ClonePartDefinitionCommand.RaiseCanExecuteChanged();
+                    DetachPartCommand.RaiseCanExecuteChanged();
+                    ExportPartCommand.RaiseCanExecuteChanged();
                 })
                 .AddTo(_CompositeDisposable);
 
@@ -685,6 +701,13 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public DelegateCommand ExportCommand { get; }
     public DelegateCommand GroupCommand { get; }
     public DelegateCommand UngroupCommand { get; }
+    public DelegateCommand PromoteToPartCommand { get; }
+    public DelegateCommand DetachPartCommand { get; }
+    public DelegateCommand ClonePartDefinitionCommand { get; }
+    public DelegateCommand EditPartDefinitionCommand { get; }
+    public DelegateCommand ExportPartCommand { get; }
+    public DelegateCommand ImportPartCommand { get; }
+    public DelegateCommand RemoveUnusedPartDefinitionsCommand { get; }
     public DelegateCommand BringForegroundCommand { get; }
     public DelegateCommand BringForwardCommand { get; }
     public DelegateCommand SendBackwardCommand { get; }
@@ -1816,6 +1839,16 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             item.ZIndex.Value = newZIndex;
             item.Owner = this;
 
+            // Phase 2-f: PartInstance が Owner = this になったタイミングで、対応する PartDefinition の
+            // Items を ID 引き継ぎクローンして RenderedItems に詰め、Binding 値伝搬を配線する。
+            // Definition が見つからない場合は何もしない (デシリアライズ中など、Definition が後から追加される
+            // ケースは別途 Definition 側の CollectionChanged で再初期化する想定 — 現状は AddItem 経由のみ対応)。
+            if (item is boilersGraphics.ViewModels.Parts.PartInstanceViewModel partInstance
+                && TryGetPartDefinition(partInstance.DefinitionId.Value, out var partDefinition))
+            {
+                partInstance.InitializeRenderedItems(partDefinition);
+            }
+
             Debug.WriteLine($"About to call targetLayer.AddItem with item: {item}");
             Debug.WriteLine($"Target layer children count before: {targetLayer.Children.Count}");
 
@@ -2172,6 +2205,157 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     public NotifyCollectionChangedSynchronizedViewList<LayerTreeViewItemBase> Layers { get; }
 
+    public System.Collections.ObjectModel.ObservableCollection<boilersGraphics.ViewModels.Parts.PartDefinitionViewModel> PartDefinitions { get; }
+        = new System.Collections.ObjectModel.ObservableCollection<boilersGraphics.ViewModels.Parts.PartDefinitionViewModel>();
+
+    // PartDefinitions の Id 索引 (Phase 1-c-8)。PartDefinitions の CollectionChanged を購読して同期。
+    private readonly Dictionary<Guid, boilersGraphics.ViewModels.Parts.PartDefinitionViewModel> _partDefinitionsById = new();
+
+    public IReadOnlyDictionary<Guid, boilersGraphics.ViewModels.Parts.PartDefinitionViewModel> PartDefinitionsById => _partDefinitionsById;
+
+    public bool TryGetPartDefinition(Guid id, out boilersGraphics.ViewModels.Parts.PartDefinitionViewModel definition)
+        => _partDefinitionsById.TryGetValue(id, out definition);
+
+    private void OnPartDefinitionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        switch (e.Action)
+        {
+            case NotifyCollectionChangedAction.Add:
+                if (e.NewItems is null) break;
+                foreach (boilersGraphics.ViewModels.Parts.PartDefinitionViewModel def in e.NewItems)
+                {
+                    _partDefinitionsById[def.Id.Value] = def;
+                    InitializePartInstancesForDefinition(def);
+                }
+                break;
+            case NotifyCollectionChangedAction.Remove:
+                if (e.OldItems is null) break;
+                foreach (boilersGraphics.ViewModels.Parts.PartDefinitionViewModel def in e.OldItems)
+                    _partDefinitionsById.Remove(def.Id.Value);
+                break;
+            case NotifyCollectionChangedAction.Replace:
+                if (e.OldItems is not null)
+                    foreach (boilersGraphics.ViewModels.Parts.PartDefinitionViewModel def in e.OldItems)
+                        _partDefinitionsById.Remove(def.Id.Value);
+                if (e.NewItems is not null)
+                    foreach (boilersGraphics.ViewModels.Parts.PartDefinitionViewModel def in e.NewItems)
+                    {
+                        _partDefinitionsById[def.Id.Value] = def;
+                        InitializePartInstancesForDefinition(def);
+                    }
+                break;
+            case NotifyCollectionChangedAction.Reset:
+                _partDefinitionsById.Clear();
+                foreach (var def in PartDefinitions)
+                {
+                    _partDefinitionsById[def.Id.Value] = def;
+                    InitializePartInstancesForDefinition(def);
+                }
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Phase 2-f-3: Definition が後から (デシリアライズ完了後 / Import 後) 追加された場合に、
+    /// その Definition を参照済みの PartInstance を全部 InitializeRenderedItems で再配線する。
+    /// PartDefinitions の CollectionChanged から呼ばれる。
+    /// </summary>
+    private void InitializePartInstancesForDefinition(boilersGraphics.ViewModels.Parts.PartDefinitionViewModel def)
+    {
+        var items = AllItems.Value;
+        if (items is null) return;
+        foreach (var item in items)
+        {
+            if (item is boilersGraphics.ViewModels.Parts.PartInstanceViewModel pi
+                && pi.DefinitionId.Value == def.Id.Value)
+            {
+                pi.InitializeRenderedItems(def);
+            }
+        }
+    }
+
+    /// <summary>
+    /// AllItems の PartInstance が PartDefinitions に存在する DefinitionId を参照しているかを検査する。
+    /// Save/Load の前後で孤児参照を検出するために使う (Phase 1-c-8)。
+    /// </summary>
+    public PartReferenceValidationResult ValidatePartReferences()
+    {
+        var orphans = new List<boilersGraphics.ViewModels.Parts.PartInstanceViewModel>();
+        var items = AllItems.Value;
+        if (items is null) return new PartReferenceValidationResult(orphans);
+
+        foreach (var item in items)
+        {
+            if (item is not boilersGraphics.ViewModels.Parts.PartInstanceViewModel pi) continue;
+            if (!_partDefinitionsById.ContainsKey(pi.DefinitionId.Value))
+                orphans.Add(pi);
+        }
+        return new PartReferenceValidationResult(orphans);
+    }
+
+    public readonly record struct PartReferenceValidationResult(
+        IReadOnlyList<boilersGraphics.ViewModels.Parts.PartInstanceViewModel> OrphanedInstances)
+    {
+        public bool HasOrphans => OrphanedInstances.Count > 0;
+    }
+
+    /// <summary>
+    /// Phase 1-c-6-d-7: 指定 Definition Id を参照する PartInstance の数を返す (キャンバス全体)。
+    /// 0 なら「未使用」。
+    /// </summary>
+    public int GetPartInstanceReferenceCount(Guid definitionId)
+    {
+        var items = AllItems.Value;
+        if (items is null) return 0;
+
+        var count = 0;
+        foreach (var item in items)
+        {
+            if (item is boilersGraphics.ViewModels.Parts.PartInstanceViewModel pi
+                && pi.DefinitionId.Value == definitionId)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /// <summary>
+    /// Phase 1-c-6-d-7: どの PartInstance からも参照されていない PartDefinition の一覧を返す。
+    /// </summary>
+    public IReadOnlyList<boilersGraphics.ViewModels.Parts.PartDefinitionViewModel> GetUnusedPartDefinitions()
+    {
+        var result = new List<boilersGraphics.ViewModels.Parts.PartDefinitionViewModel>();
+        foreach (var def in PartDefinitions)
+        {
+            if (GetPartInstanceReferenceCount(def.Id.Value) == 0)
+                result.Add(def);
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Phase 1-c-6-d-7: 未使用 PartDefinition を Recorder 経由で削除する。Undo で復元可能。
+    /// 戻り値は削除した件数。
+    /// </summary>
+    public int RemoveUnusedPartDefinitions()
+    {
+        var unused = GetUnusedPartDefinitions();
+        if (unused.Count == 0) return 0;
+
+        MainWindowVM.Recorder.BeginRecode();
+        try
+        {
+            foreach (var def in unused)
+                MainWindowVM.Recorder.Current.ExecuteRemove(PartDefinitions, def);
+        }
+        finally
+        {
+            MainWindowVM.Recorder.EndRecode();
+        }
+        return unused.Count;
+    }
+
     public IReadOnlyBindableReactiveProperty<LayerTreeViewItemBase[]> SelectedLayers { get; }
 
     public IReadOnlyBindableReactiveProperty<SelectableDesignerItemViewModelBase[]> AllItems { get; }
@@ -2313,6 +2497,11 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         root.Add(new XElement("Layers", ObjectSerializer.SerializeLayers(Layers)));
         root.Add(new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this)));
         root.Add(new XElement("Attachments", ObjectSerializer.SerializeAttachments(this)));
+
+        if (PartDefinitions.Count > 0)
+        {
+            root.Add(boilersGraphics.Helpers.Parts.PartSerializer.SerializeAll(PartDefinitions));
+        }
 
         return root;
     }
@@ -4760,6 +4949,468 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     }
 
     #endregion //Duplicate
+
+    #region Promote
+
+    private bool CanExecutePromoteToPart()
+    {
+        return SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<DesignerItemViewModelBase>()
+            .Any(x => x is not boilersGraphics.ViewModels.Parts.PartInstanceViewModel);
+    }
+
+    private void ExecutePromoteToPartCommand()
+    {
+        var selected = SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<DesignerItemViewModelBase>()
+            .Where(x => x is not boilersGraphics.ViewModels.Parts.PartInstanceViewModel)
+            .ToArray();
+        if (selected.Length == 0) return;
+
+        var defaultName = $"パーツ{PartDefinitions.Count + 1}";
+
+        if (App.IsTest || Application.Current is null)
+        {
+            CompletePromote(selected, defaultName);
+            return;
+        }
+
+        var container = (Application.Current as Prism.Unity.PrismApplication)?.Container
+                        as Prism.Ioc.IContainerExtension;
+        if (container is null)
+        {
+            CompletePromote(selected, defaultName);
+            return;
+        }
+
+        var dialogService = new Prism.Services.Dialogs.DialogService(container);
+        var parameters = new Prism.Services.Dialogs.DialogParameters
+        {
+            { ViewModels.PromoteToPartDialogViewModel.SelectedPartNameKey, defaultName },
+        };
+        dialogService.ShowDialog(nameof(Views.PromoteToPart), parameters, ret =>
+        {
+            if (ret.Result != Prism.Services.Dialogs.ButtonResult.OK) return;
+            var name = ret.Parameters.GetValue<string>(
+                ViewModels.PromoteToPartDialogViewModel.SelectedPartNameKey);
+            if (string.IsNullOrWhiteSpace(name)) name = defaultName;
+            CompletePromote(selected, name);
+        });
+    }
+
+    private void CompletePromote(DesignerItemViewModelBase[] selected, string name)
+    {
+        MainWindowVM.Recorder.BeginRecode();
+        try
+        {
+            var result = boilersGraphics.Helpers.Parts.PartOperations.Promote(selected, name);
+            // Recorder 経由で Add する。Undo 時に Definition もキャンバスから消える。
+            MainWindowVM.Recorder.Current.ExecuteAdd(PartDefinitions, result.Definition);
+
+            foreach (var item in selected)
+                ExecuteRemoveItemCommand(item);
+
+            ExecuteAddItemCommand(result.Instance);
+            result.Instance.IsSelected.Value = true;
+        }
+        finally
+        {
+            MainWindowVM.Recorder.EndRecode();
+        }
+    }
+
+    #endregion //Promote
+
+    #region Detach
+
+    private bool CanExecuteDetachPart()
+    {
+        return SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<boilersGraphics.ViewModels.Parts.PartInstanceViewModel>()
+            .Any();
+    }
+
+    private void ExecuteDetachPartCommand()
+    {
+        var instance = SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<boilersGraphics.ViewModels.Parts.PartInstanceViewModel>()
+            .FirstOrDefault();
+        if (instance is null) return;
+
+        if (!TryGetPartDefinition(instance.DefinitionId.Value, out var definition)) return;
+
+        MainWindowVM.Recorder.BeginRecode();
+        try
+        {
+            var detachedItems = boilersGraphics.Helpers.Parts.PartOperations
+                .Detach(instance, definition);
+
+            ExecuteRemoveItemCommand(instance);
+
+            foreach (var item in detachedItems)
+                ExecuteAddItemCommand(item);
+        }
+        finally
+        {
+            MainWindowVM.Recorder.EndRecode();
+        }
+    }
+
+    #endregion //Detach
+
+    #region ClonePartDefinition
+
+    private bool CanExecuteClonePartDefinition()
+    {
+        return SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<boilersGraphics.ViewModels.Parts.PartInstanceViewModel>()
+            .Any();
+    }
+
+    private void ExecuteClonePartDefinitionCommand()
+    {
+        var instance = SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<boilersGraphics.ViewModels.Parts.PartInstanceViewModel>()
+            .FirstOrDefault();
+        if (instance is null) return;
+
+        if (!TryGetPartDefinition(instance.DefinitionId.Value, out var definition)) return;
+
+        var newName = GenerateCloneName(definition.Name.Value);
+        var clone = boilersGraphics.Helpers.Parts.PartOperations.Clone(definition, newName);
+
+        MainWindowVM.Recorder.BeginRecode();
+        try
+        {
+            MainWindowVM.Recorder.Current.ExecuteAdd(PartDefinitions, clone);
+        }
+        finally
+        {
+            MainWindowVM.Recorder.EndRecode();
+        }
+
+        OpenPartEditor(clone);
+    }
+
+    private string GenerateCloneName(string originalName)
+    {
+        var baseName = string.IsNullOrWhiteSpace(originalName) ? "パーツ" : originalName;
+        var candidate = $"{baseName}のコピー";
+        if (!PartDefinitions.Any(d => d.Name.Value == candidate))
+            return candidate;
+        for (var i = 2; ; i++)
+        {
+            candidate = $"{baseName}のコピー{i}";
+            if (!PartDefinitions.Any(d => d.Name.Value == candidate))
+                return candidate;
+        }
+    }
+
+    #endregion //ClonePartDefinition
+
+    #region EditPartDefinition
+
+    /// <summary>
+    /// Test hook: when running with App.IsTest = true, OpenPartEditor records the
+    /// requested definition here instead of opening a window. Tests can inspect
+    /// this to verify the editor was triggered. In production this stays null.
+    /// </summary>
+    internal boilersGraphics.ViewModels.Parts.PartDefinitionViewModel LastRequestedEditorTarget { get; set; }
+
+    private bool CanExecuteEditPartDefinition()
+    {
+        return SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<boilersGraphics.ViewModels.Parts.PartInstanceViewModel>()
+            .Any();
+    }
+
+    private void ExecuteEditPartDefinitionCommand()
+    {
+        var instance = SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<boilersGraphics.ViewModels.Parts.PartInstanceViewModel>()
+            .FirstOrDefault();
+        if (instance is null) return;
+
+        if (!TryGetPartDefinition(instance.DefinitionId.Value, out var definition)) return;
+
+        OpenPartEditor(definition);
+    }
+
+    internal void OpenPartEditor(boilersGraphics.ViewModels.Parts.PartDefinitionViewModel definition)
+    {
+        if (definition is null) return;
+
+        if (App.IsTest || Application.Current is null)
+        {
+            LastRequestedEditorTarget = definition;
+            return;
+        }
+
+        var container = (Application.Current as Prism.Unity.PrismApplication)?.Container
+                        as Prism.Ioc.IContainerExtension;
+        if (container is null)
+        {
+            LastRequestedEditorTarget = definition;
+            return;
+        }
+
+        var dialogService = new Prism.Services.Dialogs.DialogService(container);
+        var parameters = new Prism.Services.Dialogs.DialogParameters
+        {
+            { ViewModels.Parts.PartEditorViewModel.PartDefinitionKey, definition },
+            { ViewModels.Parts.PartEditorViewModel.DiagramKey, this },
+        };
+        dialogService.Show(nameof(Views.PartEditor), parameters, _ => { });
+    }
+
+    /// <summary>
+    /// Phase 1-c-6-d-6: Definition に公開パラメータを追加し、その Definition を参照する全 PartInstance の
+    /// ParameterValues にも DefaultValue を投入する。Recorder 経由で Undo に対応。
+    /// </summary>
+    public void AddExposedPropertyToDefinition(
+        boilersGraphics.ViewModels.Parts.PartDefinitionViewModel definition,
+        boilersGraphics.ViewModels.Parts.ExposedPropertyViewModel exposedProperty)
+    {
+        if (definition is null || exposedProperty is null) return;
+
+        MainWindowVM.Recorder.BeginRecode();
+        try
+        {
+            MainWindowVM.Recorder.Current.ExecuteAdd(definition.ExposedProperties, exposedProperty);
+            SyncExposedPropertyAddedToInstances(definition, exposedProperty);
+        }
+        finally
+        {
+            MainWindowVM.Recorder.EndRecode();
+        }
+    }
+
+    /// <summary>
+    /// Phase 1-c-6-d-6: Definition から公開パラメータを削除し、その Definition を参照する全 PartInstance の
+    /// ParameterValues からも除去する。
+    /// </summary>
+    public void RemoveExposedPropertyFromDefinition(
+        boilersGraphics.ViewModels.Parts.PartDefinitionViewModel definition,
+        boilersGraphics.ViewModels.Parts.ExposedPropertyViewModel exposedProperty)
+    {
+        if (definition is null || exposedProperty is null) return;
+
+        MainWindowVM.Recorder.BeginRecode();
+        try
+        {
+            MainWindowVM.Recorder.Current.ExecuteRemove(definition.ExposedProperties, exposedProperty);
+            SyncExposedPropertyRemovedFromInstances(definition, exposedProperty);
+        }
+        finally
+        {
+            MainWindowVM.Recorder.EndRecode();
+        }
+    }
+
+    private void SyncExposedPropertyAddedToInstances(
+        boilersGraphics.ViewModels.Parts.PartDefinitionViewModel definition,
+        boilersGraphics.ViewModels.Parts.ExposedPropertyViewModel exposedProperty)
+    {
+        var items = AllItems.Value;
+        if (items is null) return;
+
+        var defId = definition.Id.Value;
+        var epId = exposedProperty.Id.Value;
+        var defaultValue = exposedProperty.DefaultValue.Value;
+
+        foreach (var item in items)
+        {
+            if (item is boilersGraphics.ViewModels.Parts.PartInstanceViewModel pi
+                && pi.DefinitionId.Value == defId)
+            {
+                pi.GetOrCreateParameterValue(epId, defaultValue);
+            }
+        }
+    }
+
+    private void SyncExposedPropertyRemovedFromInstances(
+        boilersGraphics.ViewModels.Parts.PartDefinitionViewModel definition,
+        boilersGraphics.ViewModels.Parts.ExposedPropertyViewModel exposedProperty)
+    {
+        var items = AllItems.Value;
+        if (items is null) return;
+
+        var defId = definition.Id.Value;
+        var epId = exposedProperty.Id.Value;
+
+        foreach (var item in items)
+        {
+            if (item is boilersGraphics.ViewModels.Parts.PartInstanceViewModel pi
+                && pi.DefinitionId.Value == defId)
+            {
+                pi.RemoveParameterValue(epId);
+            }
+        }
+    }
+
+    #endregion //EditPartDefinition
+
+    #region ImportExportPart (.bgpart)
+
+    public const string PartFileExtension = ".bgpart";
+    public const string PartFileFilter = "boiler's Graphics Part Files (*.bgpart)|*.bgpart|All Files (*.*)|*.*";
+
+    /// <summary>
+    /// Test hook: when running with App.IsTest = true, ExecuteImportPartCommand /
+    /// ExecuteExportPartCommand record the path they would have used here and skip
+    /// the file dialog. Tests can pre-set this to drive the import/export flow.
+    /// </summary>
+    internal string LastPartFilePath { get; set; }
+
+    private bool CanExecuteExportPart()
+    {
+        return SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<boilersGraphics.ViewModels.Parts.PartInstanceViewModel>()
+            .Any();
+    }
+
+    private void ExecuteExportPartCommand()
+    {
+        var instance = SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<boilersGraphics.ViewModels.Parts.PartInstanceViewModel>()
+            .FirstOrDefault();
+        if (instance is null) return;
+
+        if (!TryGetPartDefinition(instance.DefinitionId.Value, out var definition)) return;
+
+        var path = ResolveExportPath(definition.Name.Value);
+        if (string.IsNullOrEmpty(path)) return;
+
+        try
+        {
+            var xml = boilersGraphics.Helpers.Parts.PartSerializer.SerializePartFileFromViewModel(definition);
+            xml.Save(path);
+            LastPartFilePath = path;
+        }
+        catch (Exception ex) when (!App.IsTest)
+        {
+            MessageBox.Show(ex.Message, "パーツのエクスポート失敗", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void ExecuteImportPartCommand()
+    {
+        var path = ResolveImportPath();
+        if (string.IsNullOrEmpty(path)) return;
+
+        try
+        {
+            var root = System.Xml.Linq.XElement.Load(path);
+            // 同じ .bgpart を二度 Import しても両方が独立した PartDefinition として残るように、
+            // Id を毎回振り直す。既存 Definition を上書きしたい場合は手動で削除してから Import。
+            var vm = boilersGraphics.Helpers.Parts.PartDeserializer.DeserializePartFileToViewModel(root, this, assignNewId: true);
+
+            MainWindowVM.Recorder.BeginRecode();
+            try
+            {
+                MainWindowVM.Recorder.Current.ExecuteAdd(PartDefinitions, vm);
+            }
+            finally
+            {
+                MainWindowVM.Recorder.EndRecode();
+            }
+
+            LastPartFilePath = path;
+        }
+        catch (Exception ex) when (!App.IsTest)
+        {
+            MessageBox.Show(ex.Message, "パーツのインポート失敗", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private string ResolveExportPath(string defaultFileName)
+    {
+        if (App.IsTest || Application.Current is null) return LastPartFilePath;
+
+        var dlg = new Microsoft.Win32.SaveFileDialog
+        {
+            Filter = PartFileFilter,
+            DefaultExt = PartFileExtension,
+            FileName = SanitizeFileName(defaultFileName),
+        };
+        return dlg.ShowDialog() == true ? dlg.FileName : null;
+    }
+
+    private string ResolveImportPath()
+    {
+        if (App.IsTest || Application.Current is null) return LastPartFilePath;
+
+        var dlg = new Microsoft.Win32.OpenFileDialog
+        {
+            Filter = PartFileFilter,
+            DefaultExt = PartFileExtension,
+        };
+        return dlg.ShowDialog() == true ? dlg.FileName : null;
+    }
+
+    private static string SanitizeFileName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name)) return "Part";
+        var invalid = System.IO.Path.GetInvalidFileNameChars();
+        var chars = name.Select(c => Array.IndexOf(invalid, c) >= 0 ? '_' : c).ToArray();
+        return new string(chars);
+    }
+
+    #endregion //ImportExportPart
+
+    #region RemoveUnusedPartDefinitions
+
+    /// <summary>
+    /// Test hook: ExecuteRemoveUnusedPartDefinitionsCommand が確認ダイアログをスキップした上で
+    /// 実際に何件を削除したかを記録する。App.IsTest = true の時、確認 MessageBox を出さず即削除する。
+    /// </summary>
+    internal int LastUnusedRemovalCount { get; set; }
+
+    private void ExecuteRemoveUnusedPartDefinitionsCommand()
+    {
+        var unused = GetUnusedPartDefinitions();
+        if (unused.Count == 0)
+        {
+            if (!App.IsTest && Application.Current is not null)
+            {
+                MessageBox.Show(
+                    "未使用のパーツ定義はありません。",
+                    "未使用パーツ定義の削除",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }
+            LastUnusedRemovalCount = 0;
+            return;
+        }
+
+        if (!App.IsTest && Application.Current is not null)
+        {
+            var result = MessageBox.Show(
+                $"未使用のパーツ定義が {unused.Count} 件あります。削除しますか?\n(Undo で復元できます)",
+                "未使用パーツ定義の削除",
+                MessageBoxButton.OKCancel,
+                MessageBoxImage.Question);
+            if (result != MessageBoxResult.OK)
+            {
+                LastUnusedRemovalCount = 0;
+                return;
+            }
+        }
+
+        LastUnusedRemovalCount = RemoveUnusedPartDefinitions();
+    }
+
+    #endregion //RemoveUnusedPartDefinitions
 
     public void OverwriteColorSpot(Brush brush)
     {

@@ -164,6 +164,7 @@
                             <ItemsControl.Resources>
 
                                 <Style x:Key="designerItemStyle" TargetType="{x:Type ContentPresenter}">
+                                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="OnDesignerItemPreviewMouseLeftButtonDown" />
                                     <Setter Property="attached:CanvasPositionBehavior.TrackPosition" Value="True" />
                                     <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
                                     <Setter Property="attached:SelectionProps.EnabledForSelection" Value="{Binding EnableForSelection.Value}" />
@@ -500,6 +501,11 @@
                         <ScrollViewer.ContextMenu>
                             <ContextMenu Visibility="{Binding ContextMenuVisibility.Value}">
                                 <MenuItem Command="{Binding PropertyCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Property, Mode=OneWay}" />
+                                <MenuItem Command="{Binding PromoteToPartCommand}" Header="パーツ化…" />
+                                <MenuItem Command="{Binding EditPartDefinitionCommand}" Header="パーツ定義を編集…" />
+                                <MenuItem Command="{Binding DetachPartCommand}" Header="パーツから切り離す" />
+                                <MenuItem Command="{Binding ClonePartDefinitionCommand}" Header="複製して新パーツとして登録" />
+                                <MenuItem Command="{Binding ExportPartCommand}" Header="パーツをエクスポート…" />
                                 <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Grouping, Mode=OneWay}">
                                     <MenuItem Command="{Binding GroupCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_Group, Mode=OneWay}">
                                         <MenuItem.Icon>

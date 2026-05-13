@@ -230,6 +230,9 @@ public partial class App : PrismApplication
         containerRegistry.RegisterDialog<CustomMessageBox, CustomMessageBoxViewModel>();
         containerRegistry.RegisterDialog<PrivacyPolicy, PrivacyPolicyViewModel>();
         containerRegistry.RegisterDialog<UndoHistory, UndoHistoryViewModel>();
+        containerRegistry.RegisterDialog<PromoteToPart, PromoteToPartDialogViewModel>();
+        containerRegistry.RegisterDialog<PartEditor, boilersGraphics.ViewModels.Parts.PartEditorViewModel>();
+        containerRegistry.RegisterDialog<AddExposedProperty, boilersGraphics.ViewModels.Parts.AddExposedPropertyDialogViewModel>();
 
         containerRegistry.RegisterForNavigation<Detail>();
         containerRegistry.RegisterDialog<DetailRectangle, DetailRectangleViewModel>();
@@ -243,6 +246,7 @@ public partial class App : PrismApplication
         containerRegistry.RegisterDialog<DetailPolyBezier, DetailPolyBezierViewModel>();
         containerRegistry.RegisterDialog<DetailMosaic, DetailMosaicViewModel>();
         containerRegistry.RegisterDialog<DetailBlur, DetailBlurViewModel>();
+        containerRegistry.RegisterDialog<DetailPartInstance, boilersGraphics.ViewModels.Parts.DetailPartInstanceViewModel>();
 
         containerRegistry.RegisterForNavigation<Views.ColorCorrect.Hsv, ViewModels.ColorCorrect.HsvViewModel>();
         containerRegistry.RegisterForNavigation<Views.ColorCorrect.ToneCurve, ViewModels.ColorCorrect.ToneCurveViewModel>();

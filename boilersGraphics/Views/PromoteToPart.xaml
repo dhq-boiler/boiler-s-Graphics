@@ -1,0 +1,63 @@
+<UserControl
+    x:Class="boilersGraphics.Views.PromoteToPart"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    d:DesignHeight="160"
+    d:DesignWidth="360"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="SizeToContent" Value="WidthAndHeight" />
+            <Setter Property="ResizeMode" Value="NoResize" />
+            <Setter Property="MinWidth" Value="360" />
+        </Style>
+    </prism:Dialog.WindowStyle>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Theme.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/boilersGraphics;component/Resources/Themes/DarkTheme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock
+            Grid.Row="0"
+            Margin="0,0,0,8"
+            Text="パーツ名を入力してください" />
+        <TextBox
+            x:Name="PartNameTextBox"
+            Grid.Row="1"
+            Width="320"
+            HorizontalAlignment="Stretch"
+            Text="{Binding PartName.Value, UpdateSourceTrigger=PropertyChanged}" />
+        <StackPanel
+            Grid.Row="3"
+            Margin="0,16,0,0"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Button
+                Width="80"
+                Margin="0,0,8,0"
+                Command="{Binding OkCommand}"
+                Content="OK"
+                IsDefault="True" />
+            <Button
+                Width="80"
+                Command="{Binding CancelCommand}"
+                Content="キャンセル"
+                IsCancel="True" />
+        </StackPanel>
+    </Grid>
+</UserControl>
