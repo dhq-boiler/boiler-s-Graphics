@@ -42,6 +42,7 @@ namespace boilersGraphics.Test
             Assert.That(bar.LetterBehavior, Is.Not.Null);
             Assert.That(bar.LetterVerticalBehavior, Is.Not.Null);
             Assert.That(bar.MonoTextBlockBehavior, Is.Not.Null);
+            Assert.That(bar.DataGeneratorTextBlockBehavior, Is.Not.Null);
             Assert.That(bar.NDrawBezierCurveBehavior, Is.Not.Null);
             Assert.That(bar.SetSnapPointBehavior, Is.Not.Null);
             Assert.That(bar.EraserBehavior, Is.Not.Null);
@@ -73,6 +74,28 @@ namespace boilersGraphics.Test
             Assert.That(item.IsChecked, Is.True);
 
             foreach (var other in bar.ToolItems.Where(t => t.Name.Value != "monotext"))
+                Assert.That(other.IsChecked, Is.False, $"{other.Name.Value} should be unchecked");
+        }
+
+        [Test, RequiresThread(ApartmentState.STA)]
+        public void ctor_ToolItemsにdatagenが含まれる()
+        {
+            var bar = ToolBar();
+            var item = bar.ToolItems.SingleOrDefault(t => t.Name.Value == "datagen");
+            Assert.That(item, Is.Not.Null, "Phase 2-c: データジェネレータツールが登録されている");
+            Assert.That(item!.Tooltip.Value, Is.EqualTo("データジェネレータ"));
+        }
+
+        [Test, RequiresThread(ApartmentState.STA)]
+        public void SelectOneToolItem_datagen_他は解除される()
+        {
+            var bar = ToolBar();
+            bar.SelectOneToolItem("datagen");
+
+            var item = bar.ToolItems.Single(t => t.Name.Value == "datagen");
+            Assert.That(item.IsChecked, Is.True);
+
+            foreach (var other in bar.ToolItems.Where(t => t.Name.Value != "datagen"))
                 Assert.That(other.IsChecked, Is.False, $"{other.Name.Value} should be unchecked");
         }
 
