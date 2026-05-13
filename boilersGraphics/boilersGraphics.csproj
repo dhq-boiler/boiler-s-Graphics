@@ -173,6 +173,7 @@
     <Resource Include="Assets\img\numseq_dark.png" />
     <Resource Include="Assets\img\textmatrix_dark.png" />
     <Resource Include="Assets\img\textonpath_dark.png" />
+    <Resource Include="Assets\img\anchor_dark.png" />
     <Resource Include="Fonts\JetBrainsMono-Regular.ttf" />
     <Resource Include="Fonts\JetBrainsMono-Bold.ttf" />
     <Resource Include="Fonts\JetBrainsMono-Italic.ttf" />

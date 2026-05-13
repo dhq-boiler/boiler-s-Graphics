@@ -1,0 +1,17 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:anchors="clr-namespace:boilersGraphics.ViewModels.Anchors">
+    <!-- Phase 3-b: ユーザ追加 Anchor の DataTemplate。Owner 図形に追従する Left/Top で配置され、
+         小さなオレンジ色の円として描画される (SnapPoint と区別)。 -->
+    <DataTemplate DataType="{x:Type anchors:AnchorViewModel}">
+        <Grid Width="8" Height="8">
+            <Ellipse
+                Width="8"
+                Height="8"
+                Fill="#FFE08A"
+                Stroke="#7A4A00"
+                StrokeThickness="1" />
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

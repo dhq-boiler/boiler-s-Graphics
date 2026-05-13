@@ -52,6 +52,7 @@ public class ToolBarViewModel
     public NumberSequenceBlockBehavior NumberSequenceBlockBehavior { get; } = new();
     public TextMatrixBlockBehavior TextMatrixBlockBehavior { get; } = new();
     public TextOnPathBlockBehavior TextOnPathBlockBehavior { get; } = new();
+    public AddAnchorBehavior AddAnchorBehavior { get; } = new();
     public NDrawPolygonBehavior NDrawPolygonBehavior { get; private set; }
     public NDrawBezierCurveBehavior NDrawBezierCurveBehavior { get; } = new();
     public SetSnapPointBehavior SetSnapPointBehavior { get; } = new();
@@ -281,6 +282,17 @@ public class ToolBarViewModel
                 ChangeHitTestToDisable();
                 SelectOneToolItem("textonpath");
             })));
+        // Phase 3-b: アンカー追加ツール (Q-6 案 A, Q-10 採用名)
+        // 専用アイコン: MDI vector-point-edit
+        ToolItems.Add(new ToolItemData("anchor", "pack://application:,,,/Assets/img/anchor_dark.png",
+            "アンカー追加", new DelegateCommand(() =>
+            {
+                MainWindowViewModel.Instance.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(AddAnchorBehavior)) Behaviors.Add(AddAnchorBehavior);
+                ChangeHitTestToDisable();
+                SelectOneToolItem("anchor");
+            })));
         ToolItems.Add(new ToolItemData("brush", "pack://application:,,,/Assets/img/brush_dark.png",
             Resources.Tool_Brush, new DelegateCommand(() =>
             {
@@ -439,6 +451,7 @@ public class ToolBarViewModel
             case "numseq":
             case "textmatrix":
             case "textonpath":
+            case "anchor":
             case "polygon":
             case "bezier":
             case "snappoint":
