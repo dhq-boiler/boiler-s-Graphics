@@ -23,6 +23,8 @@ internal class Preference : BindableBase
     public BindableReactiveProperty<bool> EnableImageEmbedding { get; set; } = new();
     public BindableReactiveProperty<bool> EnableAutoScrollOnDrag { get; set; } = new();
     public BindableReactiveProperty<double> AutoScrollOnDragSpeed { get; set; } = new();
+    /// <summary>Phase 3-i / Q-7 案 C: アンカー吸着距離 (px)。0 以上、推奨 5〜30。</summary>
+    public BindableReactiveProperty<double> AnchorSnapDistance { get; set; } = new();
 
     public ObservableList<double> EdgeThicknessOptions { get; } = new ObservableList<double>()
     {

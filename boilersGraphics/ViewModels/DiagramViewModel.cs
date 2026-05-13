@@ -1780,6 +1780,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         preferences.EnableImageEmbedding.Value = EnableImageEmbedding.Value;
         preferences.EnableAutoScrollOnDrag.Value = EnableAutoScrollOnDrag.Value;
         preferences.AutoScrollOnDragSpeed.Value = AutoScrollOnDragSpeed.Value;
+        // Phase 3-i / Q-7 案 C: グローバル設定の AnchorSnapDistance を初期値として渡す。
+        preferences.AnchorSnapDistance.Value = boilersGraphics.Helpers.Anchors.AnchorSnapSettings.SnapDistance.Value;
         dlgService.ShowDialog(nameof(Views.Preference), new DialogParameters { { "Preferences", preferences } },
             ret => result = ret);
         if (result != null && result.Result == ButtonResult.OK)
@@ -1800,6 +1802,10 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             EnableImageEmbedding.Value = s.EnableImageEmbedding.Value;
             EnableAutoScrollOnDrag.Value = s.EnableAutoScrollOnDrag.Value;
             AutoScrollOnDragSpeed.Value = s.AutoScrollOnDragSpeed.Value;
+            // Phase 3-i / Q-7 案 C: ダイアログ確定時に AnchorSnap グローバル設定へ反映。
+            // 負値を防いで 0 以上にクランプ (0 は事実上「常に最寄り」になる)。
+            boilersGraphics.Helpers.Anchors.AnchorSnapSettings.SnapDistance.Value =
+                System.Math.Max(0, s.AnchorSnapDistance.Value);
             SetAutoSave();
         }
     }

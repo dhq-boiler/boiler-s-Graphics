@@ -9,23 +9,25 @@ namespace boilersGraphics.Helpers.Anchors;
 
 /// <summary>
 /// Phase 3-e: ドラッグ確定時に「クリック点の近くのアンカー (暗黙 9 点 or 明示 AnchorViewModel)」を
-/// 探して AnchorRef 文字列を返すヘルパ。Phase 3-i でグローバル設定の吸着距離を使うようリファクタ予定。
+/// 探して AnchorRef 文字列を返すヘルパ。Phase 3-i で <see cref="AnchorSnapSettings.SnapDistance"/>
+/// (グローバル設定) を参照するようリファクタ済み。
 /// </summary>
 public static class AnchorSnap
 {
-    /// <summary>デフォルトの吸着距離 (px)。Phase 3-i で Settings 経由に切り替え予定 (Q-7 案 C)。</summary>
+    /// <summary>初期デフォルトの吸着距離 (px)。<see cref="AnchorSnapSettings.SnapDistance"/> の初期値と同期している必要あり。</summary>
     public const double DefaultSnapDistance = 10.0;
 
     /// <summary>
     /// クリック点に対し、<paramref name="threshold"/> 以内で最も近いアンカーの AnchorRef を返す。
-    /// 該当なしの場合は null。
+    /// 該当なしの場合は null。<paramref name="threshold"/> 未指定なら現在の <see cref="AnchorSnapSettings.SnapDistance"/> を使う。
     /// </summary>
     public static string FindNearestAnchorRef(IDiagramViewModel diagram, Point click,
-        double threshold = DefaultSnapDistance)
+        double? threshold = null)
     {
         if (diagram is null) return null;
+        var effectiveThreshold = threshold ?? AnchorSnapSettings.SnapDistance.Value;
         string bestRef = null;
-        var bestDist = threshold;
+        var bestDist = effectiveThreshold;
 
         foreach (var item in diagram.AllItems.Value.AsValueEnumerable())
         {
