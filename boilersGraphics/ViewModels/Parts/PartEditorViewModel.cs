@@ -113,24 +113,12 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
 
         var previous = SelectedItem.Value;
         if (previous is not null && !ReferenceEquals(previous, item))
-            TrySetIsSelected(previous, false);
+            previous.IsSelected.Value = false;
 
         if (item is not null)
-            TrySetIsSelected(item, true);
+            item.IsSelected.Value = true;
 
         SelectedItem.Value = item;
-    }
-
-    // Items が Promote / Detach 等で先に Dispose 済みになっているケースを許容する。
-    private static void TrySetIsSelected(SelectableDesignerItemViewModelBase target, bool value)
-    {
-        try
-        {
-            target.IsSelected.Value = value;
-        }
-        catch (ObjectDisposedException)
-        {
-        }
     }
 
     private void AddRectangle()
@@ -156,7 +144,7 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
         if (target is null) return;
 
         Definition.Items.Remove(target as DesignerItemViewModelBase);
-        TrySetIsSelected(target, false);
+        target.IsSelected.Value = false;
         SelectedItem.Value = null;
     }
 
@@ -167,15 +155,7 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
         var target = SelectedItem.Value;
         if (target is null) return;
 
-        Brush currentBrush;
-        try
-        {
-            currentBrush = isEdge ? target.EdgeBrush.Value : target.FillBrush.Value;
-        }
-        catch (ObjectDisposedException)
-        {
-            return;
-        }
+        var currentBrush = isEdge ? target.EdgeBrush.Value : target.FillBrush.Value;
 
         IDialogResult dialogResult = null;
         _dialogService.ShowDialog(
@@ -192,15 +172,8 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
         var exchange = dialogResult?.Parameters.GetValue<ColorExchange>("ColorExchange");
         if (exchange?.New is null) return;
 
-        try
-        {
-            if (isEdge) target.EdgeBrush.Value = exchange.New;
-            else target.FillBrush.Value = exchange.New;
-        }
-        catch (ObjectDisposedException)
-        {
-            // SelectedItem が直前に Dispose されたケース。何もしない。
-        }
+        if (isEdge) target.EdgeBrush.Value = exchange.New;
+        else target.FillBrush.Value = exchange.New;
     }
 
     private void AddExposedProperty()

@@ -1,6 +1,5 @@
 ﻿using boilersGraphics.ViewModels;
 using boilersGraphics.ViewModels.Parts;
-using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -30,17 +29,8 @@ public partial class PartEditorDesignerControl : UserControl
 
         if (item is DesignerItemViewModelBase designerItem)
         {
-            try
-            {
-                _dragOriginLeft = designerItem.Left.Value;
-                _dragOriginTop = designerItem.Top.Value;
-            }
-            catch (ObjectDisposedException)
-            {
-                // 先に Dispose された Items は drag 対象外。選択のみ。
-                return;
-            }
-
+            _dragOriginLeft = designerItem.Left.Value;
+            _dragOriginTop = designerItem.Top.Value;
             _dragTarget = designerItem;
             _dragOriginPoint = e.GetPosition(this);
             CaptureMouse();
@@ -58,17 +48,8 @@ public partial class PartEditorDesignerControl : UserControl
         }
 
         var current = e.GetPosition(this);
-        try
-        {
-            _dragTarget.Left.Value = _dragOriginLeft + (current.X - _dragOriginPoint.X);
-            _dragTarget.Top.Value = _dragOriginTop + (current.Y - _dragOriginPoint.Y);
-        }
-        catch (ObjectDisposedException)
-        {
-            // Promote / Detach で先に Dispose された Items が SelectItem 経由で
-            // _dragTarget になっているケース。drag は静かに諦める。
-            EndDrag();
-        }
+        _dragTarget.Left.Value = _dragOriginLeft + (current.X - _dragOriginPoint.X);
+        _dragTarget.Top.Value = _dragOriginTop + (current.Y - _dragOriginPoint.Y);
     }
 
     private void OnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
