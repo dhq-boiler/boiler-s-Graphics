@@ -1839,6 +1839,16 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             item.ZIndex.Value = newZIndex;
             item.Owner = this;
 
+            // Phase 2-f: PartInstance が Owner = this になったタイミングで、対応する PartDefinition の
+            // Items を ID 引き継ぎクローンして RenderedItems に詰め、Binding 値伝搬を配線する。
+            // Definition が見つからない場合は何もしない (デシリアライズ中など、Definition が後から追加される
+            // ケースは別途 Definition 側の CollectionChanged で再初期化する想定 — 現状は AddItem 経由のみ対応)。
+            if (item is boilersGraphics.ViewModels.Parts.PartInstanceViewModel partInstance
+                && TryGetPartDefinition(partInstance.DefinitionId.Value, out var partDefinition))
+            {
+                partInstance.InitializeRenderedItems(partDefinition);
+            }
+
             Debug.WriteLine($"About to call targetLayer.AddItem with item: {item}");
             Debug.WriteLine($"Target layer children count before: {targetLayer.Children.Count}");
 
