@@ -6,9 +6,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    Focusable="True"
     mc:Ignorable="d">
+    <UserControl.InputBindings>
+        <KeyBinding Key="Delete" Command="{Binding DeleteSelectedCommand}" />
+    </UserControl.InputBindings>
     <DockPanel LastChildFill="True">
-        <!--  Editing toolbar (Phase 1-c-6-d-1: Rectangle のみ)  -->
+        <!--  Editing toolbar (Phase 1-c-6-d-2: Rectangle 追加 + 削除)  -->
         <Border
             Padding="6,4"
             Background="#252526"
@@ -21,6 +25,12 @@
                     Command="{Binding AddRectangleCommand}"
                     Content="矩形を追加"
                     ToolTip="新しい矩形を編集中のパーツに追加します" />
+                <Button
+                    Margin="6,0,0,0"
+                    Padding="10,4"
+                    Command="{Binding DeleteSelectedCommand}"
+                    Content="選択を削除"
+                    ToolTip="選択中の図形を削除します (Delete キー可)" />
             </StackPanel>
         </Border>
 
@@ -29,7 +39,7 @@
             <ScrollViewer
                 HorizontalScrollBarVisibility="Auto"
                 VerticalScrollBarVisibility="Auto">
-                <ItemsControl ItemsSource="{Binding Definition.Items}">
+                <ItemsControl x:Name="ItemsRoot" ItemsSource="{Binding Definition.Items}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <Canvas
@@ -38,11 +48,36 @@
                                 Background="Transparent" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <!--
+                            Border (Background=Transparent) で包んで hit-test を確保する。
+                            内側の ContentPresenter は DataType マッチで既存の
+                            <NRectangleViewModel> 用 DataTemplate (App.xaml) を使う。
+                        -->
+                        <DataTemplate>
+                            <Border Background="Transparent">
+                                <ContentPresenter Content="{Binding}" />
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
                     <ItemsControl.ItemContainerStyle>
                         <Style TargetType="ContentPresenter">
+                            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="OnItemPreviewMouseLeftButtonDown" />
                             <Setter Property="Canvas.Left" Value="{Binding Left.Value}" />
                             <Setter Property="Canvas.Top" Value="{Binding Top.Value}" />
                             <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
+                                    <Setter Property="Effect">
+                                        <Setter.Value>
+                                            <DropShadowEffect
+                                                BlurRadius="6"
+                                                Color="#1E90FF"
+                                                ShadowDepth="0" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
                         </Style>
                     </ItemsControl.ItemContainerStyle>
                 </ItemsControl>

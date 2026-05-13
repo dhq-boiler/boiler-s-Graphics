@@ -1,4 +1,4 @@
-using boilersGraphics.Models.Parts;
+﻿using boilersGraphics.Models.Parts;
 using boilersGraphics.ViewModels;
 using boilersGraphics.ViewModels.Parts;
 using NUnit.Framework;
@@ -154,6 +154,100 @@ public class PartEditorViewModelTest
         vm.AddRectangleCommand.Execute(Unit.Default);
 
         Assert.That(defVm.Items.Count, Is.EqualTo(3));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void SelectedItem_初期値はnull()
+    {
+        var vm = new PartEditorViewModel();
+        Assert.That(vm.SelectedItem.Value, Is.Null);
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void SelectItem_対象のIsSelectedがtrueになりSelectedItemに反映される()
+    {
+        var vm = new PartEditorViewModel();
+        var defVm = new PartDefinitionViewModel(new PartDefinition { Name = "リング" });
+        vm.OnDialogOpened(new DialogParameters
+        {
+            { PartEditorViewModel.PartDefinitionKey, defVm }
+        });
+
+        vm.AddRectangleCommand.Execute(Unit.Default);
+        var rect = defVm.Items[0];
+
+        vm.SelectItem(rect);
+
+        Assert.That(vm.SelectedItem.Value, Is.SameAs(rect));
+        Assert.That(rect.IsSelected.Value, Is.True);
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void SelectItem_別アイテムを選択すると前の選択が解除される()
+    {
+        var vm = new PartEditorViewModel();
+        var defVm = new PartDefinitionViewModel(new PartDefinition { Name = "リング" });
+        vm.OnDialogOpened(new DialogParameters
+        {
+            { PartEditorViewModel.PartDefinitionKey, defVm }
+        });
+
+        vm.AddRectangleCommand.Execute(Unit.Default);
+        vm.AddRectangleCommand.Execute(Unit.Default);
+        var first = defVm.Items[0];
+        var second = defVm.Items[1];
+
+        vm.SelectItem(first);
+        vm.SelectItem(second);
+
+        Assert.That(first.IsSelected.Value, Is.False);
+        Assert.That(second.IsSelected.Value, Is.True);
+        Assert.That(vm.SelectedItem.Value, Is.SameAs(second));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void DeleteSelectedCommand_SelectedItemがItemsから消えてSelectedItemはnullになる()
+    {
+        var vm = new PartEditorViewModel();
+        var defVm = new PartDefinitionViewModel(new PartDefinition { Name = "リング" });
+        vm.OnDialogOpened(new DialogParameters
+        {
+            { PartEditorViewModel.PartDefinitionKey, defVm }
+        });
+
+        vm.AddRectangleCommand.Execute(Unit.Default);
+        var rect = defVm.Items[0];
+        vm.SelectItem(rect);
+
+        vm.DeleteSelectedCommand.Execute(Unit.Default);
+
+        Assert.That(defVm.Items, Has.Count.EqualTo(0));
+        Assert.That(vm.SelectedItem.Value, Is.Null);
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void DeleteSelectedCommand_未選択なら何も起きない()
+    {
+        var vm = new PartEditorViewModel();
+        var defVm = new PartDefinitionViewModel(new PartDefinition { Name = "リング" });
+        vm.OnDialogOpened(new DialogParameters
+        {
+            { PartEditorViewModel.PartDefinitionKey, defVm }
+        });
+
+        vm.AddRectangleCommand.Execute(Unit.Default);
+
+        vm.DeleteSelectedCommand.Execute(Unit.Default);
+
+        Assert.That(defVm.Items, Has.Count.EqualTo(1));
+        Assert.That(vm.SelectedItem.Value, Is.Null);
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void DeleteSelectedCommand_Definitionなし_例外なし()
+    {
+        var vm = new PartEditorViewModel();
+        Assert.DoesNotThrow(() => vm.DeleteSelectedCommand.Execute(Unit.Default));
     }
 
     [Test, RequiresThread(ApartmentState.STA)]

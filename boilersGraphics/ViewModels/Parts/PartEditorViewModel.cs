@@ -1,4 +1,4 @@
-using boilersGraphics.ViewModels;
+﻿using boilersGraphics.ViewModels;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -37,6 +37,10 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
 
     public ReactiveCommand AddRectangleCommand { get; }
 
+    public ReactiveCommand DeleteSelectedCommand { get; }
+
+    public BindableReactiveProperty<SelectableDesignerItemViewModelBase> SelectedItem { get; } = new();
+
     public event Action<IDialogResult> RequestClose;
 
     public PartEditorViewModel()
@@ -50,6 +54,37 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
         AddRectangleCommand
             .Subscribe(_ => AddRectangle())
             .AddTo(_disposables);
+
+        DeleteSelectedCommand = new ReactiveCommand();
+        DeleteSelectedCommand
+            .Subscribe(_ => DeleteSelected())
+            .AddTo(_disposables);
+    }
+
+    public void SelectItem(SelectableDesignerItemViewModelBase item)
+    {
+        if (Definition is null) return;
+
+        var previous = SelectedItem.Value;
+        if (previous is not null && !ReferenceEquals(previous, item))
+            TrySetIsSelected(previous, false);
+
+        if (item is not null)
+            TrySetIsSelected(item, true);
+
+        SelectedItem.Value = item;
+    }
+
+    // Items が Promote / Detach 等で先に Dispose 済みになっているケースを許容する。
+    private static void TrySetIsSelected(SelectableDesignerItemViewModelBase target, bool value)
+    {
+        try
+        {
+            target.IsSelected.Value = value;
+        }
+        catch (ObjectDisposedException)
+        {
+        }
     }
 
     private void AddRectangle()
@@ -65,6 +100,18 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
         rect.EdgeBrush.Value = new SolidColorBrush(DefaultEdgeColor);
         rect.FillBrush.Value = new SolidColorBrush(DefaultFillColor);
         Definition.Items.Add(rect);
+    }
+
+    private void DeleteSelected()
+    {
+        if (Definition is null) return;
+
+        var target = SelectedItem.Value;
+        if (target is null) return;
+
+        Definition.Items.Remove(target as DesignerItemViewModelBase);
+        TrySetIsSelected(target, false);
+        SelectedItem.Value = null;
     }
 
     public bool CanCloseDialog() => true;
@@ -99,6 +146,7 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
     {
         if (_disposed) return;
         _disposed = true;
+        SelectedItem.Dispose();
         _disposables.Dispose();
     }
 }
