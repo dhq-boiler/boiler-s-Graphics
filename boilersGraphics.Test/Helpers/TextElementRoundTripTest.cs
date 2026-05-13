@@ -5,6 +5,7 @@ using boilersGraphics.ViewModels.Text;
 using Moq;
 using NUnit.Framework;
 using Prism.Services.Dialogs;
+using System;
 using System.Threading;
 using System.Windows.Media;
 
@@ -143,6 +144,97 @@ public class TextElementRoundTripTest
         Assert.That(dst.Start.Value, Is.EqualTo(0.25));
         Assert.That(dst.End.Value, Is.EqualTo(1.75));
         Assert.That(dst.Step.Value, Is.EqualTo(0.125));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void TextMatrixBlock_完全ラウンドトリップ_Textも一致()
+    {
+        var src = new TextMatrixBlockViewModel();
+        src.Rows.Value = 3;
+        src.Columns.Value = 4;
+        src.CellMode.Value = TextMatrixCellMode.DataGenerator;
+        src.Separator.Value = " | ";
+        src.SequenceStart.Value = 100;
+        src.SequenceFormat.Value = "D3";
+        src.DataGenType.Value = DataGeneratorType.Hex;
+        src.DataGenSeed.Value = 999;
+        src.CustomItems.Value = "alpha\nbeta\ngamma";
+
+        var beforeText = src.Text.Value;
+
+        var xml = ObjectSerializer.ExtractItem(src);
+        var dst = (TextMatrixBlockViewModel)ObjectDeserializer.ExtractDesignerItemViewModelBase(_diagram, xml);
+
+        Assert.That(dst.Rows.Value, Is.EqualTo(3));
+        Assert.That(dst.Columns.Value, Is.EqualTo(4));
+        Assert.That(dst.CellMode.Value, Is.EqualTo(TextMatrixCellMode.DataGenerator));
+        Assert.That(dst.Separator.Value, Is.EqualTo(" | "));
+        Assert.That(dst.SequenceStart.Value, Is.EqualTo(100));
+        Assert.That(dst.SequenceFormat.Value, Is.EqualTo("D3"));
+        Assert.That(dst.DataGenType.Value, Is.EqualTo(DataGeneratorType.Hex));
+        Assert.That(dst.DataGenSeed.Value, Is.EqualTo(999));
+        Assert.That(dst.CustomItems.Value, Is.EqualTo("alpha\nbeta\ngamma"));
+        Assert.That(dst.Text.Value, Is.EqualTo(beforeText),
+            "Seed / Rows / Columns が同じなら同じ Text に再生成される");
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void TextMatrixBlock_Sequential_モードで往復()
+    {
+        var src = new TextMatrixBlockViewModel();
+        src.Rows.Value = 2;
+        src.Columns.Value = 3;
+        src.CellMode.Value = TextMatrixCellMode.Sequential;
+        src.Separator.Value = ",";
+        src.SequenceStart.Value = 10;
+        src.SequenceFormat.Value = string.Empty;
+
+        var xml = ObjectSerializer.ExtractItem(src);
+        var dst = (TextMatrixBlockViewModel)ObjectDeserializer.ExtractDesignerItemViewModelBase(_diagram, xml);
+
+        Assert.That(dst.CellMode.Value, Is.EqualTo(TextMatrixCellMode.Sequential));
+        Assert.That(dst.Text.Value, Does.StartWith("10,11,12"));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void TextOnPathBlock_完全ラウンドトリップ_主要プロパティ復元()
+    {
+        var src = new TextOnPathBlockViewModel();
+        var refId = Guid.NewGuid();
+        src.PathReferenceId.Value = refId;
+        src.Text.Value = "CIRCLE LABEL";
+        src.StartOffset.Value = 0.25;
+        src.Spacing.Value = 2.5;
+        src.Side.Value = TextOnPathSide.Above;
+        src.Rotation.Value = TextOnPathRotation.Tangent;
+        src.FontSize.Value = 14;
+
+        var xml = ObjectSerializer.ExtractItem(src);
+        var dst = (TextOnPathBlockViewModel)ObjectDeserializer.ExtractDesignerItemViewModelBase(_diagram, xml);
+
+        Assert.That(dst.PathReferenceId.Value, Is.EqualTo(refId));
+        Assert.That(dst.Text.Value, Is.EqualTo("CIRCLE LABEL"));
+        Assert.That(dst.StartOffset.Value, Is.EqualTo(0.25));
+        Assert.That(dst.Spacing.Value, Is.EqualTo(2.5));
+        Assert.That(dst.Side.Value, Is.EqualTo(TextOnPathSide.Above));
+        Assert.That(dst.Rotation.Value, Is.EqualTo(TextOnPathRotation.Tangent));
+        Assert.That(dst.FontSize.Value, Is.EqualTo(14));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void TextOnPathBlock_PathReferenceIdなし_復元時もnull()
+    {
+        var src = new TextOnPathBlockViewModel();
+        src.PathReferenceId.Value = null;
+        src.Side.Value = TextOnPathSide.Below;
+        src.Rotation.Value = TextOnPathRotation.Upright;
+
+        var xml = ObjectSerializer.ExtractItem(src);
+        var dst = (TextOnPathBlockViewModel)ObjectDeserializer.ExtractDesignerItemViewModelBase(_diagram, xml);
+
+        Assert.That(dst.PathReferenceId.Value, Is.Null);
+        Assert.That(dst.Side.Value, Is.EqualTo(TextOnPathSide.Below));
+        Assert.That(dst.Rotation.Value, Is.EqualTo(TextOnPathRotation.Upright));
     }
 
     [Test, RequiresThread(ApartmentState.STA)]

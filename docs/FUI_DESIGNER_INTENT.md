@@ -121,13 +121,14 @@ FUI らしさの肝は「微細な技術テキスト」と「データっぽい�
 - **数値列 (`NumberSequenceBlock`)**: Start / End / Step / Format / Separator / Direction (Horizontal / Vertical / Grid)
 - Phase 1 のパーツ機構と統合 (`RenderedItems` 経由の値伝搬機構、ExposedProperty 公開可能プロパティを Q-9 で確定)
 
-#### Phase 2.5 (後送り)
+#### Phase 2.5 で実装した要素 ✅ 完了
 - **テキストマトリクス (`TextMatrixBlock`)**: 3 モード (連番 / DataGenerator 埋め込み / 任意文字列リスト)
-- **テキストパス (`TextOnPathBlock`)**: 既存 `PolyBezierViewModel` を Path として利用
+- **テキストパス (`TextOnPathBlock`)**: 既存 `PolyBezierViewModel` を Path として利用 (Q-7 案 B)
 
 #### 参考ドキュメント
 - 設計仕様書: [`fui/phase2-text-data-elements.md`](./fui/phase2-text-data-elements.md)
-- チュートリアル: [`fui/phase2-tutorial.md`](./fui/phase2-tutorial.md)
+- Phase 2 チュートリアル: [`fui/phase2-tutorial.md`](./fui/phase2-tutorial.md)
+- Phase 2.5 チュートリアル: [`fui/phase2-5-tutorial.md`](./fui/phase2-5-tutorial.md)
 
 ### Phase 3: 接続線・関係表現
 要素同士を「配線」して関係を示すのは FUI の重要言語。
@@ -289,5 +290,5 @@ WPF 出力イメージ:
 
 ---
 
-*Last updated: 2026-05-13 (Phase 2 完了 / Phase 2-g チュートリアル追加)*
+*Last updated: 2026-05-13 (Phase 2 + Phase 2.5 完了 / phase2-5-tutorial.md 追加)*
 *Author: dhq_boiler*

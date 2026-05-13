@@ -676,6 +676,45 @@ public class ObjectDeserializer
             numseq.Regenerate();
         }
 
+        // Phase 2.5-a: TextMatrixBlock デシリアライズ。最後に Regenerate() で Text を再構築。
+        if (item is boilersGraphics.ViewModels.Text.TextMatrixBlockViewModel matrix)
+        {
+            if (designerItemElm.Element("TextMatrixRows") is { } mr) matrix.Rows.Value = int.Parse(mr.Value);
+            if (designerItemElm.Element("TextMatrixColumns") is { } mc) matrix.Columns.Value = int.Parse(mc.Value);
+            if (designerItemElm.Element("TextMatrixCellMode") is { } mcm &&
+                Enum.TryParse<boilersGraphics.Models.Text.TextMatrixCellMode>(mcm.Value, out var cm))
+                matrix.CellMode.Value = cm;
+            if (designerItemElm.Element("TextMatrixSeparator") is { } msep) matrix.Separator.Value = msep.Value;
+            if (designerItemElm.Element("TextMatrixSequenceStart") is { } mss) matrix.SequenceStart.Value = int.Parse(mss.Value);
+            if (designerItemElm.Element("TextMatrixSequenceFormat") is { } msf) matrix.SequenceFormat.Value = msf.Value;
+            if (designerItemElm.Element("TextMatrixDataGenType") is { } mdt &&
+                Enum.TryParse<boilersGraphics.Models.Text.DataGeneratorType>(mdt.Value, out var dgt))
+                matrix.DataGenType.Value = dgt;
+            if (designerItemElm.Element("TextMatrixDataGenSeed") is { } mds) matrix.DataGenSeed.Value = int.Parse(mds.Value);
+            if (designerItemElm.Element("TextMatrixCustomItems") is { } mci) matrix.CustomItems.Value = mci.Value;
+            matrix.Regenerate();
+        }
+
+        // Phase 2.5-b: TextOnPathBlock デシリアライズ。Regenerate() は PolyBezier が既に
+        // AllItems にロード済みでないと参照解決できないので、確定的な再生成は呼び出し側に任せる。
+        if (item is boilersGraphics.ViewModels.Text.TextOnPathBlockViewModel onPath)
+        {
+            if (designerItemElm.Element("TextOnPathReferenceId") is { } topr &&
+                Guid.TryParse(topr.Value, out var refId))
+                onPath.PathReferenceId.Value = refId;
+            if (designerItemElm.Element("TextOnPathStartOffset") is { } tso)
+                onPath.StartOffset.Value = double.Parse(tso.Value, System.Globalization.CultureInfo.InvariantCulture);
+            if (designerItemElm.Element("TextOnPathSpacing") is { } tsp)
+                onPath.Spacing.Value = double.Parse(tsp.Value, System.Globalization.CultureInfo.InvariantCulture);
+            if (designerItemElm.Element("TextOnPathSide") is { } tsi &&
+                Enum.TryParse<boilersGraphics.Models.Text.TextOnPathSide>(tsi.Value, out var topSide))
+                onPath.Side.Value = topSide;
+            if (designerItemElm.Element("TextOnPathRotation") is { } tro &&
+                Enum.TryParse<boilersGraphics.Models.Text.TextOnPathRotation>(tro.Value, out var topRot))
+                onPath.Rotation.Value = topRot;
+            onPath.Regenerate();
+        }
+
         if (item is LetterDesignerItemViewModel letter)
         {
             letter.LetterString.Value = designerItemElm.Element("LetterString").Value;

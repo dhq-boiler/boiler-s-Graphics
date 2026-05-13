@@ -1,0 +1,41 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:text="clr-namespace:boilersGraphics.ViewModels.Text"
+    xmlns:textModels="clr-namespace:boilersGraphics.Models.Text">
+    <DataTemplate DataType="{x:Type text:TextOnPathBlockViewModel}">
+        <!-- PolyBezier 座標系 (キャンバス全体) で配置された 1 文字ずつを Canvas に並べる。
+             各 ContentPresenter は CharPlacement の X/Y/Angle で位置決め + 回転される。-->
+        <Canvas Width="{Binding Width.Value}" Height="{Binding Height.Value}" Background="{Binding Background.Value}">
+            <ItemsControl ItemsSource="{Binding Placements}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="Canvas.Left" Value="{Binding X}" />
+                        <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                        <Setter Property="RenderTransformOrigin" Value="0.5, 0.5" />
+                        <Setter Property="RenderTransform">
+                            <Setter.Value>
+                                <RotateTransform Angle="{Binding Angle}" />
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type textModels:TextOnPathCharPlacement}">
+                        <TextBlock
+                            FontFamily="{Binding DataContext.FontFamily.Value, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                            FontSize="{Binding DataContext.FontSize.Value, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                            Foreground="{Binding DataContext.Foreground.Value, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                            Opacity="{Binding DataContext.TextOpacity.Value, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                            Text="{Binding Char}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Canvas>
+    </DataTemplate>
+</ResourceDictionary>
