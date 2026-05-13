@@ -1,0 +1,52 @@
+﻿<UserControl
+    x:Class="boilersGraphics.UserControls.Parts.PartEditorDesignerControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <DockPanel LastChildFill="True">
+        <!--  Editing toolbar (Phase 1-c-6-d-1: Rectangle のみ)  -->
+        <Border
+            Padding="6,4"
+            Background="#252526"
+            BorderBrush="#3F3F46"
+            BorderThickness="0,0,0,1"
+            DockPanel.Dock="Top">
+            <StackPanel Orientation="Horizontal">
+                <Button
+                    Padding="10,4"
+                    Command="{Binding AddRectangleCommand}"
+                    Content="矩形を追加"
+                    ToolTip="新しい矩形を編集中のパーツに追加します" />
+            </StackPanel>
+        </Border>
+
+        <!--  Editing canvas: shows PartDefinition.Items  -->
+        <Grid Background="#1E1E1E">
+            <ScrollViewer
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Definition.Items}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas
+                                MinWidth="400"
+                                MinHeight="300"
+                                Background="Transparent" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Setter Property="Canvas.Left" Value="{Binding Left.Value}" />
+                            <Setter Property="Canvas.Top" Value="{Binding Top.Value}" />
+                            <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </DockPanel>
+</UserControl>

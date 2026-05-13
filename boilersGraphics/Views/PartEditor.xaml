@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:parts="clr-namespace:boilersGraphics.UserControls.Parts"
     xmlns:prism="http://prismlibrary.com/"
     d:DesignHeight="600"
     d:DesignWidth="900"
@@ -59,36 +60,7 @@
             </StackPanel>
         </Border>
 
-        <!--  Center canvas: read-only preview of PartDefinition.Items (Phase 1-c-6-c)  -->
-        <Grid Background="#1E1E1E">
-            <ScrollViewer
-                HorizontalScrollBarVisibility="Auto"
-                VerticalScrollBarVisibility="Auto">
-                <ItemsControl ItemsSource="{Binding Definition.Items}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Canvas
-                                MinWidth="400"
-                                MinHeight="300"
-                                Background="Transparent" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemContainerStyle>
-                        <Style TargetType="ContentPresenter">
-                            <Setter Property="Canvas.Left" Value="{Binding Left.Value}" />
-                            <Setter Property="Canvas.Top" Value="{Binding Top.Value}" />
-                            <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
-                        </Style>
-                    </ItemsControl.ItemContainerStyle>
-                </ItemsControl>
-            </ScrollViewer>
-            <TextBlock
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Margin="8,8,0,0"
-                FontSize="10"
-                Foreground="#80808080"
-                Text="(読み取り専用プレビュー — 編集機能は Phase 1-c-6-d 以降)" />
-        </Grid>
+        <!--  Center editing area (Phase 1-c-6-d-1: Rectangle 追加のみ)  -->
+        <parts:PartEditorDesignerControl />
     </DockPanel>
 </UserControl>

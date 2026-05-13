@@ -1,14 +1,24 @@
+using boilersGraphics.ViewModels;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using R3;
 using System;
+using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels.Parts;
 
 public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
 {
     public const string PartDefinitionKey = "PartDefinition";
+
+    private const double DefaultShapeLeft = 50d;
+    private const double DefaultShapeTop = 50d;
+    private const double DefaultShapeWidth = 100d;
+    private const double DefaultShapeHeight = 60d;
+    private const double DefaultEdgeThickness = 1d;
+    private static readonly Color DefaultEdgeColor = Colors.Gray;
+    private static readonly Color DefaultFillColor = Color.FromArgb(0x30, 0x80, 0x80, 0x80);
 
     private readonly CompositeDisposable _disposables = new();
     private bool _disposed;
@@ -25,6 +35,8 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
 
     public DelegateCommand CloseCommand { get; }
 
+    public ReactiveCommand AddRectangleCommand { get; }
+
     public event Action<IDialogResult> RequestClose;
 
     public PartEditorViewModel()
@@ -33,6 +45,26 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
         {
             RequestClose?.Invoke(new DialogResult(ButtonResult.OK));
         });
+
+        AddRectangleCommand = new ReactiveCommand();
+        AddRectangleCommand
+            .Subscribe(_ => AddRectangle())
+            .AddTo(_disposables);
+    }
+
+    private void AddRectangle()
+    {
+        if (Definition is null) return;
+
+        var rect = new NRectangleViewModel(
+            DefaultShapeLeft,
+            DefaultShapeTop,
+            DefaultShapeWidth,
+            DefaultShapeHeight);
+        rect.EdgeThickness.Value = DefaultEdgeThickness;
+        rect.EdgeBrush.Value = new SolidColorBrush(DefaultEdgeColor);
+        rect.FillBrush.Value = new SolidColorBrush(DefaultFillColor);
+        Definition.Items.Add(rect);
     }
 
     public bool CanCloseDialog() => true;

@@ -1,7 +1,9 @@
 using boilersGraphics.Models.Parts;
+using boilersGraphics.ViewModels;
 using boilersGraphics.ViewModels.Parts;
 using NUnit.Framework;
 using Prism.Services.Dialogs;
+using R3;
 using System.Threading;
 
 namespace boilersGraphics.Test.ViewModels.Parts;
@@ -112,6 +114,46 @@ public class PartEditorViewModelTest
     {
         var vm = new PartEditorViewModel();
         Assert.That(vm.CanCloseDialog(), Is.True);
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void AddRectangleCommand_Definitionなし_例外なし()
+    {
+        var vm = new PartEditorViewModel();
+        Assert.DoesNotThrow(() => vm.AddRectangleCommand.Execute(Unit.Default));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void AddRectangleCommand_Execute_DefinitionのItemsにNRectangleが追加される()
+    {
+        var vm = new PartEditorViewModel();
+        var defVm = new PartDefinitionViewModel(new PartDefinition { Name = "リング" });
+        vm.OnDialogOpened(new DialogParameters
+        {
+            { PartEditorViewModel.PartDefinitionKey, defVm }
+        });
+
+        vm.AddRectangleCommand.Execute(Unit.Default);
+
+        Assert.That(defVm.Items.Count, Is.EqualTo(1));
+        Assert.That(defVm.Items[0], Is.TypeOf<NRectangleViewModel>());
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void AddRectangleCommand_複数回Execute_その分だけItemsが増える()
+    {
+        var vm = new PartEditorViewModel();
+        var defVm = new PartDefinitionViewModel(new PartDefinition { Name = "メーター" });
+        vm.OnDialogOpened(new DialogParameters
+        {
+            { PartEditorViewModel.PartDefinitionKey, defVm }
+        });
+
+        vm.AddRectangleCommand.Execute(Unit.Default);
+        vm.AddRectangleCommand.Execute(Unit.Default);
+        vm.AddRectangleCommand.Execute(Unit.Default);
+
+        Assert.That(defVm.Items.Count, Is.EqualTo(3));
     }
 
     [Test, RequiresThread(ApartmentState.STA)]
