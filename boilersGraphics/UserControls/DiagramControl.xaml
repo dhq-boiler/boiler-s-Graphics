@@ -506,6 +506,7 @@
                                 <MenuItem Command="{Binding DetachPartCommand}" Header="パーツから切り離す" />
                                 <MenuItem Command="{Binding ClonePartDefinitionCommand}" Header="複製して新パーツとして登録" />
                                 <MenuItem Command="{Binding ExportPartCommand}" Header="パーツをエクスポート…" />
+                                <MenuItem Command="{Binding ToggleNodeCommand}" Header="ノード化 / ノード解除" />
                                 <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Grouping, Mode=OneWay}">
                                     <MenuItem Command="{Binding GroupCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_Group, Mode=OneWay}">
                                         <MenuItem.Icon>

@@ -53,6 +53,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     private int _Height;
     private bool _MiddleButtonIsPressed;
     private Point _MousePointerPosition;
+    private boilersGraphics.Helpers.Anchors.NodeHighlightController _nodeHighlightController;
     private int _Width;
     private DesignerCanvas designerCanvas;
     private bool disposedValue;
@@ -112,6 +113,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             UniformHeightCommand = new DelegateCommand(() => ExecuteUniformHeightCommand(), () => CanExecuteUniform());
             DuplicateCommand = new DelegateCommand(() => ExecuteDuplicateCommand(), () => CanExecuteDuplicate());
             PromoteToPartCommand = new DelegateCommand(() => ExecutePromoteToPartCommand(), () => CanExecutePromoteToPart());
+            ToggleNodeCommand = new DelegateCommand(() => ExecuteToggleNodeCommand(), () => CanExecuteToggleNode());
             DetachPartCommand = new DelegateCommand(() => ExecuteDetachPartCommand(), () => CanExecuteDetachPart());
             ClonePartDefinitionCommand = new DelegateCommand(() => ExecuteClonePartDefinitionCommand(), () => CanExecuteClonePartDefinition());
             EditPartDefinitionCommand = new DelegateCommand(() => ExecuteEditPartDefinitionCommand(), () => CanExecuteEditPartDefinition());
@@ -579,12 +581,18 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                     PropertyCommand.RaiseCanExecuteChanged();
 
                     PromoteToPartCommand.RaiseCanExecuteChanged();
+                    ToggleNodeCommand.RaiseCanExecuteChanged();
                     EditPartDefinitionCommand.RaiseCanExecuteChanged();
                     ClonePartDefinitionCommand.RaiseCanExecuteChanged();
                     DetachPartCommand.RaiseCanExecuteChanged();
                     ExportPartCommand.RaiseCanExecuteChanged();
                 })
                 .AddTo(_CompositeDisposable);
+
+            // Phase 3-g: IsNode=true な DesignerItem が選択されたとき、関連コネクタを強調表示する。
+            // Dispose は _CompositeDisposable に乗せて DiagramViewModel と寿命を合わせる。
+            _nodeHighlightController = new boilersGraphics.Helpers.Anchors.NodeHighlightController(this);
+            Disposable.Create(() => _nodeHighlightController.Dispose()).AddTo(_CompositeDisposable);
 
             SelectedLayers = Layers.ObserveElementObservableProperty(x => x.IsSelected)
                 .Select(_ => Layers.AsValueEnumerable().Where(x => x.IsSelected.Value).ToArray())
@@ -702,6 +710,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public DelegateCommand GroupCommand { get; }
     public DelegateCommand UngroupCommand { get; }
     public DelegateCommand PromoteToPartCommand { get; }
+    public DelegateCommand ToggleNodeCommand { get; }
     public DelegateCommand DetachPartCommand { get; }
     public DelegateCommand ClonePartDefinitionCommand { get; }
     public DelegateCommand EditPartDefinitionCommand { get; }
@@ -4949,6 +4958,32 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     }
 
     #endregion //Duplicate
+
+    #region ToggleNode
+
+    /// <summary>Phase 3-g: 選択中の DesignerItem の IsNode を一括反転する (全て true なら全 false、それ以外なら全 true)。</summary>
+    private bool CanExecuteToggleNode()
+    {
+        return SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<DesignerItemViewModelBase>()
+            .Any();
+    }
+
+    private void ExecuteToggleNodeCommand()
+    {
+        var items = SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<DesignerItemViewModelBase>()
+            .ToArray();
+        if (items.Length == 0) return;
+        var allAreNodes = items.AsValueEnumerable().All(i => i.IsNode.Value);
+        var next = !allAreNodes;
+        foreach (var item in items)
+            item.IsNode.Value = next;
+    }
+
+    #endregion
 
     #region Promote
 
