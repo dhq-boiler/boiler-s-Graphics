@@ -21,6 +21,21 @@ public class PartInstanceViewModelTest
     }
 
     [Test]
+    public void PartInstanceViewModel_SupportsPropertyDialogはtrue()
+    {
+        var vm = new PartInstanceViewModel();
+        Assert.That(vm.SupportsPropertyDialog, Is.True);
+    }
+
+    [Test]
+    public void PartInstanceViewModel_OpenPropertyDialogはApp_IsTest時にnoOp()
+    {
+        boilersGraphics.App.IsTest = true;
+        var vm = new PartInstanceViewModel();
+        Assert.DoesNotThrow(() => vm.OpenPropertyDialog());
+    }
+
+    [Test]
     public void PartInstanceViewModel_DesignerItemViewModelBase既定のIsResizableはtrue()
     {
         var vm = new boilersGraphics.ViewModels.NRectangleViewModel();

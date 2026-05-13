@@ -246,6 +246,7 @@ public partial class App : PrismApplication
         containerRegistry.RegisterDialog<DetailPolyBezier, DetailPolyBezierViewModel>();
         containerRegistry.RegisterDialog<DetailMosaic, DetailMosaicViewModel>();
         containerRegistry.RegisterDialog<DetailBlur, DetailBlurViewModel>();
+        containerRegistry.RegisterDialog<DetailPartInstance, boilersGraphics.ViewModels.Parts.DetailPartInstanceViewModel>();
 
         containerRegistry.RegisterForNavigation<Views.ColorCorrect.Hsv, ViewModels.ColorCorrect.HsvViewModel>();
         containerRegistry.RegisterForNavigation<Views.ColorCorrect.ToneCurve, ViewModels.ColorCorrect.ToneCurveViewModel>();

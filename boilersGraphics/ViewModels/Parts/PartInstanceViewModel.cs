@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+using Application = System.Windows.Application;
 using Path = System.Windows.Shapes.Path;
 
 namespace boilersGraphics.ViewModels.Parts;
@@ -31,7 +32,7 @@ public class PartInstanceViewModel : DesignerItemViewModelBase
 
     public override bool IsResizable => false;
 
-    public override bool SupportsPropertyDialog => false;
+    public override bool SupportsPropertyDialog => true;
 
     public PartInstanceViewModel()
     {
@@ -112,6 +113,15 @@ public class PartInstanceViewModel : DesignerItemViewModelBase
 
     public override void OpenPropertyDialog()
     {
+        if (App.IsTest) return;
+        var app = Application.Current as PrismApplication;
+        if (app?.Container is not IContainerExtension container) return;
+
+        var dialogService = new DialogService(container);
+        IDialogResult result = null;
+        dialogService.Show(nameof(DetailPartInstance),
+            new DialogParameters { { "ViewModel", this } },
+            ret => result = ret);
     }
 
     public override object Clone()
