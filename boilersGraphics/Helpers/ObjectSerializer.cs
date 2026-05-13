@@ -3,6 +3,8 @@ using boilersGraphics.Extensions;
 using boilersGraphics.Helpers.Parts;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
+using boilersGraphics.ViewModels.Anchors;
+using boilersGraphics.ViewModels.Connectors;
 using boilersGraphics.ViewModels.Parts;
 using System;
 using System.Collections.Generic;
@@ -66,6 +68,7 @@ internal class ObjectSerializer
         var designerItem = item as DesignerItemViewModelBase;
         var connectorItem = item as ConnectorBaseViewModel;
         var snapPointItem = item as SnapPointViewModel;
+        var anchorItem = item as AnchorViewModel;
         if (designerItem != null)
         {
             var list = new List<XElement>();
@@ -89,6 +92,12 @@ internal class ObjectSerializer
             list.Add(new XElement("StrokeLineJoin", designerItem.StrokeLineJoin.Value));
             list.Add(new XElement("StrokeMiterLimit", designerItem.StrokeMiterLimit.Value));
             list.Add(new XElement("StrokeDashArray", designerItem.StrokeDashArray.Value.ToString()));
+
+            // Phase 3-f: Q-11 案 B / Phase 3-g UI 用 IsNode フラグ。
+            // デフォルト false なので、true のときだけ書き出す (古いファイル互換)。
+            if (designerItem.IsNode.Value)
+                list.Add(new XElement("IsNode", true));
+
             if (designerItem is NRectangleViewModel rectangle)
             {
                 list.Add(new XElement("RadiusX", rectangle.RadiusX.Value));
@@ -328,7 +337,10 @@ internal class ObjectSerializer
             list.Add(new XElement("ID", connectorItem.ID));
             list.Add(new XElement("ParentID", connectorItem.ParentID));
             list.Add(new XElement("Type", connectorItem.GetType().FullName));
-            if (connectorItem is StraightConnectorViewModel || connectorItem is BezierCurveViewModel)
+            if (connectorItem is StraightConnectorViewModel
+                || connectorItem is BezierCurveViewModel
+                || connectorItem is OrthogonalConnectorViewModel
+                || connectorItem is AnchorBezierConnectorViewModel)
             {
                 list.Add(new XElement("BeginPoint", connectorItem.Points[0]));
                 list.Add(new XElement("EndPoint", connectorItem.Points[1]));
@@ -351,6 +363,34 @@ internal class ObjectSerializer
 
             if (connectorItem is PolyBezierViewModel polyBezier)
                 list.Add(new XElement("Points", PointsToStr(connectorItem.Points)));
+
+            // Phase 3-f §6.2 / Q-1 案 B (完全新規) のシリアライズ。
+            // プレフィックス Orthogonal* / AnchorBezier* で他コネクタとの命名衝突を回避。
+            if (connectorItem is OrthogonalConnectorViewModel ortho)
+            {
+                list.Add(new XElement("OrthogonalRoutingMode", ortho.RoutingMode.Value.ToString()));
+                list.Add(new XElement("OrthogonalCornerRadius", ortho.CornerRadius.Value));
+                var midPointsElm = new XElement("OrthogonalMidPoints");
+                foreach (var mp in ortho.MidPoints)
+                    midPointsElm.Add(new XElement("MidPoint",
+                        new XAttribute("X", mp.X), new XAttribute("Y", mp.Y)));
+                list.Add(midPointsElm);
+                if (!string.IsNullOrEmpty(ortho.BeginAnchorRef.Value))
+                    list.Add(new XElement("OrthogonalBeginAnchorRef", ortho.BeginAnchorRef.Value));
+                if (!string.IsNullOrEmpty(ortho.EndAnchorRef.Value))
+                    list.Add(new XElement("OrthogonalEndAnchorRef", ortho.EndAnchorRef.Value));
+            }
+
+            if (connectorItem is AnchorBezierConnectorViewModel anchorBezier)
+            {
+                list.Add(new XElement("AnchorBezierBeginControl", anchorBezier.BeginControlPoint.Value));
+                list.Add(new XElement("AnchorBezierEndControl", anchorBezier.EndControlPoint.Value));
+                if (!string.IsNullOrEmpty(anchorBezier.BeginAnchorRef.Value))
+                    list.Add(new XElement("AnchorBezierBeginAnchorRef", anchorBezier.BeginAnchorRef.Value));
+                if (!string.IsNullOrEmpty(anchorBezier.EndAnchorRef.Value))
+                    list.Add(new XElement("AnchorBezierEndAnchorRef", anchorBezier.EndAnchorRef.Value));
+            }
+
             var connectorItemXML = new XElement("ConnectorItem", list);
             return connectorItemXML;
         }
@@ -376,6 +416,24 @@ internal class ObjectSerializer
             list.Add(new XElement("PathGeometry", snapPointItem.PathGeometry.Value));
             var snappointItemXML = new XElement("SnapPointItem", list);
             return snappointItemXML;
+        }
+
+        // Phase 3-f §6.2: AnchorViewModel は DesignerItem / Connector / SnapPoint いずれにも該当しない
+        // SelectableDesignerItemViewModelBase 派生なので、独立した <AnchorItem> ノードで保存する。
+        // プレフィックス Anchor* で命名衝突を回避。
+        if (anchorItem != null)
+        {
+            var list = new List<XElement>();
+            list.Add(new XElement("ID", anchorItem.ID));
+            list.Add(new XElement("ParentID", anchorItem.ParentID));
+            list.Add(new XElement("Type", anchorItem.GetType().FullName));
+            list.Add(new XElement("ZIndex", anchorItem.ZIndex.Value));
+            list.Add(new XElement("AnchorOwnerId", anchorItem.OwnerId.Value));
+            list.Add(new XElement("AnchorRelativeX", anchorItem.RelativeX.Value));
+            list.Add(new XElement("AnchorRelativeY", anchorItem.RelativeY.Value));
+            if (!string.IsNullOrEmpty(anchorItem.AnchorName.Value))
+                list.Add(new XElement("AnchorName", anchorItem.AnchorName.Value));
+            return new XElement("AnchorItem", list);
         }
 
         throw new Exception("Neither DesinerItem nor ConnectorItem");

@@ -429,6 +429,19 @@
                         </TextBox.Style>
                     </TextBox>
                 </DockPanel>
+                <!-- Phase 3-i / Q-7 案 C: アンカー吸着距離設定。0 以上 (0 = 常に最寄り、推奨 5〜30 px) -->
+                <DockPanel />
+                <DockPanel>
+                    <Label Content="アンカー吸着距離 (px)" />
+                    <TextBox
+                        x:Name="anchorSnapDistance"
+                        AutomationProperties.AutomationId="AnchorSnapDistanceTextBox"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Right"
+                        Background="{StaticResource ControlDarkerBackground}"
+                        Foreground="{StaticResource ControlDefaultForeground}"
+                        Text="{Binding EditTarget.Value.AnchorSnapDistance.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </DockPanel>
             </controls:SimpleGrid>
         </StackPanel>
     </DockPanel>

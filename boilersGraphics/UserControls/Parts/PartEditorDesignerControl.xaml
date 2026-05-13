@@ -389,6 +389,235 @@
                     </StackPanel>
 
                     <!--
+                        Phase 3-h §5.7 / Q-9: Phase 3 で追加された公開可能プロパティ。
+                        OrthogonalConnector / AnchorBezierConnector / Anchor / IsNode 系。
+                        該当プロパティを持たない型に対してはトグルが no-op (PartEditorViewModel 側でガード)。
+                        値編集は inline では行わず、ピン留めの可否のみを操作する。
+                    -->
+                    <StackPanel Margin="0,8,0,0">
+                        <TextBlock
+                            Margin="0,0,0,4"
+                            FontWeight="Bold"
+                            Foreground="#DDDDDD"
+                            Text="Phase 3 公開可能プロパティ" />
+                        <ItemsControl AutomationProperties.AutomationId="Phase3ExposurePinList">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="26" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Foreground="#DDDDDD" Text="BeginPoint" />
+                            <Button Grid.Column="1" Margin="4,0,0,0"
+                                    AutomationProperties.AutomationId="BeginPointExposurePin"
+                                    Command="{Binding DataContext.TogglePropertyExposureCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                    CommandParameter="BeginPoint"
+                                    Style="{StaticResource ExposurePinButtonStyle}"
+                                    ToolTip="このプロパティを公開する">
+                                <TextBlock FontSize="11" Text="●">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#666666" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DataContext.IsBeginPointExposed.Value, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                                    <Setter Property="Foreground" Value="#1E90FF" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Button>
+                        </Grid>
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="26" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Foreground="#DDDDDD" Text="EndPoint" />
+                            <Button Grid.Column="1" Margin="4,0,0,0"
+                                    AutomationProperties.AutomationId="EndPointExposurePin"
+                                    Command="{Binding DataContext.TogglePropertyExposureCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                    CommandParameter="EndPoint"
+                                    Style="{StaticResource ExposurePinButtonStyle}"
+                                    ToolTip="このプロパティを公開する">
+                                <TextBlock FontSize="11" Text="●">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#666666" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DataContext.IsEndPointExposed.Value, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                                    <Setter Property="Foreground" Value="#1E90FF" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Button>
+                        </Grid>
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="26" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Foreground="#DDDDDD" Text="BeginControlPoint" />
+                            <Button Grid.Column="1" Margin="4,0,0,0"
+                                    AutomationProperties.AutomationId="BeginControlPointExposurePin"
+                                    Command="{Binding DataContext.TogglePropertyExposureCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                    CommandParameter="BeginControlPoint"
+                                    Style="{StaticResource ExposurePinButtonStyle}"
+                                    ToolTip="このプロパティを公開する">
+                                <TextBlock FontSize="11" Text="●">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#666666" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DataContext.IsBeginControlPointExposed.Value, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                                    <Setter Property="Foreground" Value="#1E90FF" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Button>
+                        </Grid>
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="26" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Foreground="#DDDDDD" Text="EndControlPoint" />
+                            <Button Grid.Column="1" Margin="4,0,0,0"
+                                    AutomationProperties.AutomationId="EndControlPointExposurePin"
+                                    Command="{Binding DataContext.TogglePropertyExposureCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                    CommandParameter="EndControlPoint"
+                                    Style="{StaticResource ExposurePinButtonStyle}"
+                                    ToolTip="このプロパティを公開する">
+                                <TextBlock FontSize="11" Text="●">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#666666" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DataContext.IsEndControlPointExposed.Value, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                                    <Setter Property="Foreground" Value="#1E90FF" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Button>
+                        </Grid>
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="26" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Foreground="#DDDDDD" Text="CornerRadius" />
+                            <Button Grid.Column="1" Margin="4,0,0,0"
+                                    AutomationProperties.AutomationId="CornerRadiusExposurePin"
+                                    Command="{Binding DataContext.TogglePropertyExposureCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                    CommandParameter="CornerRadius"
+                                    Style="{StaticResource ExposurePinButtonStyle}"
+                                    ToolTip="このプロパティを公開する">
+                                <TextBlock FontSize="11" Text="●">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#666666" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DataContext.IsCornerRadiusExposed.Value, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                                    <Setter Property="Foreground" Value="#1E90FF" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Button>
+                        </Grid>
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="26" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Foreground="#DDDDDD" Text="RelativeX" />
+                            <Button Grid.Column="1" Margin="4,0,0,0"
+                                    AutomationProperties.AutomationId="RelativeXExposurePin"
+                                    Command="{Binding DataContext.TogglePropertyExposureCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                    CommandParameter="RelativeX"
+                                    Style="{StaticResource ExposurePinButtonStyle}"
+                                    ToolTip="このプロパティを公開する">
+                                <TextBlock FontSize="11" Text="●">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#666666" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DataContext.IsRelativeXExposed.Value, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                                    <Setter Property="Foreground" Value="#1E90FF" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Button>
+                        </Grid>
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="26" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Foreground="#DDDDDD" Text="RelativeY" />
+                            <Button Grid.Column="1" Margin="4,0,0,0"
+                                    AutomationProperties.AutomationId="RelativeYExposurePin"
+                                    Command="{Binding DataContext.TogglePropertyExposureCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                    CommandParameter="RelativeY"
+                                    Style="{StaticResource ExposurePinButtonStyle}"
+                                    ToolTip="このプロパティを公開する">
+                                <TextBlock FontSize="11" Text="●">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#666666" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DataContext.IsRelativeYExposed.Value, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                                    <Setter Property="Foreground" Value="#1E90FF" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Button>
+                        </Grid>
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="26" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Foreground="#DDDDDD" Text="IsNode" />
+                            <Button Grid.Column="1" Margin="4,0,0,0"
+                                    AutomationProperties.AutomationId="IsNodeExposurePin"
+                                    Command="{Binding DataContext.TogglePropertyExposureCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                    CommandParameter="IsNode"
+                                    Style="{StaticResource ExposurePinButtonStyle}"
+                                    ToolTip="このプロパティを公開する">
+                                <TextBlock FontSize="11" Text="●">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#666666" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DataContext.IsIsNodeExposed.Value, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                                    <Setter Property="Foreground" Value="#1E90FF" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Button>
+                        </Grid>
+                    </StackPanel>
+
+                    <!--
                         Phase 1-c-6-d-6: 公開パラメータセクション。Definition.ExposedProperties を一覧表示し、
                         追加 / 削除できる。SelectedItem に依存せず常時表示。
                     -->
