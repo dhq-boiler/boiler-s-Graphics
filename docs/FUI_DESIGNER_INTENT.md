@@ -130,12 +130,18 @@ FUI らしさの肝は「微細な技術テキスト」と「データっぽい�
 - Phase 2 チュートリアル: [`fui/phase2-tutorial.md`](./fui/phase2-tutorial.md)
 - Phase 2.5 チュートリアル: [`fui/phase2-5-tutorial.md`](./fui/phase2-5-tutorial.md)
 
-### Phase 3: 接続線・関係表現
+### Phase 3: 接続線・関係表現 ✅ 完了
 要素同士を「配線」して関係を示すのは FUI の重要言語。
-- **L字 / カギ型コネクタ**: 始点・終点を指定すると自動でカギ型に折れる線
-- **ベジエコネクタ**: 開始ハンドルと終了ハンドルを持つ
-- **ノード - エッジ風グラフ**: 単純なネットワーク図を素早く作れる
-- **アンカー (snap target)**: 既存図形に接続点を持たせ、コネクタが吸着する
+- **L字 / カギ型コネクタ** (`OrthogonalConnectorViewModel`): Auto/HFirst/VFirst/Manual の 4 ルーティング + CornerRadius
+- **ベジエコネクタ** (`AnchorBezierConnectorViewModel`): Anchor 接続対応の完全新規型 (既存 `BezierCurveViewModel` には触らない、Q-1 案 B)
+- **アンカー (snap target)**: 暗黙 9 点 + 明示 `AnchorViewModel` の 2 系統。コネクタが吸着し、図形移動に追従
+- **ノード - エッジ風グラフモード**: `IsNode` フラグ + 選択時の関連コネクタ強調表示 (EdgeThickness × 1.5 + EdgeBrush 反転)
+- **Phase 1 パーツ機構との統合**: 主要プロパティを ExposedProperty で公開可能 (Q-9 案 A)
+- **吸着距離設定**: グローバル設定 (Q-7 案 C)
+
+#### 関連ドキュメント
+- 設計仕様: [`fui/phase3-connectors.md`](./fui/phase3-connectors.md) (Q-1 〜 Q-11 確定版)
+- チュートリアル: [`fui/phase3-tutorial.md`](./fui/phase3-tutorial.md)
 
 ### Phase 4: スタイル・テーマ・カラー
 FUI は「世界観」を統一することで完成度が決まる。
@@ -290,5 +296,5 @@ WPF 出力イメージ:
 
 ---
 
-*Last updated: 2026-05-13 (Phase 2 + Phase 2.5 完了 / phase2-5-tutorial.md 追加)*
+*Last updated: 2026-05-14 (Phase 3 完了 / phase3-tutorial.md 追加)*
 *Author: dhq_boiler*
