@@ -1,4 +1,7 @@
+using boilersGraphics.Helpers;
 using boilersGraphics.Models.Parts;
+using boilersGraphics.ViewModels;
+using boilersGraphics.ViewModels.Parts;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -29,6 +32,26 @@ internal static class PartDeserializer
                          ?? throw new InvalidOperationException(
                              "Missing <PartDefinition> child in part file.");
         return DeserializeDefinition(defElement);
+    }
+
+    /// <summary>
+    /// Deserialize a standalone .bgpart file root into a ViewModel, including Items.
+    /// Counterpart to <see cref="PartSerializer.SerializePartFileFromViewModel"/>.
+    /// </summary>
+    public static PartDefinitionViewModel DeserializePartFileToViewModel(
+        XElement root,
+        DiagramViewModel diagramViewModel,
+        bool assignNewId)
+    {
+        if (root is null) throw new ArgumentNullException(nameof(root));
+        if (root.Name != PartSerializer.PartFileRoot)
+            throw new InvalidOperationException(
+                $"Expected root element '{PartSerializer.PartFileRoot}', got '{root.Name}'.");
+
+        var defElement = root.Element("PartDefinition")
+                         ?? throw new InvalidOperationException(
+                             "Missing <PartDefinition> child in part file.");
+        return ObjectDeserializer.ReadPartDefinitionFromXML(diagramViewModel, defElement, assignNewId);
     }
 
     public static PartDefinition DeserializeDefinition(XElement element)

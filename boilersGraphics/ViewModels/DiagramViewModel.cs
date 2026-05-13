@@ -115,6 +115,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             DetachPartCommand = new DelegateCommand(() => ExecuteDetachPartCommand(), () => CanExecuteDetachPart());
             ClonePartDefinitionCommand = new DelegateCommand(() => ExecuteClonePartDefinitionCommand(), () => CanExecuteClonePartDefinition());
             EditPartDefinitionCommand = new DelegateCommand(() => ExecuteEditPartDefinitionCommand(), () => CanExecuteEditPartDefinition());
+            ExportPartCommand = new DelegateCommand(() => ExecuteExportPartCommand(), () => CanExecuteExportPart());
+            ImportPartCommand = new DelegateCommand(() => ExecuteImportPartCommand());
             CutCommand = new DelegateCommand(() => ExecuteCutCommand(), () => CanExecuteCut());
             CopyCommand = new DelegateCommand(() => ExecuteCopyCommand(), () => CanExecuteCopy());
             CopyCanvasToClipboardCommand = new DelegateCommand(() => ExecuteCopyCanvasToClipboardCommand());
@@ -579,6 +581,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                     EditPartDefinitionCommand.RaiseCanExecuteChanged();
                     ClonePartDefinitionCommand.RaiseCanExecuteChanged();
                     DetachPartCommand.RaiseCanExecuteChanged();
+                    ExportPartCommand.RaiseCanExecuteChanged();
                 })
                 .AddTo(_CompositeDisposable);
 
@@ -701,6 +704,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public DelegateCommand DetachPartCommand { get; }
     public DelegateCommand ClonePartDefinitionCommand { get; }
     public DelegateCommand EditPartDefinitionCommand { get; }
+    public DelegateCommand ExportPartCommand { get; }
+    public DelegateCommand ImportPartCommand { get; }
     public DelegateCommand BringForegroundCommand { get; }
     public DelegateCommand BringForwardCommand { get; }
     public DelegateCommand SendBackwardCommand { get; }
@@ -5069,6 +5074,116 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     }
 
     #endregion //EditPartDefinition
+
+    #region ImportExportPart (.bgpart)
+
+    public const string PartFileExtension = ".bgpart";
+    public const string PartFileFilter = "boiler's Graphics Part Files (*.bgpart)|*.bgpart|All Files (*.*)|*.*";
+
+    /// <summary>
+    /// Test hook: when running with App.IsTest = true, ExecuteImportPartCommand /
+    /// ExecuteExportPartCommand record the path they would have used here and skip
+    /// the file dialog. Tests can pre-set this to drive the import/export flow.
+    /// </summary>
+    internal string LastPartFilePath { get; set; }
+
+    private bool CanExecuteExportPart()
+    {
+        return SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<boilersGraphics.ViewModels.Parts.PartInstanceViewModel>()
+            .Any();
+    }
+
+    private void ExecuteExportPartCommand()
+    {
+        var instance = SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<boilersGraphics.ViewModels.Parts.PartInstanceViewModel>()
+            .FirstOrDefault();
+        if (instance is null) return;
+
+        if (!TryGetPartDefinition(instance.DefinitionId.Value, out var definition)) return;
+
+        var path = ResolveExportPath(definition.Name.Value);
+        if (string.IsNullOrEmpty(path)) return;
+
+        try
+        {
+            var xml = boilersGraphics.Helpers.Parts.PartSerializer.SerializePartFileFromViewModel(definition);
+            xml.Save(path);
+            LastPartFilePath = path;
+        }
+        catch (Exception ex) when (!App.IsTest)
+        {
+            MessageBox.Show(ex.Message, "パーツのエクスポート失敗", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void ExecuteImportPartCommand()
+    {
+        var path = ResolveImportPath();
+        if (string.IsNullOrEmpty(path)) return;
+
+        try
+        {
+            var root = System.Xml.Linq.XElement.Load(path);
+            // 同じ .bgpart を二度 Import しても両方が独立した PartDefinition として残るように、
+            // Id を毎回振り直す。既存 Definition を上書きしたい場合は手動で削除してから Import。
+            var vm = boilersGraphics.Helpers.Parts.PartDeserializer.DeserializePartFileToViewModel(root, this, assignNewId: true);
+
+            MainWindowVM.Recorder.BeginRecode();
+            try
+            {
+                MainWindowVM.Recorder.Current.ExecuteAdd(PartDefinitions, vm);
+            }
+            finally
+            {
+                MainWindowVM.Recorder.EndRecode();
+            }
+
+            LastPartFilePath = path;
+        }
+        catch (Exception ex) when (!App.IsTest)
+        {
+            MessageBox.Show(ex.Message, "パーツのインポート失敗", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private string ResolveExportPath(string defaultFileName)
+    {
+        if (App.IsTest || Application.Current is null) return LastPartFilePath;
+
+        var dlg = new Microsoft.Win32.SaveFileDialog
+        {
+            Filter = PartFileFilter,
+            DefaultExt = PartFileExtension,
+            FileName = SanitizeFileName(defaultFileName),
+        };
+        return dlg.ShowDialog() == true ? dlg.FileName : null;
+    }
+
+    private string ResolveImportPath()
+    {
+        if (App.IsTest || Application.Current is null) return LastPartFilePath;
+
+        var dlg = new Microsoft.Win32.OpenFileDialog
+        {
+            Filter = PartFileFilter,
+            DefaultExt = PartFileExtension,
+        };
+        return dlg.ShowDialog() == true ? dlg.FileName : null;
+    }
+
+    private static string SanitizeFileName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name)) return "Part";
+        var invalid = System.IO.Path.GetInvalidFileNameChars();
+        var chars = name.Select(c => Array.IndexOf(invalid, c) >= 0 ? '_' : c).ToArray();
+        return new string(chars);
+    }
+
+    #endregion //ImportExportPart
 
     public void OverwriteColorSpot(Brush brush)
     {

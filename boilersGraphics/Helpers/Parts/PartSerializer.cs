@@ -50,6 +50,18 @@ internal static class PartSerializer
             SerializeDefinition(definition));
     }
 
+    /// <summary>
+    /// Serialize a PartDefinitionViewModel (including its internal Items) into a standalone
+    /// .bgpart file root. Counterpart to <see cref="PartDeserializer.DeserializePartFileToViewModel"/>.
+    /// </summary>
+    public static XElement SerializePartFileFromViewModel(PartDefinitionViewModel viewModel)
+    {
+        if (viewModel is null) throw new ArgumentNullException(nameof(viewModel));
+        return new XElement(PartFileRoot,
+            new XAttribute("Version", PartFileVersion),
+            SerializeDefinitionFromViewModel(viewModel));
+    }
+
     public static XElement SerializeDefinition(PartDefinition definition)
     {
         if (definition is null) throw new ArgumentNullException(nameof(definition));

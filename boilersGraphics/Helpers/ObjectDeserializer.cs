@@ -238,22 +238,41 @@ public class ObjectDeserializer
         {
             foreach (var defElm in partDefinitionsElm.Elements("PartDefinition"))
             {
-                var def = PartDeserializer.DeserializeDefinition(defElm);
-                var vm = new PartDefinitionViewModel(def);
-
-                var itemsElm = defElm.Element("Items");
-                if (itemsElm is not null)
-                {
-                    foreach (var designerItemElm in itemsElm.Elements("DesignerItem"))
-                    {
-                        var item = ExtractDesignerItemViewModelBase(diagramViewModel, designerItemElm);
-                        if (item is not null)
-                            vm.Items.Add(item);
-                    }
-                }
+                var vm = ReadPartDefinitionFromXML(diagramViewModel, defElm, assignNewId: false);
                 diagramViewModel.PartDefinitions.Add(vm);
             }
         }
+    }
+
+    /// <summary>
+    /// Build a PartDefinitionViewModel from a single &lt;PartDefinition&gt; element.
+    /// Used both by the embedded PartDefinitions section in a .bgff document and by
+    /// the standalone .bgpart import path. When <paramref name="assignNewId"/> is true
+    /// the imported definition gets a fresh Guid, so importing the same file twice
+    /// produces two independent PartDefinitions instead of overwriting.
+    /// </summary>
+    internal static PartDefinitionViewModel ReadPartDefinitionFromXML(
+        DiagramViewModel diagramViewModel,
+        XElement defElm,
+        bool assignNewId)
+    {
+        if (defElm is null) throw new ArgumentNullException(nameof(defElm));
+
+        var def = PartDeserializer.DeserializeDefinition(defElm);
+        if (assignNewId) def.Id = Guid.NewGuid();
+        var vm = new PartDefinitionViewModel(def);
+
+        var itemsElm = defElm.Element("Items");
+        if (itemsElm is not null)
+        {
+            foreach (var designerItemElm in itemsElm.Elements("DesignerItem"))
+            {
+                var item = ExtractDesignerItemViewModelBase(diagramViewModel, designerItemElm);
+                if (item is not null)
+                    vm.Items.Add(item);
+            }
+        }
+        return vm;
     }
 
     private static LayerItem ReadLayerItemFromXML(DiagramViewModel diagramViewModel, Layer layerObj, XElement layerItem)
