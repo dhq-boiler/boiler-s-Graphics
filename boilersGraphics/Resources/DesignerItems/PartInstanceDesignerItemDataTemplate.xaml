@@ -4,7 +4,7 @@
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:parts="clr-namespace:boilersGraphics.ViewModels.Parts">
     <DataTemplate DataType="{x:Type parts:PartInstanceViewModel}">
-        <ContentControl>
+        <ContentControl Background="Transparent">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDoubleClick">
                     <i:InvokeCommandAction Command="{Binding MouseDoubleClickCommand}" />

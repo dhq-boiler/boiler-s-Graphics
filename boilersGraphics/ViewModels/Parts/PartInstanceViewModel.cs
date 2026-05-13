@@ -31,6 +31,7 @@ public class PartInstanceViewModel : DesignerItemViewModelBase
     public PartInstanceViewModel()
     {
         ParameterValues = new ReadOnlyDictionary<Guid, BindableReactiveProperty<object>>(_parameterValues);
+        IsHitTestVisible.Value = true;
         InitMouseDoubleClick();
     }
 
@@ -43,6 +44,7 @@ public class PartInstanceViewModel : DesignerItemViewModelBase
         : base(id, parent, left, top)
     {
         ParameterValues = new ReadOnlyDictionary<Guid, BindableReactiveProperty<object>>(_parameterValues);
+        IsHitTestVisible.Value = true;
         InitMouseDoubleClick();
     }
 
