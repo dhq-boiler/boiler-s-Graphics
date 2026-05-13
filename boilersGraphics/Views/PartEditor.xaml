@@ -17,7 +17,6 @@
             <Setter Property="MinWidth" Value="480" />
             <Setter Property="MinHeight" Value="320" />
             <Setter Property="ResizeMode" Value="CanResize" />
-            <Setter Property="WindowStartupLocation" Value="CenterScreen" />
             <Setter Property="ShowInTaskbar" Value="True" />
         </Style>
     </prism:Dialog.WindowStyle>

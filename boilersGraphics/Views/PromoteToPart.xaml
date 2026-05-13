@@ -13,7 +13,6 @@
         <Style TargetType="Window">
             <Setter Property="SizeToContent" Value="WidthAndHeight" />
             <Setter Property="ResizeMode" Value="NoResize" />
-            <Setter Property="WindowStartupLocation" Value="CenterOwner" />
             <Setter Property="MinWidth" Value="360" />
         </Style>
     </prism:Dialog.WindowStyle>
