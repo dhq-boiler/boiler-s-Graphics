@@ -770,4 +770,21 @@ internal class ObjectSerializer
             };
         }
     }
+
+    /// <summary>
+    /// Phase 4-f-2: Themes セクションを `<Diagram>` ルート直下に追加する。
+    /// MVP では ActiveThemeId のみ。組込テーマは ThemeRepository.IsBuiltInId 判定でロード時に解決。
+    /// ユーザー追加テーマの個別シリアライズ (`<Theme>` 子要素) は Phase 4.5 候補。
+    /// ActiveTheme が null のときは要素ごと省略する (後方互換)。
+    /// </summary>
+    public static XElement SerializeThemes(DiagramViewModel diagramViewModel)
+    {
+        var themes = new XElement("Themes");
+        var active = diagramViewModel?.ActiveTheme?.Value;
+        if (active != null)
+        {
+            themes.Add(new XElement("ActiveThemeId", active.Id.ToString()));
+        }
+        return themes;
+    }
 }

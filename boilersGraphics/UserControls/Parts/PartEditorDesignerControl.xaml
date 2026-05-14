@@ -716,6 +716,71 @@
                     </StackPanel>
 
                     <!--
+                        Phase 4-g-2: テーマ追従パーツ用のスロット名 / 線種名タグ。文字列ベースで公開。
+                        パーツインスタンスごとに "primary" / "Dash" 等の値を持たせて、後段でテーマ追従できる。
+                        動的バインドモード本体 (Q-3 案 B) は Phase 4.5 候補。
+                    -->
+                    <StackPanel Margin="0,8,0,0">
+                        <TextBlock
+                            Margin="0,0,0,4"
+                            FontWeight="Bold"
+                            Foreground="#DDDDDD"
+                            Text="Phase 4 公開可能プロパティ (テーマタグ)" />
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="26" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Foreground="#DDDDDD" Text="PaletteSlotName" />
+                            <Button Grid.Column="1" Margin="4,0,0,0"
+                                    AutomationProperties.AutomationId="PaletteSlotNameExposurePin"
+                                    Command="{Binding DataContext.TogglePropertyExposureCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                    CommandParameter="PaletteSlotName"
+                                    Style="{StaticResource ExposurePinButtonStyle}"
+                                    ToolTip="このプロパティを公開する">
+                                <TextBlock FontSize="11" Text="●">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#666666" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DataContext.IsPaletteSlotNameExposed.Value, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                                    <Setter Property="Foreground" Value="#1E90FF" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Button>
+                        </Grid>
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="26" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Foreground="#DDDDDD" Text="LineStyleName" />
+                            <Button Grid.Column="1" Margin="4,0,0,0"
+                                    AutomationProperties.AutomationId="LineStyleNameExposurePin"
+                                    Command="{Binding DataContext.TogglePropertyExposureCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                    CommandParameter="LineStyleName"
+                                    Style="{StaticResource ExposurePinButtonStyle}"
+                                    ToolTip="このプロパティを公開する">
+                                <TextBlock FontSize="11" Text="●">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#666666" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DataContext.IsLineStyleNameExposed.Value, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                                    <Setter Property="Foreground" Value="#1E90FF" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Button>
+                        </Grid>
+                    </StackPanel>
+
+                    <!--
                         Phase 1-c-6-d-6: 公開パラメータセクション。Definition.ExposedProperties を一覧表示し、
                         追加 / 削除できる。SelectedItem に依存せず常時表示。
                     -->

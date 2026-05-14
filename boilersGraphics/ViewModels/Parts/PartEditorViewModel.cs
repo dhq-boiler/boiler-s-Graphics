@@ -88,6 +88,9 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
         { "GlowRadius", new BindableReactiveProperty<bool>(false) },
         { "GlowIntensity", new BindableReactiveProperty<bool>(false) },
         { "GlowColor", new BindableReactiveProperty<bool>(false) },
+        // Phase 4-g-2: テーマ追従パーツ用のスロット名 / 線種名タグ。Phase 1 の String 型でカバー。
+        { "PaletteSlotName", new BindableReactiveProperty<bool>(false) },
+        { "LineStyleName", new BindableReactiveProperty<bool>(false) },
     };
 
     public BindableReactiveProperty<bool> IsLeftExposed => _exposureFlags["Left"];
@@ -110,6 +113,9 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
     public BindableReactiveProperty<bool> IsGlowRadiusExposed => _exposureFlags["GlowRadius"];
     public BindableReactiveProperty<bool> IsGlowIntensityExposed => _exposureFlags["GlowIntensity"];
     public BindableReactiveProperty<bool> IsGlowColorExposed => _exposureFlags["GlowColor"];
+    // Phase 4-g-2: テーマ追従タグ系のフラグ。
+    public BindableReactiveProperty<bool> IsPaletteSlotNameExposed => _exposureFlags["PaletteSlotName"];
+    public BindableReactiveProperty<bool> IsLineStyleNameExposed => _exposureFlags["LineStyleName"];
 
     public ReactiveCommand<string> TogglePropertyExposureCommand { get; }
 
@@ -371,6 +377,9 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
         "IsNode" => ExposedPropertyType.Boolean,
         // Phase 4-g / Q-11 案 A: Color 型は Nullable<Color> も含む (SelectableDesignerItemViewModelBase.GlowColor)。
         "GlowColor" => ExposedPropertyType.Color,
+        // Phase 4-g-2: スロット名 / 線種名は文字列タグ。
+        "PaletteSlotName" => ExposedPropertyType.String,
+        "LineStyleName" => ExposedPropertyType.String,
         _ => ExposedPropertyType.Double,
     };
 

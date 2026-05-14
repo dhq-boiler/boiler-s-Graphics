@@ -10,6 +10,17 @@ namespace boilersGraphics.Models.Themes;
 /// </summary>
 public static class ThemeRepository
 {
+    // Phase 4-f-2: 組込テーマ Id を固定化。プロジェクトファイルに ActiveThemeId を保存・復元
+    // するため、毎回 Guid.NewGuid() で発番すると ActiveThemeId が一致しなくなり復元できない。
+    /// <summary>組込テーマ Bladerunner の固定 Id。</summary>
+    public static readonly Guid BladerunnerId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+    /// <summary>組込テーマ Matrix の固定 Id。</summary>
+    public static readonly Guid MatrixId = Guid.Parse("22222222-2222-2222-2222-222222222222");
+    /// <summary>組込テーマ MedicalBlueWhite の固定 Id。</summary>
+    public static readonly Guid MedicalBlueWhiteId = Guid.Parse("33333333-3333-3333-3333-333333333333");
+    /// <summary>組込テーマ AmberCrt の固定 Id。</summary>
+    public static readonly Guid AmberCrtId = Guid.Parse("44444444-4444-4444-4444-444444444444");
+
     /// <summary>組み込みテーマ 4 種を新規インスタンスで返す。</summary>
     public static IReadOnlyList<Theme> CreateBuiltIn() =>
         new[]
@@ -19,6 +30,13 @@ public static class ThemeRepository
             CreateMedicalBlueWhite(),
             CreateAmberCrt(),
         };
+
+    /// <summary>
+    /// Phase 4-f-2: 指定 Id が組込テーマ Id かどうかを返す。
+    /// プロジェクトファイル復元時、ActiveThemeId が組込なら AvailableThemes から検索可能。
+    /// </summary>
+    public static bool IsBuiltInId(Guid id) =>
+        id == BladerunnerId || id == MatrixId || id == MedicalBlueWhiteId || id == AmberCrtId;
 
     /// <summary>組み込み線種 6 種を新規インスタンスで返す (テーマに紐づく既定線種ライブラリ)。</summary>
     public static IReadOnlyList<LineStyle> CreateBuiltInLineStyles() =>
@@ -47,6 +65,7 @@ public static class ThemeRepository
     private static Theme CreateBladerunner()
     {
         return CreateThemeWith(
+            id: BladerunnerId,
             name: "Bladerunner",
             colors: new[]
             {
@@ -64,6 +83,7 @@ public static class ThemeRepository
     private static Theme CreateMatrix()
     {
         return CreateThemeWith(
+            id: MatrixId,
             name: "Matrix",
             colors: new[]
             {
@@ -81,6 +101,7 @@ public static class ThemeRepository
     private static Theme CreateMedicalBlueWhite()
     {
         return CreateThemeWith(
+            id: MedicalBlueWhiteId,
             name: "MedicalBlueWhite",
             colors: new[]
             {
@@ -98,6 +119,7 @@ public static class ThemeRepository
     private static Theme CreateAmberCrt()
     {
         return CreateThemeWith(
+            id: AmberCrtId,
             name: "AmberCrt",
             colors: new[]
             {
@@ -113,6 +135,7 @@ public static class ThemeRepository
     }
 
     private static Theme CreateThemeWith(
+        Guid id,
         string name,
         IReadOnlyList<Color> colors,
         Color glowColor,
@@ -121,6 +144,7 @@ public static class ThemeRepository
     {
         var theme = new Theme
         {
+            Id = id,
             Name = name,
             IsBuiltIn = true,
             DefaultGlow =

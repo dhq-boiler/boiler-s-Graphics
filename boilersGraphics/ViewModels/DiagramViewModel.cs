@@ -948,12 +948,15 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             var layersXML = new XElement("Layers", ObjectSerializer.SerializeLayers(Layers));
             var configurationXML = new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this));
             var attachmentsXML = new XElement("Attachments", ObjectSerializer.SerializeAttachments(this));
+            // Phase 4-f-2: ActiveThemeId を保存。
+            var themesXML = ObjectSerializer.SerializeThemes(this);
 
             var root = new XElement("boilersGraphics");
             root.Add(versionXML);
             root.Add(layersXML);
             root.Add(configurationXML);
             root.Add(attachmentsXML);
+            root.Add(themesXML);
 
             //自動保存なので、FileNameは更新しないでセーブだけする
             SaveFileAndNoFileNameUpdatingWithoutSaveFileDialog(root, path);
@@ -2634,6 +2637,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         root.Add(new XElement("Layers", ObjectSerializer.SerializeLayers(Layers)));
         root.Add(new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this)));
         root.Add(new XElement("Attachments", ObjectSerializer.SerializeAttachments(this)));
+        // Phase 4-f-2: ActiveThemeId を保存。
+        root.Add(ObjectSerializer.SerializeThemes(this));
 
         if (PartDefinitions.Count > 0)
         {

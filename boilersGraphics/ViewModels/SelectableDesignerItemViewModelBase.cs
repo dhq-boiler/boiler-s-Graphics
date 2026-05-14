@@ -152,6 +152,15 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
     /// </summary>
     public R3.IReadOnlyBindableReactiveProperty<System.Windows.Media.Effects.Effect> GlowEffect { get; private set; }
 
+    // Phase 4-g-2: テーマ追従パーツのためのスロット名 / 線種名タグ。
+    // 値は SemanticSlotKeys のいずれか (primary/accent/warning/info/background) or 任意ユーザー定義文字列。
+    // 動的バインドモード (Q-3 案 B) や ApplyThemeToScope での参照は将来追加 (現状はデータ層のみ)。
+    /// <summary>Phase 4-g-2: パレットスロット名 (例: "primary")。空文字なら未割当。</summary>
+    public R3.BindableReactiveProperty<string> PaletteSlotName { get; private set; } = new(string.Empty);
+
+    /// <summary>Phase 4-g-2: 線種名 (例: "Dash")。空文字なら未割当。</summary>
+    public R3.BindableReactiveProperty<string> LineStyleName { get; private set; } = new(string.Empty);
+
     public string Name { get; set; }
 
     public Guid ID { get; set; } = Guid.NewGuid();
