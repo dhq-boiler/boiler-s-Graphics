@@ -119,6 +119,20 @@
                         Height="24"
                         Padding="6,0"
                         ToolTip="Timeline を PNG 連番として書き出す (Phase 5-f)" />
+
+                    <!--  Phase 5.5-c: WPF Storyboard XAML 書出ダイアログ起動  -->
+                    <Button
+                        x:Name="ExportWpfXamlButton"
+                        AutomationProperties.AutomationId="TimelineExportWpfXaml"
+                        Margin="6,0,0,0"
+                        Background="#FF3E3E42"
+                        BorderBrush="#FF555555"
+                        Command="{Binding DataContext.DiagramViewModel.OpenWpfXamlExportDialogCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                        Content="WPF XAML..."
+                        Foreground="#FFCCCCCC"
+                        Height="24"
+                        Padding="6,0"
+                        ToolTip="Timeline を WPF UserControl + Storyboard XAML として書き出す (Phase 5.5-c)" />
                 </StackPanel>
             </Border>
 

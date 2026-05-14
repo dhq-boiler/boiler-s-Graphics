@@ -120,6 +120,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             OpenThemeManagerCommand = new DelegateCommand(() => ExecuteOpenThemeManagerCommand());
             // Phase 5-f-2: PNG 連番書出ダイアログ起動。
             OpenPngSequenceExportDialogCommand = new DelegateCommand(() => ExecuteOpenPngSequenceExportDialogCommand());
+            // Phase 5.5-c: WPF Storyboard XAML 書出ダイアログ起動。
+            OpenWpfXamlExportDialogCommand = new DelegateCommand(() => ExecuteOpenWpfXamlExportDialogCommand());
             UniformWidthCommand = new DelegateCommand(() => ExecuteUniformWidthCommand(), () => CanExecuteUniform());
             UniformHeightCommand = new DelegateCommand(() => ExecuteUniformHeightCommand(), () => CanExecuteUniform());
             DuplicateCommand = new DelegateCommand(() => ExecuteDuplicateCommand(), () => CanExecuteDuplicate());
@@ -758,6 +760,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     /// <summary>Phase 4-c: テーマ選択 / パレット適用ダイアログ起動コマンド。</summary>
     public DelegateCommand OpenThemeManagerCommand { get; }
     public DelegateCommand OpenPngSequenceExportDialogCommand { get; }
+    /// <summary>Phase 5.5-c: WPF Storyboard XAML 書出ダイアログ起動コマンド。</summary>
+    public DelegateCommand OpenWpfXamlExportDialogCommand { get; }
     /// <summary>Phase 4-c: 利用可能なテーマ一覧 (組込 4 種 + ユーザー追加)。</summary>
     public ObservableList<boilersGraphics.Models.Themes.Theme> AvailableThemes { get; } = new();
     /// <summary>Phase 4-c: 現在アクティブなテーマ。null 許容。</summary>
@@ -1934,6 +1938,82 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         var encoder = new System.Windows.Media.Imaging.PngBitmapEncoder();
         encoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(rtb));
         encoder.Save(stream);
+    }
+
+    /// <summary>
+    /// Phase 5.5-c: WPF Storyboard XAML 書出ダイアログを開き、OK なら
+    /// <see cref="boilersGraphics.Helpers.Animation.Export.WpfStoryboardXamlExporter"/> で
+    /// <c>.xaml</c> (+ オプションで <c>.xaml.cs</c>) をファイル出力する。
+    /// PathGeometry は各図形が描画用に保持している <c>PathGeometryNoRotate.Value</c> を利用 (= 既に流れた状態の Geometry)。
+    /// </summary>
+    private void ExecuteOpenWpfXamlExportDialogCommand()
+    {
+        IDialogResult result = null;
+        dlgService.ShowDialog(nameof(boilersGraphics.Views.Animation.WpfXamlExportDialog),
+            new DialogParameters(),
+            ret => result = ret);
+        if (result == null || result.Result != ButtonResult.OK) return;
+
+        var settings = result.Parameters.GetValue<boilersGraphics.Helpers.Animation.Export.XamlExportSettings>("Settings");
+        var outputPath = result.Parameters.GetValue<string>("OutputPath");
+        if (settings == null || string.IsNullOrWhiteSpace(outputPath))
+        {
+            MainWindowVM.Message.Value = "XAML 書出に必要なパラメータが揃っていなかったっす";
+            return;
+        }
+
+        try
+        {
+            var allItems = (AllItems?.Value as System.Collections.Generic.IEnumerable<SelectableDesignerItemViewModelBase>)
+                ?? System.Array.Empty<SelectableDesignerItemViewModelBase>();
+            var allItemsList = new System.Collections.Generic.List<SelectableDesignerItemViewModelBase>(allItems);
+            var exporter = new boilersGraphics.Helpers.Animation.Export.WpfStoryboardXamlExporter(
+                allItemsList,
+                BuildPathGeometryResolverForXamlExport());
+
+            var options = new System.Collections.Generic.Dictionary<string, object>
+            {
+                { "TargetNamespace", settings.TargetNamespace },
+                { "ClassName", settings.ClassName },
+                { "AccessModifier", settings.AccessModifier },
+                { "GenerateCodeBehind", settings.GenerateCodeBehind },
+                { "IndentWidth", settings.IndentWidth },
+                { "NewLine", settings.NewLine },
+                { "IncludeHeaderComment", settings.IncludeHeaderComment },
+            };
+
+            var written = exporter.Export(Timeline, outputPath, Timeline.ItemResolver, options);
+            MainWindowVM.Message.Value = written == 1
+                ? $"WPF XAML 1 ファイルを {outputPath} に書き出したっす"
+                : $"WPF XAML 2 ファイル (.xaml + .xaml.cs) を {outputPath} 周辺に書き出したっす";
+        }
+        catch (System.Exception ex)
+        {
+            LogManager.GetCurrentClassLogger().Warn(ex, "WPF XAML export failed");
+            MainWindowVM.Message.Value = $"書き出し失敗: {ex.Message}";
+        }
+    }
+
+    /// <summary>
+    /// Phase 5.5-c: Path 系図形に対する PathGeometry 解決。各 ViewModel が描画時に
+    /// セットしている <see cref="SelectableDesignerItemViewModelBase.PathGeometryNoRotate"/> を最優先。
+    /// 未初期化なら <c>CreateGeometry(false)</c> をフォールバックで試す
+    /// (<see cref="PathDesignerItemViewModel"/> は NotSupportedException を投げるので null フォールバック)。
+    /// </summary>
+    internal static System.Func<SelectableDesignerItemViewModelBase, System.Windows.Media.PathGeometry> BuildPathGeometryResolverForXamlExport()
+    {
+        return item =>
+        {
+            if (item is null) return null;
+            var stored = item.PathGeometryNoRotate?.Value;
+            if (stored is not null) return stored;
+            if (item is DesignerItemViewModelBase d)
+            {
+                try { return d.CreateGeometry(false); }
+                catch { return null; }
+            }
+            return null;
+        };
     }
 
     /// <summary>
