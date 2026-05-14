@@ -1,6 +1,9 @@
 using boilersGraphics.ViewModels;
+using boilersGraphics.ViewModels.Connectors;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
@@ -43,6 +46,96 @@ public static class ShapeToXamlMapper
     /// 仕様書 §6 の <c>x:Name="Item_{Guid:N}"</c>。Storyboard.TargetName と一致する形で出力する。
     /// </summary>
     public static string MakeXName(Guid id) => "Item_" + id.ToString("N");
+
+    /// <summary>
+    /// Path 系図形 (PathDesignerItemViewModel / NPolygonViewModel /
+    /// PolyBezierViewModel / OrthogonalConnectorViewModel / AnchorBezierConnectorViewModel)
+    /// を WPF Shape XAML 文字列に変換する。<paramref name="geometry"/> は呼び出し側で計算済みの
+    /// PathGeometry (実描画上のそれ) を渡す。<see cref="TryMapWpfShape"/> の Pure 性を保つため、
+    /// PathGeometry 生成自体は呼び出し側 (Phase 5.5-c の Exporter) の責務とする。
+    ///
+    /// <see cref="NPolygonViewModel"/> のみは <see cref="ExtractPolygonPoints"/> で
+    /// "x1,y1 x2,y2 ..." 形式が取れれば <c>&lt;Polygon Points="..."/&gt;</c>、取れなければ
+    /// <c>&lt;Path Data="..."/&gt;</c> にフォールバック。それ以外は常に <c>&lt;Path&gt;</c>。
+    /// </summary>
+    public static string TryMapWpfPath(SelectableDesignerItemViewModelBase item, PathGeometry geometry, XamlExportSettings settings, int indentLevel = 0)
+    {
+        if (item is null || settings is null || geometry is null) return null;
+
+        var isPathFamily = item is PathDesignerItemViewModel
+                        or NPolygonViewModel
+                        or PolyBezierViewModel
+                        or OrthogonalConnectorViewModel
+                        or AnchorBezierConnectorViewModel;
+        if (!isPathFamily) return null;
+
+        var indent = new string(' ', settings.IndentWidth * Math.Max(0, indentLevel));
+        var nl = settings.NewLine;
+
+        if (item is NPolygonViewModel poly)
+        {
+            var points = ExtractPolygonPoints(geometry);
+            if (points is not null) return BuildPolygon(poly, points, indent, nl);
+        }
+
+        return BuildPath(item, geometry, indent, nl);
+    }
+
+    /// <summary>
+    /// 直線セグメントのみで構成された <see cref="PathGeometry"/> から
+    /// <c>Polygon.Points</c> 形式の文字列を返す。非直線セグメント (Arc / Bezier) を含む場合は null。
+    /// 最初の Figure のみ扱う (Phase 5.5-b では複合 Figure は将来枠)。
+    /// </summary>
+    public static string ExtractPolygonPoints(PathGeometry geometry)
+    {
+        if (geometry is null) return null;
+        if (geometry.Figures is null || geometry.Figures.Count == 0) return null;
+        var fig = geometry.Figures[0];
+        var pts = new List<Point> { fig.StartPoint };
+        foreach (var seg in fig.Segments)
+        {
+            switch (seg)
+            {
+                case LineSegment ls: pts.Add(ls.Point); break;
+                case PolyLineSegment pls: pts.AddRange(pls.Points); break;
+                default: return null;
+            }
+        }
+        return string.Join(" ", pts.Select(p => FormatDouble(p.X) + "," + FormatDouble(p.Y)));
+    }
+
+    private static string BuildPolygon(NPolygonViewModel p, string points, string indent, string nl)
+    {
+        var sb = new StringBuilder();
+        var inner = indent + new string(' ', 4);
+        sb.Append(indent).Append("<Polygon x:Name=\"").Append(MakeXName(p.ID)).Append('"').Append(nl);
+        AppendCanvasLeftTop(sb, p, inner, nl);
+        AppendWidthHeightAlways(sb, p, inner, nl);
+        sb.Append(inner).Append("Points=\"").Append(points).Append('"').Append(nl);
+        AppendStrokeFill(sb, p, inner, nl);
+        CloseOrOpenAndChildren(sb, p, "Polygon", indent, inner, nl);
+        return sb.ToString();
+    }
+
+    private static string BuildPath(SelectableDesignerItemViewModelBase item, PathGeometry geometry, string indent, string nl)
+    {
+        var sb = new StringBuilder();
+        var inner = indent + new string(' ', 4);
+        sb.Append(indent).Append("<Path x:Name=\"").Append(MakeXName(item.ID)).Append('"').Append(nl);
+        if (item is DesignerItemViewModelBase d)
+        {
+            AppendCanvasLeftTop(sb, d, inner, nl);
+            if (d.Width.Value > 0 || d.Height.Value > 0)
+            {
+                AppendWidthHeightAlways(sb, d, inner, nl);
+            }
+        }
+        // Path.Fill / Path.Stroke はそれぞれ Stroke / Fill 属性で出す (Shape 共通)
+        AppendStrokeFill(sb, item, inner, nl);
+        sb.Append(inner).Append("Data=\"").Append(EscapeXmlAttribute(geometry.ToString(CultureInfo.InvariantCulture))).Append('"').Append(nl);
+        CloseOrOpenAndChildren(sb, item, "Path", indent, inner, nl);
+        return sb.ToString();
+    }
 
     private static string BuildRectangle(NRectangleViewModel r, string indent, string nl)
     {

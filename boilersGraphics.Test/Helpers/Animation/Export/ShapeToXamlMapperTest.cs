@@ -1,7 +1,9 @@
 using boilersGraphics.Helpers.Animation.Export;
 using boilersGraphics.ViewModels;
+using boilersGraphics.ViewModels.Connectors;
 using NUnit.Framework;
 using System;
+using System.Windows;
 using System.Windows.Media;
 
 namespace boilersGraphics.Test.Helpers.Animation.Export;
@@ -194,13 +196,135 @@ public class ShapeToXamlMapperTest
     }
 
     [Test]
-    public void 未対応図形_例えば_SnapPointViewModel_は_null()
+    public void TryMapWpfShape_は_Path系図形には_常に_null()
     {
-        // 通常 SnapPoint は SelectableDesignerItemViewModelBase 直系ではないが、
-        // 「対応外図形は null」を確認するため、適当な無関係 ViewModel を用意できないので Polygon でテスト。
-        // Phase 5.5-b-4 で Polygon は対応するので、その時点でこのテストは更新される。
+        // Path 系は TryMapWpfPath 専用 (geometry 必須)。TryMapWpfShape では null を返すべし。
         var p = new NPolygonViewModel();
-        var xaml = ShapeToXamlMapper.TryMapWpfShape(p, DefaultSettings);
-        Assert.That(xaml, Is.Null);
+        Assert.That(ShapeToXamlMapper.TryMapWpfShape(p, DefaultSettings), Is.Null);
+        var path = new PathDesignerItemViewModel();
+        Assert.That(ShapeToXamlMapper.TryMapWpfShape(path, DefaultSettings), Is.Null);
+    }
+
+    // ---------- Phase 5.5-b-4: Path 系 ----------
+
+    private static PathGeometry MakeTriangle(Point a, Point b, Point c)
+    {
+        var fig = new PathFigure(a, new PathSegment[]
+        {
+            new LineSegment(b, true),
+            new LineSegment(c, true),
+        }, closed: true);
+        return new PathGeometry(new[] { fig });
+    }
+
+    [Test]
+    public void TryMapWpfPath_geometry_null_は_null()
+    {
+        var p = new NPolygonViewModel();
+        Assert.That(ShapeToXamlMapper.TryMapWpfPath(p, null, DefaultSettings), Is.Null);
+    }
+
+    [Test]
+    public void TryMapWpfPath_は_Path系以外の図形には_null()
+    {
+        var r = new NRectangleViewModel();
+        var g = MakeTriangle(new Point(0, 0), new Point(10, 0), new Point(5, 10));
+        Assert.That(ShapeToXamlMapper.TryMapWpfPath(r, g, DefaultSettings), Is.Null);
+    }
+
+    [Test]
+    public void Polygon_直線のみのGeometryは_Points形式で_Polygonとして出力()
+    {
+        var p = new NPolygonViewModel(0, 0, 100, 50);
+        p.EdgeBrush.Value = new SolidColorBrush(Colors.Black);
+        p.FillBrush.Value = new SolidColorBrush(Colors.Yellow);
+        var g = MakeTriangle(new Point(10, 10), new Point(90, 10), new Point(50, 40));
+
+        var xaml = ShapeToXamlMapper.TryMapWpfPath(p, g, DefaultSettings);
+
+        Assert.That(xaml, Does.StartWith("<Polygon x:Name=\"Item_"));
+        Assert.That(xaml, Does.Contain("Points=\"10,10 90,10 50,40\""));
+        Assert.That(xaml, Does.Contain("Stroke=\"#FF000000\""));
+        Assert.That(xaml, Does.Contain("Fill=\"#FFFFFF00\""));
+    }
+
+    [Test]
+    public void Polygon_曲線が含まれるとPathにフォールバック()
+    {
+        var p = new NPolygonViewModel(0, 0, 100, 100);
+        var fig = new PathFigure(new Point(0, 0), new PathSegment[]
+        {
+            new BezierSegment(new Point(20, 0), new Point(80, 0), new Point(100, 100), true),
+        }, closed: false);
+        var g = new PathGeometry(new[] { fig });
+
+        var xaml = ShapeToXamlMapper.TryMapWpfPath(p, g, DefaultSettings);
+
+        Assert.That(xaml, Does.StartWith("<Path x:Name=\"Item_"));
+        Assert.That(xaml, Does.Contain("Data=\""));
+    }
+
+    [Test]
+    public void PathDesignerItem_はPath要素として出力()
+    {
+        var item = new PathDesignerItemViewModel();
+        item.Left.Value = 0;
+        item.Top.Value = 0;
+        item.EdgeBrush.Value = new SolidColorBrush(Colors.Red);
+        item.EdgeThickness.Value = 2;
+        var g = MakeTriangle(new Point(0, 0), new Point(50, 0), new Point(25, 25));
+
+        var xaml = ShapeToXamlMapper.TryMapWpfPath(item, g, DefaultSettings);
+
+        Assert.That(xaml, Does.StartWith("<Path x:Name=\"Item_"));
+        Assert.That(xaml, Does.Contain("Stroke=\"#FFFF0000\""));
+        Assert.That(xaml, Does.Contain("Data=\""));
+    }
+
+    [Test]
+    public void OrthogonalConnector_はPath要素として出力()
+    {
+        var c = new OrthogonalConnectorViewModel();
+        var g = MakeTriangle(new Point(0, 0), new Point(100, 0), new Point(100, 100));
+        var xaml = ShapeToXamlMapper.TryMapWpfPath(c, g, DefaultSettings);
+        Assert.That(xaml, Does.StartWith("<Path x:Name=\"Item_"));
+    }
+
+    [Test]
+    public void ExtractPolygonPoints_LineSegment列を文字列化()
+    {
+        var g = MakeTriangle(new Point(1, 2), new Point(3, 4), new Point(5, 6));
+        Assert.That(ShapeToXamlMapper.ExtractPolygonPoints(g), Is.EqualTo("1,2 3,4 5,6"));
+    }
+
+    [Test]
+    public void ExtractPolygonPoints_PolyLineSegmentにも対応()
+    {
+        var pls = new PolyLineSegment(new[] { new Point(10, 20), new Point(30, 40) }, true);
+        var fig = new PathFigure(new Point(0, 0), new PathSegment[] { pls }, closed: true);
+        var g = new PathGeometry(new[] { fig });
+        Assert.That(ShapeToXamlMapper.ExtractPolygonPoints(g), Is.EqualTo("0,0 10,20 30,40"));
+    }
+
+    [Test]
+    public void ExtractPolygonPoints_非直線セグメントは_null()
+    {
+        var bezier = new BezierSegment(new Point(10, 10), new Point(20, 20), new Point(30, 30), true);
+        var fig = new PathFigure(new Point(0, 0), new PathSegment[] { bezier }, closed: false);
+        var g = new PathGeometry(new[] { fig });
+        Assert.That(ShapeToXamlMapper.ExtractPolygonPoints(g), Is.Null);
+    }
+
+    [Test]
+    public void ExtractPolygonPoints_Figureなしは_null()
+    {
+        var g = new PathGeometry();
+        Assert.That(ShapeToXamlMapper.ExtractPolygonPoints(g), Is.Null);
+    }
+
+    [Test]
+    public void ExtractPolygonPoints_null_geometryは_null()
+    {
+        Assert.That(ShapeToXamlMapper.ExtractPolygonPoints(null), Is.Null);
     }
 }
