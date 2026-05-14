@@ -133,6 +133,20 @@
                         Height="24"
                         Padding="6,0"
                         ToolTip="Timeline を WPF UserControl + Storyboard XAML として書き出す (Phase 5.5-c)" />
+
+                    <!--  Phase 5.5-d: MAUI Animation XAML 書出ダイアログ起動  -->
+                    <Button
+                        x:Name="ExportMauiXamlButton"
+                        AutomationProperties.AutomationId="TimelineExportMauiXaml"
+                        Margin="6,0,0,0"
+                        Background="#FF3E3E42"
+                        BorderBrush="#FF555555"
+                        Command="{Binding DataContext.DiagramViewModel.OpenMauiXamlExportDialogCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                        Content="MAUI XAML..."
+                        Foreground="#FFCCCCCC"
+                        Height="24"
+                        Padding="6,0"
+                        ToolTip="Timeline を MAUI ContentView + Animation XAML/コード として書き出す (Phase 5.5-d)" />
                 </StackPanel>
             </Border>
 

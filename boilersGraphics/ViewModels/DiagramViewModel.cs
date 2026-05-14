@@ -122,6 +122,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             OpenPngSequenceExportDialogCommand = new DelegateCommand(() => ExecuteOpenPngSequenceExportDialogCommand());
             // Phase 5.5-c: WPF Storyboard XAML 書出ダイアログ起動。
             OpenWpfXamlExportDialogCommand = new DelegateCommand(() => ExecuteOpenWpfXamlExportDialogCommand());
+            // Phase 5.5-d: MAUI Animation XAML 書出ダイアログ起動。
+            OpenMauiXamlExportDialogCommand = new DelegateCommand(() => ExecuteOpenMauiXamlExportDialogCommand());
             UniformWidthCommand = new DelegateCommand(() => ExecuteUniformWidthCommand(), () => CanExecuteUniform());
             UniformHeightCommand = new DelegateCommand(() => ExecuteUniformHeightCommand(), () => CanExecuteUniform());
             DuplicateCommand = new DelegateCommand(() => ExecuteDuplicateCommand(), () => CanExecuteDuplicate());
@@ -762,6 +764,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public DelegateCommand OpenPngSequenceExportDialogCommand { get; }
     /// <summary>Phase 5.5-c: WPF Storyboard XAML 書出ダイアログ起動コマンド。</summary>
     public DelegateCommand OpenWpfXamlExportDialogCommand { get; }
+    /// <summary>Phase 5.5-d: MAUI Animation XAML 書出ダイアログ起動コマンド。</summary>
+    public DelegateCommand OpenMauiXamlExportDialogCommand { get; }
     /// <summary>Phase 4-c: 利用可能なテーマ一覧 (組込 4 種 + ユーザー追加)。</summary>
     public ObservableList<boilersGraphics.Models.Themes.Theme> AvailableThemes { get; } = new();
     /// <summary>Phase 4-c: 現在アクティブなテーマ。null 許容。</summary>
@@ -2014,6 +2018,57 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             }
             return null;
         };
+    }
+
+    /// <summary>
+    /// Phase 5.5-d: MAUI Animation XAML 書出ダイアログを開き、OK なら
+    /// <see cref="boilersGraphics.Helpers.Animation.Export.MauiAnimationXamlExporter"/> で
+    /// <c>.xaml</c> + <c>.xaml.cs</c> をファイル出力する。MAUI は Animation API がコード側依存なので .xaml.cs は常に同時生成。
+    /// </summary>
+    private void ExecuteOpenMauiXamlExportDialogCommand()
+    {
+        IDialogResult result = null;
+        dlgService.ShowDialog(nameof(boilersGraphics.Views.Animation.MauiXamlExportDialog),
+            new DialogParameters(),
+            ret => result = ret);
+        if (result == null || result.Result != ButtonResult.OK) return;
+
+        var settings = result.Parameters.GetValue<boilersGraphics.Helpers.Animation.Export.XamlExportSettings>("Settings");
+        var outputPath = result.Parameters.GetValue<string>("OutputPath");
+        if (settings == null || string.IsNullOrWhiteSpace(outputPath))
+        {
+            MainWindowVM.Message.Value = "MAUI XAML 書出に必要なパラメータが揃っていなかったっす";
+            return;
+        }
+
+        try
+        {
+            var allItems = (AllItems?.Value as System.Collections.Generic.IEnumerable<SelectableDesignerItemViewModelBase>)
+                ?? System.Array.Empty<SelectableDesignerItemViewModelBase>();
+            var allItemsList = new System.Collections.Generic.List<SelectableDesignerItemViewModelBase>(allItems);
+            var exporter = new boilersGraphics.Helpers.Animation.Export.MauiAnimationXamlExporter(
+                allItemsList,
+                BuildPathGeometryResolverForXamlExport());
+
+            var options = new System.Collections.Generic.Dictionary<string, object>
+            {
+                { "TargetNamespace", settings.TargetNamespace },
+                { "ClassName", settings.ClassName },
+                { "AccessModifier", settings.AccessModifier },
+                { "GenerateCodeBehind", true },  // MAUI は常に true
+                { "IndentWidth", settings.IndentWidth },
+                { "NewLine", settings.NewLine },
+                { "IncludeHeaderComment", settings.IncludeHeaderComment },
+            };
+
+            var written = exporter.Export(Timeline, outputPath, Timeline.ItemResolver, options);
+            MainWindowVM.Message.Value = $"MAUI XAML {written} ファイル (.xaml + .xaml.cs) を {outputPath} 周辺に書き出したっす";
+        }
+        catch (System.Exception ex)
+        {
+            LogManager.GetCurrentClassLogger().Warn(ex, "MAUI XAML export failed");
+            MainWindowVM.Message.Value = $"書き出し失敗: {ex.Message}";
+        }
     }
 
     /// <summary>
