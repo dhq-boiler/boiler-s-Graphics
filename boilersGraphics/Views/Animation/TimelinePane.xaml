@@ -53,9 +53,9 @@
                         Margin="2,0"
                         Background="#FF3E3E42"
                         BorderBrush="#FF555555"
+                        Command="{Binding PlayCommand}"
                         Foreground="#FF00CC00"
-                        IsEnabled="False"
-                        ToolTip="Play (Phase 5-e)" />
+                        ToolTip="Play" />
                     <Button
                         x:Name="PauseButton"
                         AutomationProperties.AutomationId="TimelinePause"
@@ -65,9 +65,9 @@
                         Margin="2,0"
                         Background="#FF3E3E42"
                         BorderBrush="#FF555555"
+                        Command="{Binding PauseCommand}"
                         Foreground="#FFCCCCCC"
-                        IsEnabled="False"
-                        ToolTip="Pause (Phase 5-e)" />
+                        ToolTip="Pause" />
                     <Button
                         x:Name="StopButton"
                         AutomationProperties.AutomationId="TimelineStop"
@@ -77,9 +77,9 @@
                         Margin="2,0"
                         Background="#FF3E3E42"
                         BorderBrush="#FF555555"
+                        Command="{Binding StopCommand}"
                         Foreground="#FFCC3333"
-                        IsEnabled="False"
-                        ToolTip="Stop (Phase 5-e)" />
+                        ToolTip="Stop" />
 
                     <Separator Margin="6,0" />
 
