@@ -65,6 +65,13 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
         PartDefinitions.CollectionChanged += OnPartDefinitionsCollectionChanged;
 
+        // Phase 4-c: 組込テーマ 4 種 (Bladerunner / Matrix / MedicalBlueWhite / AmberCrt) をロード。
+        // ユーザー追加テーマは Phase 4-f のシリアライズ復元時に追加する。
+        foreach (var t in boilersGraphics.Models.Themes.ThemeRepository.CreateBuiltIn())
+        {
+            AvailableThemes.Add(t);
+        }
+
         if (!App.IsTest)
         {
             RenderWidth = Observable.Return(Application.Current.MainWindow.GetChildOfType<DiagramControl>())
@@ -109,6 +116,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 new DelegateCommand(() => ExecuteDistributeVerticalCommand(), () => CanExecuteDistribute());
             SelectAllCommand = new DelegateCommand(() => ExecuteSelectAllCommand());
             SettingCommand = new DelegateCommand(() => ExecuteSettingCommand());
+            // Phase 4-c: テーマ選択ダイアログ起動。組込テーマは worktree 初期化時に AvailableThemes へロード。
+            OpenThemeManagerCommand = new DelegateCommand(() => ExecuteOpenThemeManagerCommand());
             UniformWidthCommand = new DelegateCommand(() => ExecuteUniformWidthCommand(), () => CanExecuteUniform());
             UniformHeightCommand = new DelegateCommand(() => ExecuteUniformHeightCommand(), () => CanExecuteUniform());
             DuplicateCommand = new DelegateCommand(() => ExecuteDuplicateCommand(), () => CanExecuteDuplicate());
@@ -731,6 +740,12 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public DelegateCommand DistributeVerticalCommand { get; }
     public DelegateCommand SelectAllCommand { get; }
     public DelegateCommand SettingCommand { get; }
+    /// <summary>Phase 4-c: テーマ選択 / パレット適用ダイアログ起動コマンド。</summary>
+    public DelegateCommand OpenThemeManagerCommand { get; }
+    /// <summary>Phase 4-c: 利用可能なテーマ一覧 (組込 4 種 + ユーザー追加)。</summary>
+    public ObservableList<boilersGraphics.Models.Themes.Theme> AvailableThemes { get; } = new();
+    /// <summary>Phase 4-c: 現在アクティブなテーマ。null 許容。</summary>
+    public R3.BindableReactiveProperty<boilersGraphics.Models.Themes.Theme> ActiveTheme { get; } = new();
     public DelegateCommand UniformWidthCommand { get; }
     public DelegateCommand UniformHeightCommand { get; }
     public DelegateCommand DuplicateCommand { get; }
@@ -1808,6 +1823,67 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 System.Math.Max(0, s.AnchorSnapDistance.Value);
             SetAutoSave();
         }
+    }
+
+    /// <summary>
+    /// Phase 4-c: テーマ選択 / パレット適用ダイアログを起動し、結果に応じて適用する。
+    /// </summary>
+    private void ExecuteOpenThemeManagerCommand()
+    {
+        IDialogResult result = null;
+        dlgService.ShowDialog(nameof(Views.ThemeManager),
+            new DialogParameters
+            {
+                { "Themes", (System.Collections.Generic.IReadOnlyList<boilersGraphics.Models.Themes.Theme>)AvailableThemes.ToList() },
+                { "ActiveTheme", ActiveTheme.Value },
+            },
+            ret => result = ret);
+        if (result == null || result.Result != ButtonResult.OK) return;
+
+        var theme = result.Parameters.GetValue<boilersGraphics.Models.Themes.Theme>("Theme");
+        var scope = result.Parameters.GetValue<boilersGraphics.Models.Themes.ThemeApplyScope>("Scope");
+        var target = result.Parameters.GetValue<boilersGraphics.Models.Themes.ThemeApplyTarget>("Target");
+        ApplyThemeToScope(theme, scope, target);
+    }
+
+    /// <summary>
+    /// Phase 4-c / Q-3 案 A: 指定スコープの図形の EdgeBrush / FillBrush をテーマで直接書換。
+    /// </summary>
+    private void ApplyThemeToScope(
+        boilersGraphics.Models.Themes.Theme theme,
+        boilersGraphics.Models.Themes.ThemeApplyScope scope,
+        boilersGraphics.Models.Themes.ThemeApplyTarget target)
+    {
+        if (theme == null) return;
+        var (edge, fill) = boilersGraphics.Helpers.Themes.ThemeApplier.ResolveBrushes(theme, target);
+
+        var selected = SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<SelectableDesignerItemViewModelBase>()
+            .ToList();
+        var activeLayerItems = SelectedLayers.Value
+            .AsValueEnumerable()
+            .OfType<LayerItem>()
+            .Select(li => li.Item.Value)
+            .OfType<SelectableDesignerItemViewModelBase>()
+            .ToList();
+        var allItems = Layers
+            .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+            .AsValueEnumerable()
+            .OfType<LayerItem>()
+            .Select(li => li.Item.Value)
+            .OfType<SelectableDesignerItemViewModelBase>()
+            .ToList();
+
+        var targets = boilersGraphics.Helpers.Themes.ThemeApplier.ResolveScope(
+            scope, selected, activeLayerItems, allItems);
+
+        foreach (var item in targets)
+        {
+            if (edge != null) item.EdgeBrush.Value = edge;
+            if (fill != null) item.FillBrush.Value = fill;
+        }
+        ActiveTheme.Value = theme;
     }
 
     private void ReleaseMiddleButton(MouseEventArgs args)
