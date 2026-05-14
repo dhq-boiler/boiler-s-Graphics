@@ -37,6 +37,43 @@ public static class AnchorMath
     }
 
     /// <summary>
+    /// Phase 3.5: <see cref="ToWorld"/> の逆変換。
+    /// 図形 (left/top/width/height/rotationDegrees) の Bounds に対し、
+    /// ワールド座標 (worldX, worldY) が示す相対座標 (RelativeX, RelativeY) を返す。
+    /// Rotation 0 の場合は単純な (worldX - left) / width で算出。Rotation 非 0 では回転前ローカル系に逆変換。
+    /// </summary>
+    /// <remarks>
+    /// width / height が 0 以下のときは (0, 0) を返す (退化図形のフォールバック)。
+    /// 戻り値は 0..1 にクランプしない (呼び出し側の責任) — 図形外側のクリックも保持する用途があるため。
+    /// </remarks>
+    public static (double RelativeX, double RelativeY) ToRelative(
+        double left, double top, double width, double height, double rotationDegrees,
+        double worldX, double worldY)
+    {
+        if (width <= 0 || height <= 0) return (0.0, 0.0);
+
+        if (rotationDegrees == 0)
+        {
+            return ((worldX - left) / width, (worldY - top) / height);
+        }
+
+        var centerX = left + width / 2.0;
+        var centerY = top + height / 2.0;
+        var rotatedX = worldX - centerX;
+        var rotatedY = worldY - centerY;
+
+        var rad = rotationDegrees * Math.PI / 180.0;
+        var cos = Math.Cos(rad);
+        var sin = Math.Sin(rad);
+        // R(-θ) を適用してローカル (回転前) 系へ
+        var dx = rotatedX * cos + rotatedY * sin;
+        var dy = -rotatedX * sin + rotatedY * cos;
+
+        // localX = centerX + dx、relativeX = (localX - left) / width = 0.5 + dx/width
+        return (0.5 + dx / width, 0.5 + dy / height);
+    }
+
+    /// <summary>
     /// 暗黙 9 点アンカー (<see cref="AnchorPosition"/>) の相対座標 (RelativeX, RelativeY) を返す。
     /// </summary>
     public static (double RelativeX, double RelativeY) RelativeOf(AnchorPosition position)
