@@ -1,7 +1,12 @@
 using boilersGraphics.Helpers;
 using boilersGraphics.Models.Anchors;
+using boilersGraphics.Views;
+using Prism.Ioc;
+using Prism.Services.Dialogs;
+using Prism.Unity;
 using R3;
 using System;
+using System.Windows;
 using System.Windows.Media;
 using ZLinq;
 using Path = System.Windows.Shapes.Path;
@@ -97,7 +102,7 @@ public class AnchorViewModel : SelectableDesignerItemViewModelBase
         Top.Value = point.Y;
     }
 
-    public override bool SupportsPropertyDialog => false;
+    public override bool SupportsPropertyDialog => true;
 
     public override object Clone()
     {
@@ -125,6 +130,12 @@ public class AnchorViewModel : SelectableDesignerItemViewModelBase
 
     public override void OpenPropertyDialog()
     {
+        // プロパティダイアログ拡充: AnchorViewModel の RelativeX/Y/AnchorName/OwnerId/派生 Left/Top を編集 / 閲覧可能に。
+        if (Application.Current is not PrismApplication app) return;
+        if (app.Container is not IContainerExtension container) return;
+        var dialogService = new DialogService(container);
+        IDialogResult result = null;
+        dialogService.Show(nameof(DetailAnchor), new DialogParameters { { "ViewModel", this } }, ret => result = ret);
     }
 
     /// <summary>このアンカーから <see cref="Anchor"/> Model を生成して返す (シリアライズ用)。</summary>
