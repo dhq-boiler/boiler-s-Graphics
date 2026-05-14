@@ -743,6 +743,11 @@
                                 <MenuItem Command="{Binding DiagramViewModel.CopyCanvasToClipboardCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_CopyCanvasToClipboard, Mode=OneWay}" />
                                 <MenuItem Command="{Binding DiagramViewModel.ClearCanvasCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_ClearCanvas, Mode=OneWay}" />
                                 <MenuItem Command="{Binding DiagramViewModel.SettingCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Preference, Mode=OneWay}" />
+                                <!-- Phase 4-c: テーマ選択 / パレット適用 -->
+                                <MenuItem
+                                    AutomationProperties.AutomationId="MenuItem_ThemeManager"
+                                    Command="{Binding DiagramViewModel.OpenThemeManagerCommand}"
+                                    Header="テーマ選択 / パレット適用..." />
                                 <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_OCR, Mode=OneWay}">
                                     <MenuItem Command="{Binding DiagramViewModel.Image2TextEngCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_OCR_Image2Text_English, Mode=OneWay}" />
                                     <MenuItem Command="{Binding DiagramViewModel.Image2TextJpnCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_OCR_Image2Text_Japanese, Mode=OneWay}" />

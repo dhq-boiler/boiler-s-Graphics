@@ -158,6 +158,26 @@ Phase 3 で「L 字 (Orthogonal) コネクタ」「ベジエコネクタ (Anchor
 #### 吸着距離の設定
 設定 → 設定ダイアログ → 「アンカー吸着距離 (px)」で全コネクタ共通の吸着距離を変更できます (0 〜 任意。推奨 5 〜 30)。
 
+### スタイル・テーマ・カラー (FUI Phase 4)
+
+Phase 4 で「組込 4 テーマ (Bladerunner / Matrix / MedicalBlueWhite / AmberCrt)」「線種ライブラリ 6 種」「擬似グロー」が追加されています。FUI らしい世界観をテーマ単位で一括適用できます。
+
+> 詳しい使い方とプロパティ仕様、Phase 1 パーツ統合例は [docs/fui/phase4-tutorial.md](docs/fui/phase4-tutorial.md) を参照してください。設計仕様は [docs/fui/phase4-styles-themes.md](docs/fui/phase4-styles-themes.md) にあります。
+
+#### テーマ選択 / パレット適用
+1. メニューバー「キャンバス → テーマ選択 / パレット適用...」を選びます。
+2. テーマ (Bladerunner / Matrix / MedicalBlueWhite / AmberCrt)、適用範囲 (選択中図形 / アクティブレイヤー / プロジェクト全体)、適用対象 (Edge のみ / Fill のみ / 両方) を選びます。
+3. 「適用」ボタンで対象範囲の EdgeBrush / FillBrush がテーマの primary / background 色で書き換わります。Ctrl+Z で取り消し可能です。
+
+#### 線種ライブラリ
+ダイアログの「線種」コンボボックスで Solid / Dash / Dot / DashDot / LongDash / Stepped (段階線) のいずれかを選び「適用」を押すと、対象範囲の StrokeDashArray と StrokeLineJoin が書き換わります。未選択なら StrokeDashArray は変更しません。
+
+#### グロー (擬似 DropShadow)
+ダイアログの「グロー設定を適用」をチェックして「適用」すると、テーマの DefaultGlow (Radius / Intensity / Color) が対象範囲の図形に流し込まれます。各図形は `GlowRadius > 0` の間 WPF DropShadowEffect でグロー化されます。図形ごとに `GlowRadius = 0` をセットすればグローを外せます。
+
+#### パーツ機構との統合
+パーツエディタの「Phase 4 公開可能プロパティ (グロー)」セクションで GlowRadius / GlowIntensity / GlowColor をピン留めすると、パーツインスタンスごとにグローパラメータをカスタマイズできます。
+
 ## 描画補助点（スナップポイント）を設置する
 
 1. 画面左側のツールからスナップポイントツールを選択します。

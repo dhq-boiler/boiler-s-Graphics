@@ -8,6 +8,7 @@
         <Grid>
             <Path
                 Data="{Binding PathGeometry.Value}"
+                Effect="{Binding GlowEffect.Value}"
                 Fill="{Binding FillBrush.Value}"
                 IsHitTestVisible="False"
                 Stretch="Fill"

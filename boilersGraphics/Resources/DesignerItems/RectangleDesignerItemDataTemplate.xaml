@@ -17,6 +17,7 @@
                 Width="{Binding Width.Value}"
                 Height="{Binding Height.Value}"
                 Data="{Binding PathGeometry.Value}"
+                Effect="{Binding GlowEffect.Value}"
                 Fill="{Binding FillBrush.Value}"
                 IsHitTestVisible="False"
                 Stretch="None"

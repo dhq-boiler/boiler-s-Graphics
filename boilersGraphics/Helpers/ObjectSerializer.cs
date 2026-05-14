@@ -98,6 +98,20 @@ internal class ObjectSerializer
             if (designerItem.IsNode.Value)
                 list.Add(new XElement("IsNode", true));
 
+            // Phase 4-f / Q-9 案 A: 図形側 Glow プロパティ。GlowRadius > 0 のときのみ 3 つ全部を出力 (古いファイル互換)。
+            if (designerItem.GlowRadius.Value > 0)
+            {
+                list.Add(new XElement("GlowRadius",
+                    designerItem.GlowRadius.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)));
+                list.Add(new XElement("GlowIntensity",
+                    designerItem.GlowIntensity.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)));
+                if (designerItem.GlowColor.Value.HasValue)
+                {
+                    // System.Windows.Media.Color.ToString() は #AARRGGBB 形式の文字列を返す。
+                    list.Add(new XElement("GlowColor", designerItem.GlowColor.Value.Value.ToString()));
+                }
+            }
+
             if (designerItem is NRectangleViewModel rectangle)
             {
                 list.Add(new XElement("RadiusX", rectangle.RadiusX.Value));

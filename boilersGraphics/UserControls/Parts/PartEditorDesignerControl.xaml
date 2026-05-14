@@ -618,6 +618,104 @@
                     </StackPanel>
 
                     <!--
+                        Phase 4-g / Q-11 案 A: Phase 4 で追加された Glow 系公開可能プロパティ。
+                        GlowRadius / GlowIntensity / GlowColor は SelectableDesignerItemViewModelBase
+                        にあるので全派生で no-op ガード不要。値編集は inline では行わずピン留めのみ。
+                    -->
+                    <StackPanel Margin="0,8,0,0">
+                        <TextBlock
+                            Margin="0,0,0,4"
+                            FontWeight="Bold"
+                            Foreground="#DDDDDD"
+                            Text="Phase 4 公開可能プロパティ (グロー)" />
+                        <ItemsControl AutomationProperties.AutomationId="Phase4ExposurePinList">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="26" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Foreground="#DDDDDD" Text="GlowRadius" />
+                            <Button Grid.Column="1" Margin="4,0,0,0"
+                                    AutomationProperties.AutomationId="GlowRadiusExposurePin"
+                                    Command="{Binding DataContext.TogglePropertyExposureCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                    CommandParameter="GlowRadius"
+                                    Style="{StaticResource ExposurePinButtonStyle}"
+                                    ToolTip="このプロパティを公開する">
+                                <TextBlock FontSize="11" Text="●">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#666666" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DataContext.IsGlowRadiusExposed.Value, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                                    <Setter Property="Foreground" Value="#1E90FF" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Button>
+                        </Grid>
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="26" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Foreground="#DDDDDD" Text="GlowIntensity" />
+                            <Button Grid.Column="1" Margin="4,0,0,0"
+                                    AutomationProperties.AutomationId="GlowIntensityExposurePin"
+                                    Command="{Binding DataContext.TogglePropertyExposureCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                    CommandParameter="GlowIntensity"
+                                    Style="{StaticResource ExposurePinButtonStyle}"
+                                    ToolTip="このプロパティを公開する">
+                                <TextBlock FontSize="11" Text="●">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#666666" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DataContext.IsGlowIntensityExposed.Value, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                                    <Setter Property="Foreground" Value="#1E90FF" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Button>
+                        </Grid>
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="26" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Foreground="#DDDDDD" Text="GlowColor" />
+                            <Button Grid.Column="1" Margin="4,0,0,0"
+                                    AutomationProperties.AutomationId="GlowColorExposurePin"
+                                    Command="{Binding DataContext.TogglePropertyExposureCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                    CommandParameter="GlowColor"
+                                    Style="{StaticResource ExposurePinButtonStyle}"
+                                    ToolTip="このプロパティを公開する">
+                                <TextBlock FontSize="11" Text="●">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#666666" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DataContext.IsGlowColorExposed.Value, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                                    <Setter Property="Foreground" Value="#1E90FF" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Button>
+                        </Grid>
+                    </StackPanel>
+
+                    <!--
                         Phase 1-c-6-d-6: 公開パラメータセクション。Definition.ExposedProperties を一覧表示し、
                         追加 / 削除できる。SelectedItem に依存せず常時表示。
                     -->

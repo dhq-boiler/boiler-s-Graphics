@@ -35,13 +35,41 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
         Id = id;
         Owner = parent;
         HalfEdgeThickness = EdgeThickness.Select(x => x / 2).ToReadOnlyBindableReactiveProperty();
+        GlowEffect = BuildGlowEffect();
         Init();
     }
 
     public SelectableDesignerItemViewModelBase()
     {
         HalfEdgeThickness = EdgeThickness.Select(x => x / 2).ToReadOnlyBindableReactiveProperty();
+        GlowEffect = BuildGlowEffect();
         Init();
+    }
+
+    // Phase 4-e-2: GlowRadius/Intensity/Color/EdgeBrush の合成で WPF DropShadowEffect を導出する。
+    // 仕様書 Q-7 案 A はラスター品質 (OpenCV ガウシアン + 加算) だが、MVP は WPF 標準 DropShadowEffect で擬似化。
+    // 完全互換の OpenCV 版 GlowEffect レイヤーは Phase 4.5 後送り。
+    private R3.IReadOnlyBindableReactiveProperty<System.Windows.Media.Effects.Effect> BuildGlowEffect()
+    {
+        return GlowRadius
+            .CombineLatest(GlowIntensity, GlowColor, EdgeBrush,
+                (r, i, c, eb) => ComposeGlowEffect(r, i, c, eb))
+            .ToReadOnlyBindableReactiveProperty();
+    }
+
+    private static System.Windows.Media.Effects.Effect ComposeGlowEffect(
+        double radius, double intensity, Color? color, Brush edgeBrush)
+    {
+        if (radius <= 0) return null;
+        var glow = color ?? (edgeBrush is SolidColorBrush scb ? scb.Color : Colors.White);
+        return new System.Windows.Media.Effects.DropShadowEffect
+        {
+            BlurRadius = radius * 2.0,
+            ShadowDepth = 0,
+            Direction = 0,
+            Color = glow,
+            Opacity = System.Math.Clamp(intensity, 0.0, 1.0),
+        };
     }
 
     public static int SelectedOrderCount { get; set; } = 0;
@@ -106,6 +134,23 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
     public ObservableList<PenLineJoin> PenLineJoins { get; private set; }
     public R3.BindableReactiveProperty<DoubleCollection> StrokeDashArray { get; private set; } = new();
     public R3.BindableReactiveProperty<double> StrokeMiterLimit { get; private set; } = new();
+
+    // Phase 4-e / Q-8 案 C / Q-9 案 A: 全派生 (線・図形・テキスト) で擬似グロー設定を保持する。
+    // 0 でグロー無効、GlowColor=null なら EdgeBrush と同色で合成 (描画は Phase 4-e-2 で DataTemplate 拡張)。
+    /// <summary>Phase 4-e: グローのぼかし半径 (px)。0 でグロー無効。</summary>
+    public R3.BindableReactiveProperty<double> GlowRadius { get; private set; } = new(0d);
+
+    /// <summary>Phase 4-e: グロー加算合成の強度 (0..1)。</summary>
+    public R3.BindableReactiveProperty<double> GlowIntensity { get; private set; } = new(0.5d);
+
+    /// <summary>Phase 4-e: グロー色。null なら EdgeBrush と同色で合成。</summary>
+    public R3.BindableReactiveProperty<Color?> GlowColor { get; private set; } = new();
+
+    /// <summary>
+    /// Phase 4-e-2: GlowRadius/Intensity/Color/EdgeBrush から派生する WPF DropShadowEffect。
+    /// Radius=0 のとき null を返すので、DataTemplate 側で `Effect="{Binding GlowEffect.Value}"` で当てられる。
+    /// </summary>
+    public R3.IReadOnlyBindableReactiveProperty<System.Windows.Media.Effects.Effect> GlowEffect { get; private set; }
 
     public string Name { get; set; }
 

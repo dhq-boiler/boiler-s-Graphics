@@ -65,6 +65,13 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
         PartDefinitions.CollectionChanged += OnPartDefinitionsCollectionChanged;
 
+        // Phase 4-c: 組込テーマ 4 種 (Bladerunner / Matrix / MedicalBlueWhite / AmberCrt) をロード。
+        // ユーザー追加テーマは Phase 4-f のシリアライズ復元時に追加する。
+        foreach (var t in boilersGraphics.Models.Themes.ThemeRepository.CreateBuiltIn())
+        {
+            AvailableThemes.Add(t);
+        }
+
         if (!App.IsTest)
         {
             RenderWidth = Observable.Return(Application.Current.MainWindow.GetChildOfType<DiagramControl>())
@@ -109,6 +116,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 new DelegateCommand(() => ExecuteDistributeVerticalCommand(), () => CanExecuteDistribute());
             SelectAllCommand = new DelegateCommand(() => ExecuteSelectAllCommand());
             SettingCommand = new DelegateCommand(() => ExecuteSettingCommand());
+            // Phase 4-c: テーマ選択ダイアログ起動。組込テーマは worktree 初期化時に AvailableThemes へロード。
+            OpenThemeManagerCommand = new DelegateCommand(() => ExecuteOpenThemeManagerCommand());
             UniformWidthCommand = new DelegateCommand(() => ExecuteUniformWidthCommand(), () => CanExecuteUniform());
             UniformHeightCommand = new DelegateCommand(() => ExecuteUniformHeightCommand(), () => CanExecuteUniform());
             DuplicateCommand = new DelegateCommand(() => ExecuteDuplicateCommand(), () => CanExecuteDuplicate());
@@ -731,6 +740,12 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public DelegateCommand DistributeVerticalCommand { get; }
     public DelegateCommand SelectAllCommand { get; }
     public DelegateCommand SettingCommand { get; }
+    /// <summary>Phase 4-c: テーマ選択 / パレット適用ダイアログ起動コマンド。</summary>
+    public DelegateCommand OpenThemeManagerCommand { get; }
+    /// <summary>Phase 4-c: 利用可能なテーマ一覧 (組込 4 種 + ユーザー追加)。</summary>
+    public ObservableList<boilersGraphics.Models.Themes.Theme> AvailableThemes { get; } = new();
+    /// <summary>Phase 4-c: 現在アクティブなテーマ。null 許容。</summary>
+    public R3.BindableReactiveProperty<boilersGraphics.Models.Themes.Theme> ActiveTheme { get; } = new();
     public DelegateCommand UniformWidthCommand { get; }
     public DelegateCommand UniformHeightCommand { get; }
     public DelegateCommand DuplicateCommand { get; }
@@ -1808,6 +1823,87 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 System.Math.Max(0, s.AnchorSnapDistance.Value);
             SetAutoSave();
         }
+    }
+
+    /// <summary>
+    /// Phase 4-c: テーマ選択 / パレット適用ダイアログを起動し、結果に応じて適用する。
+    /// </summary>
+    private void ExecuteOpenThemeManagerCommand()
+    {
+        IDialogResult result = null;
+        dlgService.ShowDialog(nameof(Views.ThemeManager),
+            new DialogParameters
+            {
+                { "Themes", (System.Collections.Generic.IReadOnlyList<boilersGraphics.Models.Themes.Theme>)AvailableThemes.ToList() },
+                { "ActiveTheme", ActiveTheme.Value },
+            },
+            ret => result = ret);
+        if (result == null || result.Result != ButtonResult.OK) return;
+
+        var theme = result.Parameters.GetValue<boilersGraphics.Models.Themes.Theme>("Theme");
+        var scope = result.Parameters.GetValue<boilersGraphics.Models.Themes.ThemeApplyScope>("Scope");
+        var target = result.Parameters.GetValue<boilersGraphics.Models.Themes.ThemeApplyTarget>("Target");
+        var lineStyle = result.Parameters.GetValue<boilersGraphics.Models.Themes.LineStyle>("LineStyle");
+        var applyGlow = result.Parameters.GetValue<bool>("ApplyGlow");
+        ApplyThemeToScope(theme, scope, target, lineStyle, applyGlow);
+    }
+
+    /// <summary>
+    /// Phase 4-c / Q-3 案 A: 指定スコープの図形の EdgeBrush / FillBrush をテーマで直接書換。
+    /// Phase 4-d: lineStyle が non-null なら StrokeDashArray / StrokeLineJoin も書換。
+    /// Phase 4-e / Q-9 案 A: applyGlow=true なら DefaultGlow を各図形の GlowRadius/Intensity/Color に流し込む。
+    /// </summary>
+    private void ApplyThemeToScope(
+        boilersGraphics.Models.Themes.Theme theme,
+        boilersGraphics.Models.Themes.ThemeApplyScope scope,
+        boilersGraphics.Models.Themes.ThemeApplyTarget target,
+        boilersGraphics.Models.Themes.LineStyle lineStyle,
+        bool applyGlow)
+    {
+        if (theme == null) return;
+        var (edge, fill) = boilersGraphics.Helpers.Themes.ThemeApplier.ResolveBrushes(theme, target);
+
+        var selected = SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<SelectableDesignerItemViewModelBase>()
+            .ToList();
+        var activeLayerItems = SelectedLayers.Value
+            .AsValueEnumerable()
+            .OfType<LayerItem>()
+            .Select(li => li.Item.Value)
+            .OfType<SelectableDesignerItemViewModelBase>()
+            .ToList();
+        var allItems = Layers
+            .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+            .AsValueEnumerable()
+            .OfType<LayerItem>()
+            .Select(li => li.Item.Value)
+            .OfType<SelectableDesignerItemViewModelBase>()
+            .ToList();
+
+        var targets = boilersGraphics.Helpers.Themes.ThemeApplier.ResolveScope(
+            scope, selected, activeLayerItems, allItems);
+
+        var (glowRadius, glowIntensity, glowColor) = boilersGraphics.Helpers.Themes.ThemeApplier.ResolveGlow(theme);
+        foreach (var item in targets)
+        {
+            if (edge != null) item.EdgeBrush.Value = edge;
+            if (fill != null) item.FillBrush.Value = fill;
+            // Phase 4-d: 線種プリセットがあれば StrokeDashArray / StrokeLineJoin を書換 (テーマ側参照は共有しない)。
+            if (lineStyle != null)
+            {
+                item.StrokeDashArray.Value = boilersGraphics.Helpers.Themes.ThemeApplier.CopyDashArray(lineStyle);
+                item.StrokeLineJoin.Value = lineStyle.StrokeLineJoin;
+            }
+            // Phase 4-e: グロー設定を流し込む (DataTemplate での視覚化は 4-e-2 で対応)。
+            if (applyGlow)
+            {
+                item.GlowRadius.Value = glowRadius;
+                item.GlowIntensity.Value = glowIntensity;
+                item.GlowColor.Value = glowColor;
+            }
+        }
+        ActiveTheme.Value = theme;
     }
 
     private void ReleaseMiddleButton(MouseEventArgs args)

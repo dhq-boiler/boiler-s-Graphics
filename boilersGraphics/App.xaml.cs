@@ -220,6 +220,8 @@ public partial class App : PrismApplication
         containerRegistry.RegisterDialog<LetterSetting, LetterSettingViewModel>();
         containerRegistry.RegisterDialog<LetterVerticalSetting, LetterVerticalSettingViewModel>();
         containerRegistry.RegisterDialog<Preference, PreferenceViewModel>();
+        // Phase 4-c: テーマ選択 / パレット適用ダイアログ
+        containerRegistry.RegisterDialog<ThemeManager, ThemeManagerViewModel>();
         containerRegistry.RegisterDialog<Export, ExportViewModel>();
         containerRegistry.RegisterDialog<PolygonSetting, PolygonSettingViewModel>();
         containerRegistry.RegisterDialog<Layers, LayersViewModel>();

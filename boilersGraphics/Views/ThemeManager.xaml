@@ -1,0 +1,111 @@
+<UserControl
+    x:Class="boilersGraphics.Views.ThemeManager"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:themes="clr-namespace:boilersGraphics.Models.Themes"
+    d:DesignHeight="320"
+    d:DesignWidth="480"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    Background="{StaticResource ControlDarkerBackground}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Theme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Themes/DarkTheme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <ObjectDataProvider x:Key="ScopeValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="themes:ThemeApplyScope" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ObjectDataProvider x:Key="TargetValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="themes:ThemeApplyTarget" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="{x:Type Window}">
+            <Setter Property="SizeToContent" Value="WidthAndHeight" />
+            <Setter Property="ResizeMode" Value="NoResize" />
+            <Setter Property="Topmost" Value="True" />
+        </Style>
+    </prism:Dialog.WindowStyle>
+    <DockPanel Margin="10">
+        <StackPanel
+            HorizontalAlignment="Right"
+            DockPanel.Dock="Bottom"
+            Orientation="Horizontal">
+            <Button
+                x:Name="ApplyButton"
+                AutomationProperties.AutomationId="ThemeApplyButton"
+                Width="120"
+                Height="28"
+                Margin="5"
+                Command="{Binding ApplyCommand}"
+                Content="適用" />
+            <Button
+                x:Name="CancelButton"
+                AutomationProperties.AutomationId="ThemeCancelButton"
+                Width="100"
+                Height="28"
+                Margin="5"
+                Command="{Binding CancelCommand}"
+                Content="キャンセル" />
+        </StackPanel>
+        <StackPanel Orientation="Vertical" MinWidth="420">
+            <Label Content="テーマ" />
+            <ComboBox
+                x:Name="ThemeComboBox"
+                AutomationProperties.AutomationId="ThemeComboBox"
+                MinHeight="28"
+                ItemsSource="{Binding AvailableThemes}"
+                SelectedItem="{Binding SelectedTheme.Value, Mode=TwoWay}"
+                DisplayMemberPath="Name" />
+
+            <Label Content="適用範囲" Margin="0,12,0,0" />
+            <ComboBox
+                x:Name="ScopeComboBox"
+                AutomationProperties.AutomationId="ThemeScopeComboBox"
+                MinHeight="28"
+                ItemsSource="{Binding Source={StaticResource ScopeValues}}"
+                SelectedItem="{Binding SelectedScope.Value, Mode=TwoWay}" />
+
+            <Label Content="適用対象 (Edge: primary / Fill: background)" Margin="0,12,0,0" />
+            <ComboBox
+                x:Name="TargetComboBox"
+                AutomationProperties.AutomationId="ThemeTargetComboBox"
+                MinHeight="28"
+                ItemsSource="{Binding Source={StaticResource TargetValues}}"
+                SelectedItem="{Binding SelectedTarget.Value, Mode=TwoWay}" />
+
+            <Label Content="線種 (Phase 4-d、未選択で変更しない)" Margin="0,12,0,0" />
+            <ComboBox
+                x:Name="LineStyleComboBox"
+                AutomationProperties.AutomationId="ThemeLineStyleComboBox"
+                MinHeight="28"
+                ItemsSource="{Binding AvailableLineStyles}"
+                SelectedItem="{Binding SelectedLineStyle.Value, Mode=TwoWay}"
+                DisplayMemberPath="Name" />
+
+            <CheckBox
+                x:Name="ApplyGlowCheckBox"
+                AutomationProperties.AutomationId="ThemeApplyGlowCheckBox"
+                Margin="0,12,0,0"
+                Content="グロー設定を適用 (DefaultGlow → GlowRadius/Intensity/Color)"
+                IsChecked="{Binding ApplyGlow.Value, Mode=TwoWay}" />
+
+            <TextBlock
+                Margin="0,12,0,0"
+                FontSize="11"
+                Foreground="{StaticResource ControlDefaultForeground}"
+                TextWrapping="Wrap"
+                Text="Phase 4-c / Q-3 案 A: 適用ボタンで対象範囲の図形の EdgeBrush / FillBrush をテーマ色で直接書き換えるっす。Ctrl+Z で取り消せるっす。" />
+        </StackPanel>
+    </DockPanel>
+</UserControl>

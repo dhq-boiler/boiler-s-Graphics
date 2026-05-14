@@ -595,6 +595,32 @@ public class ObjectDeserializer
         // Phase 3-f: Q-11 案 B / Phase 3-g UI 用 IsNode フラグ。デフォルト false なので、ある時だけ書き戻す。
         if (designerItemElm.Element("IsNode") is { } isNodeElm && bool.TryParse(isNodeElm.Value, out var isNode))
             item.IsNode.Value = isNode;
+        // Phase 4-f / Q-9 案 A: 図形側 Glow プロパティ。要素があるときだけ書き戻し (後方互換)。
+        if (designerItemElm.Element("GlowRadius") is { } glowRadiusElm
+            && double.TryParse(glowRadiusElm.Value,
+                System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture, out var glowRadius))
+        {
+            item.GlowRadius.Value = glowRadius;
+        }
+        if (designerItemElm.Element("GlowIntensity") is { } glowIntensityElm
+            && double.TryParse(glowIntensityElm.Value,
+                System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture, out var glowIntensity))
+        {
+            item.GlowIntensity.Value = glowIntensity;
+        }
+        if (designerItemElm.Element("GlowColor") is { } glowColorElm
+            && !string.IsNullOrWhiteSpace(glowColorElm.Value))
+        {
+            try
+            {
+                var c = (System.Windows.Media.Color)
+                    System.Windows.Media.ColorConverter.ConvertFromString(glowColorElm.Value);
+                item.GlowColor.Value = c;
+            }
+            catch (System.FormatException) { /* 古い破損ファイルは無視 */ }
+        }
         item.EdgeThickness.Value = double.Parse(designerItemElm.Element("EdgeThickness").Value);
         item.RotationAngle.Value = designerItemElm.Element("RotationAngle") is not null
             ? double.Parse(designerItemElm.Element("RotationAngle").Value)
