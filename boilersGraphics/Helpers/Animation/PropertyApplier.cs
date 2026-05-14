@@ -23,6 +23,61 @@ namespace boilersGraphics.Helpers.Animation;
 /// </summary>
 public static class PropertyApplier
 {
+    /// <summary>
+    /// Phase 5-e: Snapshot / 状態問合せ用の逆操作。指定の (item, propertyPath) における
+    /// 現在値を取得する。<see cref="Apply"/> と完全に対の dispatch を持つ。対応外パスは false。
+    /// </summary>
+    public static bool TryGet(SelectableDesignerItemViewModelBase item, string propertyPath, out object value)
+    {
+        value = null;
+        if (item is null || string.IsNullOrEmpty(propertyPath)) return false;
+
+        if (propertyPath.StartsWith("ExposedProperties[") && propertyPath.EndsWith("]"))
+        {
+            return TryGetExposedProperty(item, propertyPath, out value);
+        }
+
+        if (item is DesignerItemViewModelBase di)
+        {
+            switch (propertyPath)
+            {
+                case "Left.Value": value = di.Left.Value; return true;
+                case "Top.Value": value = di.Top.Value; return true;
+                case "Width.Value": value = di.Width.Value; return true;
+                case "Height.Value": value = di.Height.Value; return true;
+            }
+        }
+
+        switch (propertyPath)
+        {
+            case "RotationAngle.Value": value = item.RotationAngle.Value; return true;
+            case "EdgeBrush.Value": value = item.EdgeBrush.Value; return true;
+            case "FillBrush.Value": value = item.FillBrush.Value; return true;
+            case "EdgeThickness.Value": value = item.EdgeThickness.Value; return true;
+            case "GlowRadius.Value": value = item.GlowRadius.Value; return true;
+            case "GlowIntensity.Value": value = item.GlowIntensity.Value; return true;
+            case "GlowColor.Value": value = item.GlowColor.Value; return true;
+        }
+        return false;
+    }
+
+    private static bool TryGetExposedProperty(SelectableDesignerItemViewModelBase item, string propertyPath, out object value)
+    {
+        value = null;
+        if (item is not PartInstanceViewModel pi) return false;
+
+        var inner = propertyPath.Substring("ExposedProperties[".Length);
+        inner = inner.TrimEnd(']');
+        if (!Guid.TryParse(inner, out var exposedId)) return false;
+
+        if (pi.ParameterValues.TryGetValue(exposedId, out var prop))
+        {
+            value = prop.Value;
+            return true;
+        }
+        return false;
+    }
+
     public static bool Apply(SelectableDesignerItemViewModelBase item, string propertyPath, object value)
     {
         if (item is null || string.IsNullOrEmpty(propertyPath) || value is null) return false;
