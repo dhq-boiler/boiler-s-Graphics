@@ -251,6 +251,7 @@ public partial class App : PrismApplication
         containerRegistry.RegisterDialog<DetailPartInstance, boilersGraphics.ViewModels.Parts.DetailPartInstanceViewModel>();
         // プロパティダイアログ拡充: Phase 3 / Phase 2.5 で SupportsPropertyDialog=false だった型の Detail ダイアログ。
         containerRegistry.RegisterDialog<DetailAnchor, DetailAnchorViewModel>();
+        containerRegistry.RegisterDialog<DetailOrthogonalConnector, DetailOrthogonalConnectorViewModel>();
 
         containerRegistry.RegisterForNavigation<Views.ColorCorrect.Hsv, ViewModels.ColorCorrect.HsvViewModel>();
         containerRegistry.RegisterForNavigation<Views.ColorCorrect.ToneCurve, ViewModels.ColorCorrect.ToneCurveViewModel>();
