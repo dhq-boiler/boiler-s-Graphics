@@ -95,7 +95,7 @@ public class AnchorBezierConnectorViewModel : ConnectorBaseViewModel
             Points[0], BeginControlPoint.Value, EndControlPoint.Value, Points[1]);
     }
 
-    public override bool SupportsPropertyDialog => false;
+    public override bool SupportsPropertyDialog => true;
 
     public override Type GetViewType() => typeof(Path);
 
@@ -123,5 +123,14 @@ public class AnchorBezierConnectorViewModel : ConnectorBaseViewModel
 
     public override void OpenPropertyDialog()
     {
+        // プロパティダイアログ拡充: DetailAnchorBezierConnector を Prism Dialog として起動。
+        if (System.Windows.Application.Current is not Prism.Unity.PrismApplication app) return;
+        if (app.Container is not Prism.Ioc.IContainerExtension container) return;
+        var dialogService = new Prism.Services.Dialogs.DialogService(container);
+        Prism.Services.Dialogs.IDialogResult result = null;
+        dialogService.Show(
+            nameof(boilersGraphics.Views.DetailAnchorBezierConnector),
+            new Prism.Services.Dialogs.DialogParameters { { "ViewModel", this } },
+            ret => result = ret);
     }
 }
