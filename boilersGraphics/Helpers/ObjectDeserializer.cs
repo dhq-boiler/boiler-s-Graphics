@@ -250,7 +250,38 @@ public class ObjectDeserializer
         // 後方互換: 旧プロジェクトファイル (Themes セクションなし) は ActiveTheme=null で続行。
         RestoreThemesSection(diagramViewModel, root);
 
+        // Phase 5-d-1: <Timeline> セクションを読み戻し。
+        // 後方互換: 旧プロジェクトファイル (Timeline セクションなし) は空 Timeline のまま続行。
+        RestoreTimelineSection(diagramViewModel, root);
+
         FinalizeAnchorsAndFollowers(diagramViewModel);
+    }
+
+    /// <summary>
+    /// Phase 5-d-1: `&lt;Timeline&gt;` セクション (Phase 5-b で定義した形式) をロードする。
+    /// セクションが無い場合は何もしない (空 Timeline のまま、Phase 4 以前互換)。
+    /// </summary>
+    private static void RestoreTimelineSection(DiagramViewModel diagramViewModel, XElement root)
+    {
+        if (diagramViewModel is null || root is null) return;
+        var timelineElm = root.Element("Timeline");
+        if (timelineElm is null) return;
+
+        var restored = boilersGraphics.Helpers.Animation.TimelineSerializer.DeserializeTimeline(timelineElm);
+        if (restored is null) return;
+
+        // 既存 Timeline インスタンスにコピー (DiagramViewModel.Timeline は readonly プロパティで、
+        // 内部 ReactiveProperty に Subscribe している UI を壊さないため、置換ではなく値コピー)。
+        var live = diagramViewModel.Timeline;
+        live.Duration.Value = restored.Duration.Value;
+        live.Fps.Value = restored.Fps.Value;
+        live.PlayRangeStart.Value = restored.PlayRangeStart.Value;
+        live.PlayRangeEnd.Value = restored.PlayRangeEnd.Value;
+        live.Loop.Value = restored.Loop.Value;
+
+        foreach (var t in live.Tracks) t.Dispose();
+        live.Tracks.Clear();
+        foreach (var t in restored.Tracks) live.Tracks.Add(t);
     }
 
     /// <summary>

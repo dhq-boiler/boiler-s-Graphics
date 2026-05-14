@@ -746,6 +746,12 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public ObservableList<boilersGraphics.Models.Themes.Theme> AvailableThemes { get; } = new();
     /// <summary>Phase 4-c: 現在アクティブなテーマ。null 許容。</summary>
     public R3.BindableReactiveProperty<boilersGraphics.Models.Themes.Theme> ActiveTheme { get; } = new();
+    /// <summary>
+    /// Phase 5-d: 現在編集中のシーンのアニメーションタイムライン。
+    /// CanvasPage 切替時の swap は Phase 5-d-2 で実装予定 (現状はシーン依存なく単一)。
+    /// </summary>
+    public boilersGraphics.ViewModels.Animation.TimelineViewModel Timeline { get; } =
+        new boilersGraphics.ViewModels.Animation.TimelineViewModel();
     public DelegateCommand UniformWidthCommand { get; }
     public DelegateCommand UniformHeightCommand { get; }
     public DelegateCommand DuplicateCommand { get; }
@@ -957,6 +963,12 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             root.Add(configurationXML);
             root.Add(attachmentsXML);
             root.Add(themesXML);
+
+            // Phase 5-d-1: 空でなければ <Timeline> セクションを追加。
+            if (!Timeline.IsEmpty)
+            {
+                root.Add(boilersGraphics.Helpers.Animation.TimelineSerializer.SerializeTimeline(Timeline));
+            }
 
             //自動保存なので、FileNameは更新しないでセーブだけする
             SaveFileAndNoFileNameUpdatingWithoutSaveFileDialog(root, path);
@@ -2639,6 +2651,12 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         root.Add(new XElement("Attachments", ObjectSerializer.SerializeAttachments(this)));
         // Phase 4-f-2: ActiveThemeId を保存。
         root.Add(ObjectSerializer.SerializeThemes(this));
+
+        // Phase 5-d-1: 空でなければ <Timeline> セクションを追加 (空なら Phase 4 以前互換のため省略)。
+        if (!Timeline.IsEmpty)
+        {
+            root.Add(boilersGraphics.Helpers.Animation.TimelineSerializer.SerializeTimeline(Timeline));
+        }
 
         if (PartDefinitions.Count > 0)
         {
