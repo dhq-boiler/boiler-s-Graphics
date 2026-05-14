@@ -246,7 +246,33 @@ public class ObjectDeserializer
             }
         }
 
+        // Phase 4-f-2: <Themes> セクション (現状は ActiveThemeId のみ) を読み戻し。
+        // 後方互換: 旧プロジェクトファイル (Themes セクションなし) は ActiveTheme=null で続行。
+        RestoreThemesSection(diagramViewModel, root);
+
         FinalizeAnchorsAndFollowers(diagramViewModel);
+    }
+
+    /// <summary>
+    /// Phase 4-f-2: `<Themes>` セクション (MVP は ActiveThemeId のみ) をロードする。
+    /// 組込 4 種は DiagramViewModel コンストラクタで AvailableThemes に既ロード済みなので、
+    /// 復元時は AvailableThemes から Id 一致で検索するだけ。
+    /// </summary>
+    private static void RestoreThemesSection(DiagramViewModel diagramViewModel, XElement root)
+    {
+        if (diagramViewModel is null || root is null) return;
+        var themesElm = root.Element("Themes");
+        if (themesElm is null) return;
+        var activeIdElm = themesElm.Element("ActiveThemeId");
+        if (activeIdElm is null || string.IsNullOrWhiteSpace(activeIdElm.Value)) return;
+        if (!Guid.TryParse(activeIdElm.Value, out var activeId)) return;
+        var theme = diagramViewModel.AvailableThemes
+            .AsValueEnumerable()
+            .FirstOrDefault(t => t.Id == activeId);
+        if (theme != null)
+        {
+            diagramViewModel.ActiveTheme.Value = theme;
+        }
     }
 
     /// <summary>

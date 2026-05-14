@@ -16,6 +16,47 @@ public class ThemeRepositoryTest
         Assert.That(themes, Has.Count.EqualTo(4));
     }
 
+    // Phase 4-f-2: 組込テーマ Id 固定化のテスト
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void BuiltIn_Bladerunnerの_Idは固定値()
+    {
+        var theme = ThemeRepository.CreateBuiltIn().First(t => t.Name == "Bladerunner");
+        Assert.That(theme.Id, Is.EqualTo(ThemeRepository.BladerunnerId));
+    }
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void BuiltIn_全テーマのIdは異なる()
+    {
+        var ids = ThemeRepository.CreateBuiltIn().Select(t => t.Id).ToList();
+        Assert.That(ids.Distinct().Count(), Is.EqualTo(4));
+    }
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void BuiltIn_Idは再生成しても同じ()
+    {
+        // ActiveThemeId 復元の前提: 起動毎に Id が固定されている
+        var first = ThemeRepository.CreateBuiltIn().Select(t => t.Id).ToList();
+        var second = ThemeRepository.CreateBuiltIn().Select(t => t.Id).ToList();
+        Assert.That(second, Is.EqualTo(first));
+    }
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void IsBuiltInId_組込4つはtrue()
+    {
+        Assert.That(ThemeRepository.IsBuiltInId(ThemeRepository.BladerunnerId), Is.True);
+        Assert.That(ThemeRepository.IsBuiltInId(ThemeRepository.MatrixId), Is.True);
+        Assert.That(ThemeRepository.IsBuiltInId(ThemeRepository.MedicalBlueWhiteId), Is.True);
+        Assert.That(ThemeRepository.IsBuiltInId(ThemeRepository.AmberCrtId), Is.True);
+    }
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void IsBuiltInId_未知Idはfalse()
+    {
+        Assert.That(ThemeRepository.IsBuiltInId(System.Guid.NewGuid()), Is.False);
+        Assert.That(ThemeRepository.IsBuiltInId(System.Guid.Empty), Is.False);
+    }
+
     [Test, Apartment(ApartmentState.STA)]
     public void CreateBuiltIn_4種類の名前が定義どおり()
     {
