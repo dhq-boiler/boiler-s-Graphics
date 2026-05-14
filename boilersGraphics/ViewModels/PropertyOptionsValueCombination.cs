@@ -28,6 +28,13 @@ public abstract class PropertyOptionsValueCombination : BindableBase
     public BindableReactiveProperty<string> PropertyName { get; set; } = new();
     public BindableReactiveProperty<int> TabIndex { get; set; } = new();
 
+    /// <summary>
+    /// Phase 5-d-3 follow-up: 該当 (Item, PropertyName) に対する Track が Timeline に存在するか。
+    /// Detail ダイアログ表示中に DetailViewModelBase が Timeline.Tracks.CollectionChanged を Subscribe して
+    /// 更新する。◇ ボタンの Fill (塗 / 空) はこの値にバインドされる。
+    /// </summary>
+    public BindableReactiveProperty<bool> HasTrack { get; } = new();
+
     public virtual string Type => "NONE";
 
     protected PropertyInfo[] GetCachedPropertyPath(string propertyPath, Type rootType)

@@ -296,10 +296,21 @@
                                                 Width="10"
                                                 Height="10"
                                                 Data="M 5,0 L 10,5 L 5,10 L 0,5 Z"
-                                                Fill="#FFFFCC00"
                                                 Stretch="Uniform"
-                                                Stroke="#FF000000"
-                                                StrokeThickness="0.5" />
+                                                Stroke="#FFFFCC00"
+                                                StrokeThickness="1">
+                                                <Path.Style>
+                                                    <Style TargetType="Path">
+                                                        <!--  Phase 5-d-3 follow-up: HasTrack=false なら空 ◇、true なら塗 ◆  -->
+                                                        <Setter Property="Fill" Value="Transparent" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding HasTrack.Value}" Value="True">
+                                                                <Setter Property="Fill" Value="#FFFFCC00" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Path.Style>
+                                            </Path>
                                         </Button>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>

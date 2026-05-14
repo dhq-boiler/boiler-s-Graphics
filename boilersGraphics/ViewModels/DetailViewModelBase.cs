@@ -1,5 +1,7 @@
 ﻿using boilersGraphics.Helpers.Animation;
+using boilersGraphics.Models.Animation;
 using boilersGraphics.Properties;
+using boilersGraphics.ViewModels.Animation;
 using boilersGraphics.Views;
 using NLog;
 using ObservableCollections;
@@ -8,6 +10,8 @@ using Prism.Regions;
 using Prism.Services.Dialogs;
 using R3;
 using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Reflection;
 using boilersGraphics.Extensions;
 using ZLinq;
@@ -113,6 +117,56 @@ public class DetailViewModelBase<T> : BindableBase, IDialogAware, INavigationAwa
         var i = 0;
         properties.ForEach(x => { x.TabIndex.Value = i++; });
         OKTabIndex.Value = i++;
+
+        SubscribeHasTrack();
+    }
+
+    /// <summary>
+    /// Phase 5-d-3 follow-up: ViewModel.Value から Timeline を辿り、各 row の <see cref="PropertyOptionsValueCombination.HasTrack"/>
+    /// を初期化 + Timeline.Tracks.CollectionChanged で再計算するよう Subscribe する。
+    /// ダイアログを跨いで Timeline が変わることは想定しない (= ダイアログのライフサイクル内のみ)。
+    /// </summary>
+    private void SubscribeHasTrack()
+    {
+        var item = ViewModel.Value;
+        if (item is null) return;
+        var diagram = item.Owner as DiagramViewModel;
+        if (diagram is null) return;
+        var timeline = diagram.Timeline;
+        if (timeline is null) return;
+
+        RefreshHasTrack(item.ID, Properties, timeline);
+
+        NotifyCollectionChangedEventHandler handler = (_, _) => RefreshHasTrack(item.ID, Properties, timeline);
+        timeline.Tracks.CollectionChanged += handler;
+        Disposable.Create(() => timeline.Tracks.CollectionChanged -= handler).AddTo(disposables);
+    }
+
+    /// <summary>
+    /// Properties の各 row に対し、Timeline.Tracks に該当 (itemId, PropertyName.Value) の Track があれば
+    /// HasTrack.Value=true、無ければ false を設定する。pure - テスト用に internal で切り出し。
+    /// </summary>
+    internal static void RefreshHasTrack(Guid itemId, IEnumerable<PropertyOptionsValueCombination> rows, TimelineViewModel timeline)
+    {
+        if (rows is null || timeline is null) return;
+        foreach (var row in rows)
+        {
+            if (row is null) continue;
+            var path = row.PropertyName.Value;
+            var has = false;
+            if (!string.IsNullOrEmpty(path))
+            {
+                foreach (var t in timeline.Tracks)
+                {
+                    if (t.Target.ItemId == itemId && t.Target.PropertyPath == path)
+                    {
+                        has = true;
+                        break;
+                    }
+                }
+            }
+            row.HasTrack.Value = has;
+        }
     }
 
     public void Dispose()
