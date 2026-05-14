@@ -1,8 +1,12 @@
 using boilersGraphics.Helpers.Animation;
 using boilersGraphics.Models.Animation;
+using boilersGraphics.ViewModels;
+using boilersGraphics.ViewModels.Animation;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 
 namespace boilersGraphics.Test.Helpers.Animation;
 
@@ -227,5 +231,149 @@ public class PngSequenceExporterTest
     {
         var s = new PngSequenceExportSettings { Start = 0, End = 1, Fps = 30, OutputDirectory = "C:/tmp" };
         Assert.That(s.FilenamePrefix, Is.EqualTo("frame_"));
+    }
+
+    // ----- Export (Phase 5-f-2) -----
+
+    private static (TimelineViewModel tl, NRectangleViewModel rect) NewTimelineWithTrack()
+    {
+        boilersGraphics.App.IsTest = true;
+        var tl = new TimelineViewModel(5.0, 30);
+        var rect = new NRectangleViewModel();
+        var track = new AnimationTrack(new PropertyRef(rect.ID, "Left.Value", AnimatedValueType.Double));
+        track.Keyframes.Add(new Keyframe(0.0, 100.0, EasingKind.LinearEase, EasingMode.EaseIn));
+        track.Keyframes.Add(new Keyframe(2.0, 200.0, EasingKind.LinearEase, EasingMode.EaseIn));
+        tl.Tracks.Add(track);
+        return (tl, rect);
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void Export_は_フレーム数分_renderAndSaveFrame_を呼ぶ()
+    {
+        var (tl, rect) = NewTimelineWithTrack();
+        var settings = Valid(0, 2, 30, outDir: "C:/tmp");
+        var calls = new List<(double time, string path)>();
+
+        var saved = PngSequenceExporter.Export(tl, settings, g => g == rect.ID ? rect : null,
+            (t, p) => calls.Add((t, p)));
+
+        var expected = PngSequenceExporter.ComputeFrameCount(settings);
+        Assert.That(saved, Is.EqualTo(expected));
+        Assert.That(calls.Count, Is.EqualTo(expected));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void Export_は_各フレーム時刻_と_ファイル名_を_順に渡す()
+    {
+        var (tl, rect) = NewTimelineWithTrack();
+        var settings = Valid(0, 0.1, 10, outDir: "C:/out", prefix: "f_");
+        var calls = new List<(double time, string path)>();
+
+        PngSequenceExporter.Export(tl, settings, g => g == rect.ID ? rect : null,
+            (t, p) => calls.Add((t, p)));
+
+        // 0.1 * 10 + 1 = 2 frames: t = 0.0, 0.1
+        Assert.That(calls.Count, Is.EqualTo(2));
+        Assert.That(calls[0].time, Is.EqualTo(0.0).Within(1e-9));
+        Assert.That(calls[1].time, Is.EqualTo(0.1).Within(1e-9));
+        Assert.That(calls[0].path, Is.EqualTo(Path.Combine("C:/out", "f_0000.png")));
+        Assert.That(calls[1].path, Is.EqualTo(Path.Combine("C:/out", "f_0001.png")));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void Export_は_各フレームで_PlaybackEngine_ApplyAt_を呼んで_アイテム値が変動()
+    {
+        var (tl, rect) = NewTimelineWithTrack();
+        // 0..2s @ 1fps = 3 frames (t=0,1,2)。Track は (0->100, 2->200) リニア → 100, 150, 200。
+        var settings = Valid(0, 2, 1, outDir: "C:/out");
+        var observed = new List<double>();
+
+        PngSequenceExporter.Export(tl, settings, g => g == rect.ID ? rect : null,
+            (t, _) => observed.Add(rect.Left.Value));
+
+        Assert.That(observed.Count, Is.EqualTo(3));
+        Assert.That(observed[0], Is.EqualTo(100.0));
+        Assert.That(observed[1], Is.EqualTo(150.0));
+        Assert.That(observed[2], Is.EqualTo(200.0));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void Export_完了時_は_Snapshot_を_Restore_して_元値に戻る()
+    {
+        var (tl, rect) = NewTimelineWithTrack();
+        rect.Left.Value = 100.0;
+        var settings = Valid(0, 2, 1, outDir: "C:/out");
+
+        PngSequenceExporter.Export(tl, settings, g => g == rect.ID ? rect : null,
+            (_, _) => { });
+
+        Assert.That(rect.Left.Value, Is.EqualTo(100.0), "Export 終了時に Snapshot で元の値に戻ること");
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void Export_途中で_例外_でも_Restore_は_必ず実行()
+    {
+        var (tl, rect) = NewTimelineWithTrack();
+        rect.Left.Value = 100.0;
+        var settings = Valid(0, 2, 1, outDir: "C:/out");
+        var calls = 0;
+
+        Assert.Throws<InvalidOperationException>(() =>
+        {
+            PngSequenceExporter.Export(tl, settings, g => g == rect.ID ? rect : null,
+                (_, _) =>
+                {
+                    calls++;
+                    if (calls == 2) throw new InvalidOperationException("boom");
+                });
+        });
+
+        Assert.That(rect.Left.Value, Is.EqualTo(100.0), "例外時も Restore 実行");
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void Export_resolver_null_でも_動く_アイテム値は変更されず_renderAndSave_は呼ばれる()
+    {
+        var (tl, _) = NewTimelineWithTrack();
+        var settings = Valid(0, 1, 5, outDir: "C:/out");
+        var calls = 0;
+
+        var saved = PngSequenceExporter.Export(tl, settings, resolver: null,
+            (_, _) => calls++);
+
+        Assert.That(saved, Is.GreaterThan(0));
+        Assert.That(calls, Is.EqualTo(saved));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void Export_timeline_null_は_ArgumentNullException()
+    {
+        Assert.That(() => PngSequenceExporter.Export(null, Valid(), null, (_, _) => { }),
+            Throws.TypeOf<ArgumentNullException>());
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void Export_settings_null_は_ArgumentNullException()
+    {
+        var (tl, _) = NewTimelineWithTrack();
+        Assert.That(() => PngSequenceExporter.Export(tl, null, null, (_, _) => { }),
+            Throws.TypeOf<ArgumentNullException>());
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void Export_renderAndSaveFrame_null_は_ArgumentNullException()
+    {
+        var (tl, _) = NewTimelineWithTrack();
+        Assert.That(() => PngSequenceExporter.Export(tl, Valid(), null, null),
+            Throws.TypeOf<ArgumentNullException>());
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void Export_invalid_settings_は_ArgumentException()
+    {
+        var (tl, _) = NewTimelineWithTrack();
+        var settings = Valid(start: 0, end: 0, fps: 30); // End <= Start で NG
+        Assert.That(() => PngSequenceExporter.Export(tl, settings, null, (_, _) => { }),
+            Throws.TypeOf<ArgumentException>());
     }
 }

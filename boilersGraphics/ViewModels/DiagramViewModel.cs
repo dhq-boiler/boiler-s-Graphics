@@ -118,6 +118,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             SettingCommand = new DelegateCommand(() => ExecuteSettingCommand());
             // Phase 4-c: テーマ選択ダイアログ起動。組込テーマは worktree 初期化時に AvailableThemes へロード。
             OpenThemeManagerCommand = new DelegateCommand(() => ExecuteOpenThemeManagerCommand());
+            // Phase 5-f-2: PNG 連番書出ダイアログ起動。
+            OpenPngSequenceExportDialogCommand = new DelegateCommand(() => ExecuteOpenPngSequenceExportDialogCommand());
             UniformWidthCommand = new DelegateCommand(() => ExecuteUniformWidthCommand(), () => CanExecuteUniform());
             UniformHeightCommand = new DelegateCommand(() => ExecuteUniformHeightCommand(), () => CanExecuteUniform());
             DuplicateCommand = new DelegateCommand(() => ExecuteDuplicateCommand(), () => CanExecuteDuplicate());
@@ -755,6 +757,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public DelegateCommand SettingCommand { get; }
     /// <summary>Phase 4-c: テーマ選択 / パレット適用ダイアログ起動コマンド。</summary>
     public DelegateCommand OpenThemeManagerCommand { get; }
+    public DelegateCommand OpenPngSequenceExportDialogCommand { get; }
     /// <summary>Phase 4-c: 利用可能なテーマ一覧 (組込 4 種 + ユーザー追加)。</summary>
     public ObservableList<boilersGraphics.Models.Themes.Theme> AvailableThemes { get; } = new();
     /// <summary>Phase 4-c: 現在アクティブなテーマ。null 許容。</summary>
@@ -1874,6 +1877,63 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         var lineStyle = result.Parameters.GetValue<boilersGraphics.Models.Themes.LineStyle>("LineStyle");
         var applyGlow = result.Parameters.GetValue<bool>("ApplyGlow");
         ApplyThemeToScope(theme, scope, target, lineStyle, applyGlow);
+    }
+
+    /// <summary>
+    /// Phase 5-f-2: PNG 連番書出ダイアログを開き、OK なら <see cref="boilersGraphics.Helpers.Animation.PngSequenceExporter.Export"/>
+    /// で各フレームを Renderer.Render + PngBitmapEncoder で保存する。再生中の場合は Pause させてから走らせる方が安全だが
+    /// ここでは Snapshot/Restore に任せている (Export 内で Snapshot を取り、終了時に Restore する)。
+    /// </summary>
+    private void ExecuteOpenPngSequenceExportDialogCommand()
+    {
+        IDialogResult result = null;
+        var end = Timeline.PlayRangeEnd.Value > 0 ? Timeline.PlayRangeEnd.Value : Timeline.Duration.Value;
+        if (end <= Timeline.PlayRangeStart.Value) end = Timeline.PlayRangeStart.Value + 1.0;
+        dlgService.ShowDialog(nameof(boilersGraphics.Views.Animation.PngSequenceExportDialog),
+            new DialogParameters
+            {
+                { "Start", Timeline.PlayRangeStart.Value },
+                { "End", end },
+                { "Fps", Timeline.Fps.Value > 0 ? Timeline.Fps.Value : 30 },
+                { "Duration", Timeline.Duration.Value },
+            },
+            ret => result = ret);
+        if (result == null || result.Result != ButtonResult.OK) return;
+
+        var settings = result.Parameters.GetValue<boilersGraphics.Models.Animation.PngSequenceExportSettings>("Settings");
+        if (settings == null) return;
+
+        try
+        {
+            var designerCanvas = System.Windows.Application.Current.MainWindow?.GetChildOfType<boilersGraphics.Controls.DesignerCanvas>();
+            if (designerCanvas == null)
+            {
+                MainWindowVM.Message.Value = "DesignerCanvas が取得できなかったっす";
+                return;
+            }
+            var saved = boilersGraphics.Helpers.Animation.PngSequenceExporter.Export(
+                Timeline,
+                settings,
+                Timeline.ItemResolver,
+                (time, path) => RenderFrameAndSavePng(designerCanvas, path));
+            MainWindowVM.Message.Value = $"PNG {saved} 枚を {settings.OutputDirectory} に書き出したっす";
+        }
+        catch (Exception ex)
+        {
+            LogManager.GetCurrentClassLogger().Warn(ex, "PNG sequence export failed");
+            MainWindowVM.Message.Value = $"書き出し失敗: {ex.Message}";
+        }
+    }
+
+    private void RenderFrameAndSavePng(boilersGraphics.Controls.DesignerCanvas designerCanvas, string filePath)
+    {
+        var background = BackgroundItem.Value;
+        var rtb = Renderer.Render(null, designerCanvas, this, background, background);
+        if (rtb == null) return;
+        using var stream = new System.IO.FileStream(filePath, System.IO.FileMode.Create);
+        var encoder = new System.Windows.Media.Imaging.PngBitmapEncoder();
+        encoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(rtb));
+        encoder.Save(stream);
     }
 
     /// <summary>

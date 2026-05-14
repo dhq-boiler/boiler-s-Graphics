@@ -222,6 +222,8 @@ public partial class App : PrismApplication
         containerRegistry.RegisterDialog<Preference, PreferenceViewModel>();
         // Phase 4-c: テーマ選択 / パレット適用ダイアログ
         containerRegistry.RegisterDialog<ThemeManager, ThemeManagerViewModel>();
+        // Phase 5-f-2: PNG 連番書出ダイアログ
+        containerRegistry.RegisterDialog<boilersGraphics.Views.Animation.PngSequenceExportDialog, boilersGraphics.ViewModels.Animation.PngSequenceExportDialogViewModel>();
         containerRegistry.RegisterDialog<Export, ExportViewModel>();
         containerRegistry.RegisterDialog<PolygonSetting, PolygonSettingViewModel>();
         containerRegistry.RegisterDialog<Layers, LayersViewModel>();

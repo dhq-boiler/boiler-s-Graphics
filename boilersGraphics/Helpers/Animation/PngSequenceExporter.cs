@@ -1,4 +1,6 @@
 using boilersGraphics.Models.Animation;
+using boilersGraphics.ViewModels;
+using boilersGraphics.ViewModels.Animation;
 using System;
 using IoPath = System.IO.Path;
 
@@ -87,5 +89,58 @@ public static class PngSequenceExporter
         var fileName = $"{settings.FilenamePrefix}{frameIndex.ToString().PadLeft(digits, '0')}.png";
         var dir = settings.OutputDirectory ?? string.Empty;
         return IoPath.Combine(dir, fileName);
+    }
+
+    /// <summary>
+    /// Phase 5-f-2: 副作用付き Export 本体。
+    ///
+    /// 各フレームで <see cref="PlaybackEngine.ApplyAt"/> でアイテム値を時刻 t に合わせ、
+    /// <paramref name="renderAndSaveFrame"/> (= "時刻 t と保存パス path を受け取り 1 枚 PNG を作って書く")
+    /// を呼び出す。Renderer 呼び出しは boilersGraphics 側の <see cref="Renderer"/> に依存するので、
+    /// テストではダミーデリゲートを差し込む。
+    ///
+    /// 開始前に <see cref="PlaybackEngine.Snapshot"/> を取り、終了 (例外を含む) で必ず Restore する。
+    /// 戻り値は実際に書き出したフレーム数。
+    /// </summary>
+    public static int Export(
+        TimelineViewModel timeline,
+        PngSequenceExportSettings settings,
+        Func<Guid, SelectableDesignerItemViewModelBase> resolver,
+        Action<double, string> renderAndSaveFrame)
+    {
+        if (timeline is null) throw new ArgumentNullException(nameof(timeline));
+        if (settings is null) throw new ArgumentNullException(nameof(settings));
+        if (renderAndSaveFrame is null) throw new ArgumentNullException(nameof(renderAndSaveFrame));
+
+        var validation = Validate(settings, timeline.Duration.Value);
+        if (!validation.IsValid) throw new ArgumentException(validation.ErrorMessage, nameof(settings));
+
+        var total = ComputeFrameCount(settings);
+        if (total <= 0) return 0;
+
+        var snapshot = resolver is null ? null : PlaybackEngine.Snapshot(timeline, resolver);
+        var saved = 0;
+        try
+        {
+            for (var i = 0; i < total; i++)
+            {
+                var time = GetFrameTime(settings, i);
+                if (resolver is not null)
+                {
+                    PlaybackEngine.ApplyAt(timeline, time, resolver);
+                }
+                var path = BuildFrameFilePath(settings, i, total);
+                renderAndSaveFrame(time, path);
+                saved++;
+            }
+        }
+        finally
+        {
+            if (snapshot is not null && resolver is not null)
+            {
+                PlaybackEngine.Restore(snapshot, resolver);
+            }
+        }
+        return saved;
     }
 }

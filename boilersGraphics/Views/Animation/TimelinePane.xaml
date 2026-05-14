@@ -104,6 +104,21 @@
                         Foreground="#FFCCCCCC"
                         IsChecked="{Binding Loop.Value, Mode=TwoWay}"
                         VerticalAlignment="Center" />
+
+                    <Separator Margin="12,0,6,0" />
+
+                    <!--  Phase 5-f-2: PNG 連番書出ダイアログ起動  -->
+                    <Button
+                        x:Name="ExportPngSequenceButton"
+                        AutomationProperties.AutomationId="TimelineExportPngSequence"
+                        Background="#FF3E3E42"
+                        BorderBrush="#FF555555"
+                        Command="{Binding DataContext.DiagramViewModel.OpenPngSequenceExportDialogCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                        Content="PNG 連番..."
+                        Foreground="#FFCCCCCC"
+                        Height="24"
+                        Padding="6,0"
+                        ToolTip="Timeline を PNG 連番として書き出す (Phase 5-f)" />
                 </StackPanel>
             </Border>
 
