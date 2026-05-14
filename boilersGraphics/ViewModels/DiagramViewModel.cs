@@ -659,6 +659,19 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         EnableLayers.Value = true;
         EnableWorkHistory.Value = true;
 
+        // Phase 5-e-2: Timeline 再生エンジンに DesignerItem 解決関数を差し込む。
+        // ItemId -> 該当 VM の lookup は AllItems を線形検索する単純実装 (Tracks の総数 << AllItems の総数想定)。
+        Timeline.ItemResolver = guid =>
+        {
+            var arr = AllItems?.Value;
+            if (arr is null) return null;
+            foreach (var it in arr)
+            {
+                if (it is not null && it.ID == guid) return it;
+            }
+            return null;
+        };
+
         SettingIfDebug();
     }
 
