@@ -347,3 +347,21 @@ Phase 4 で「組込 4 テーマ (Bladerunner / Matrix / MedicalBlueWhite / Ambe
 2. 未使用件数を確認するダイアログが出るので OK を押すと一括削除されます。
 3. Undo で削除前の状態に戻せます。
 
+## アニメーション (Phase 5 / Phase 5.5)
+
+詳しい操作は以下のチュートリアルを参照してください。
+
+- [`docs/fui/phase5-tutorial.md`](docs/fui/phase5-tutorial.md) — Timeline / Track / Keyframe / 再生 / PNG 連番書出
+- [`docs/fui/phase5-5-tutorial.md`](docs/fui/phase5-5-tutorial.md) — WPF Storyboard / MAUI Animation XAML 出力
+
+要点:
+
+1. 画面下部 `Timeline` Expander を開く。
+2. 図形のプロパティダイアログで各行の ◇ ボタンをクリックして現時刻にキーフレームを打つ。
+3. Now を別時刻に進めて値を変更 → もう一度 ◇ で 2 つ目のキーフレーム。これで補間アニメ完成。
+4. トランスポートバーの ▶ で再生 / Loop チェックで折返し。
+5. 「PNG 連番...」「WPF XAML...」「MAUI XAML...」ボタンから書き出し可能。
+   - PNG 連番: 各フレームを 0001.png〜 として保存。
+   - WPF XAML: `UserControl` + `Storyboard` の `.xaml` (+ オプションで `.xaml.cs`) を生成、実 WPF アプリへコピペで組み込み可能。
+   - MAUI XAML: `ContentView` の `.xaml` + Animation コードビハインドの `.xaml.cs` を生成、実 .NET MAUI アプリへコピペで組み込み可能。
+
