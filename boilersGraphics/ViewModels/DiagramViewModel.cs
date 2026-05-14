@@ -2001,6 +2001,14 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             var item = (SelectableDesignerItemViewModelBase)parameter;
             if (item is SnapPointViewModel snapPoint && !(snapPoint.Parent.Value is null))
                 item = snapPoint.Parent.Value;
+            // Phase 3.5 / Q-8 案 B: AnchorViewModel を削除する前に、その Id を参照する
+            // OrthogonalConnector / AnchorBezierConnector を先に削除 (自由端コネクタが残る
+            // 状況を回避し、データの一貫性を保つ)。明示 Guid 参照のみ対象、暗黙 9 点参照 (#xx)
+            // は対象外なのでオーナー DesignerItem 削除時に別途回収される。
+            if (item is boilersGraphics.ViewModels.Anchors.AnchorViewModel anchor)
+            {
+                RemoveAnchorReferringConnectors(anchor);
+            }
             RemoveGroupMembers(item);
             Remove(item);
             if (item is LetterDesignerItemViewModel) (item as LetterDesignerItemViewModel).CloseLetterSettingDialog();
@@ -2008,6 +2016,24 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 (item as LetterVerticalDesignerItemViewModel).CloseLetterSettingDialog();
             item.Dispose();
             UpdateZIndex();
+        }
+    }
+
+    /// <summary>
+    /// Phase 3.5 / Q-8 案 B: 指定 AnchorViewModel の Id を明示参照しているコネクタ
+    /// (OrthogonalConnector / AnchorBezierConnector) を一括削除する。
+    /// 検索ロジックは <see cref="boilersGraphics.Helpers.Anchors.AnchorReferenceFinder"/> に分離。
+    /// </summary>
+    private void RemoveAnchorReferringConnectors(boilersGraphics.ViewModels.Anchors.AnchorViewModel anchor)
+    {
+        if (anchor is null) return;
+        // AllItems.Value はライブ参照配列なので、削除中の再列挙を避けるため snapshot を取る。
+        var refs = boilersGraphics.Helpers.Anchors.AnchorReferenceFinder
+            .FindReferring(AllItems.Value, anchor.ID)
+            .ToList();
+        foreach (var connector in refs)
+        {
+            ExecuteRemoveItemCommand(connector);
         }
     }
 

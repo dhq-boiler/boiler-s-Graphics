@@ -67,6 +67,88 @@ public class AnchorMathTest
         Assert.That(p.Y, Is.EqualTo(100).Within(1e-6));
     }
 
+    // Phase 3.5: ToRelative (ToWorld の逆変換) のテスト
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void ToRelative_回転0_左上ワールドはRelative0_0()
+    {
+        var (rx, ry) = AnchorMath.ToRelative(left: 10, top: 20, width: 100, height: 50,
+            rotationDegrees: 0, worldX: 10, worldY: 20);
+        Assert.That(rx, Is.EqualTo(0).Within(1e-6));
+        Assert.That(ry, Is.EqualTo(0).Within(1e-6));
+    }
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void ToRelative_回転0_右下ワールドはRelative1_1()
+    {
+        var (rx, ry) = AnchorMath.ToRelative(left: 10, top: 20, width: 100, height: 50,
+            rotationDegrees: 0, worldX: 110, worldY: 70);
+        Assert.That(rx, Is.EqualTo(1).Within(1e-6));
+        Assert.That(ry, Is.EqualTo(1).Within(1e-6));
+    }
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void ToRelative_90度回転_中心点ワールド50_50はRelative0_5()
+    {
+        // ToWorld(rot=90, rel=0.5,0.5) = (50,50) の逆
+        var (rx, ry) = AnchorMath.ToRelative(left: 0, top: 0, width: 100, height: 100,
+            rotationDegrees: 90, worldX: 50, worldY: 50);
+        Assert.That(rx, Is.EqualTo(0.5).Within(1e-6));
+        Assert.That(ry, Is.EqualTo(0.5).Within(1e-6));
+    }
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void ToRelative_90度回転_ワールド100_0はRelative0_0()
+    {
+        // ToWorld(rot=90, rel=0,0) = (100,0) の逆。左上が右上へ移動するパターン。
+        var (rx, ry) = AnchorMath.ToRelative(left: 0, top: 0, width: 100, height: 100,
+            rotationDegrees: 90, worldX: 100, worldY: 0);
+        Assert.That(rx, Is.EqualTo(0).Within(1e-6));
+        Assert.That(ry, Is.EqualTo(0).Within(1e-6));
+    }
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void ToRelative_180度回転_ワールド100_100はRelative0_0()
+    {
+        // ToWorld(rot=180, rel=0,0) = (100,100) の逆
+        var (rx, ry) = AnchorMath.ToRelative(left: 0, top: 0, width: 100, height: 100,
+            rotationDegrees: 180, worldX: 100, worldY: 100);
+        Assert.That(rx, Is.EqualTo(0).Within(1e-6));
+        Assert.That(ry, Is.EqualTo(0).Within(1e-6));
+    }
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void ToWorld_ToRelative_は互いに逆関数_45度回転()
+    {
+        // 任意の (relX, relY) を ToWorld → ToRelative して戻ること
+        const double left = 30, top = 40, width = 80, height = 60, rot = 45;
+        foreach (var (rx, ry) in new[] { (0.0, 0.0), (1.0, 0.0), (0.0, 1.0), (1.0, 1.0), (0.5, 0.5), (0.25, 0.75) })
+        {
+            var w = AnchorMath.ToWorld(left, top, width, height, rot, rx, ry);
+            var (rx2, ry2) = AnchorMath.ToRelative(left, top, width, height, rot, w.X, w.Y);
+            Assert.That(rx2, Is.EqualTo(rx).Within(1e-6), $"RelativeX roundtrip ({rx},{ry})");
+            Assert.That(ry2, Is.EqualTo(ry).Within(1e-6), $"RelativeY roundtrip ({rx},{ry})");
+        }
+    }
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void ToRelative_width0_退化図形は0_0()
+    {
+        var (rx, ry) = AnchorMath.ToRelative(left: 0, top: 0, width: 0, height: 100,
+            rotationDegrees: 0, worldX: 50, worldY: 50);
+        Assert.That(rx, Is.EqualTo(0));
+        Assert.That(ry, Is.EqualTo(0));
+    }
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void ToRelative_height負値も退化扱い()
+    {
+        var (rx, ry) = AnchorMath.ToRelative(left: 0, top: 0, width: 100, height: -5,
+            rotationDegrees: 0, worldX: 50, worldY: 50);
+        Assert.That(rx, Is.EqualTo(0));
+        Assert.That(ry, Is.EqualTo(0));
+    }
+
     [Test]
     public void RelativeOf_全9点_予約座標と一致()
     {

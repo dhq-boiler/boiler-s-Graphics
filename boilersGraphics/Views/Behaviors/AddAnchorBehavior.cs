@@ -64,13 +64,16 @@ public class AddAnchorBehavior : Behavior<DesignerCanvas>
         var owner = FindOwnerUnder(diagram, click);
         if (owner is null) return;
 
-        // 図形の Bounds から相対座標を算出。Rotation > 0 のときは AABB 近似で誤差が出るが、
-        // Phase 3-b 最小スコープでは許容 (Phase 3.5 で逆回転変換に改善余地)。
+        // Phase 3.5: Rotation 非 0 の図形でも、ワールド座標を逆回転してローカル系で相対座標を算出する。
+        // AnchorMath.ToRelative が R(-θ) を適用して (RelativeX, RelativeY) を返す。
         var width = owner.Width.Value;
         var height = owner.Height.Value;
         if (width <= 0 || height <= 0) return;
-        var relX = Math.Clamp((click.X - owner.Left.Value) / width, 0.0, 1.0);
-        var relY = Math.Clamp((click.Y - owner.Top.Value) / height, 0.0, 1.0);
+        var (rawRelX, rawRelY) = boilersGraphics.Models.Anchors.AnchorMath.ToRelative(
+            owner.Left.Value, owner.Top.Value, width, height,
+            owner.RotationAngle.Value, click.X, click.Y);
+        var relX = Math.Clamp(rawRelX, 0.0, 1.0);
+        var relY = Math.Clamp(rawRelY, 0.0, 1.0);
 
         var model = new Anchor
         {

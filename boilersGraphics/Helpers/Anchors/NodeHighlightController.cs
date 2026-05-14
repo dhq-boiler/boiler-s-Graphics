@@ -9,17 +9,18 @@ namespace boilersGraphics.Helpers.Anchors;
 
 /// <summary>
 /// Phase 3-g: IsNode=true の DesignerItem が選択されたとき、関連コネクタを強調表示する。
-/// EdgeThickness × <see cref="ThicknessMultiplier"/>, EdgeBrush の色反転 (SolidColorBrush 限定) を
-/// 直接コネクタ VM に書き戻し、選択解除/別ノード選択時は元の値を復元する。
-/// 注意: 強調表示中にユーザが EdgeThickness / EdgeBrush を手動変更すると、解除時に元の値で
-///       上書きされる (Phase 3-g の最小実装スコープ。Phase 3.5 で改善余地)。
+/// Phase 3.5 (#4): stash dict 方式をやめて、対象コネクタの IsHighlighted を true/false するだけに変更。
+/// 派生プロパティ <see cref="ConnectorBaseViewModel.EffectiveEdgeBrush"/> /
+/// <see cref="ConnectorBaseViewModel.EffectiveEdgeThickness"/> が EdgeBrush / EdgeThickness と
+/// IsHighlighted の CombineLatest で導出されるため、強調表示中のユーザ手動編集
+/// (EdgeBrush 変更等) も解除時に上書きされない。
 /// </summary>
 public sealed class NodeHighlightController : IDisposable
 {
     public const double ThicknessMultiplier = 1.5;
 
     private readonly IDiagramViewModel _diagram;
-    private readonly Dictionary<ConnectorBaseViewModel, (Brush Brush, double Thickness)> _stash = new();
+    private readonly HashSet<ConnectorBaseViewModel> _highlighted = new();
     private readonly IDisposable _subscription;
 
     public NodeHighlightController(IDiagramViewModel diagram)
@@ -28,7 +29,7 @@ public sealed class NodeHighlightController : IDisposable
         _subscription = _diagram.SelectedItems.AsObservable().Subscribe(_ => Apply());
     }
 
-    /// <summary>選択状態から目標コネクタを計算して、stash と差分を取りつつ強調表示を更新する。</summary>
+    /// <summary>選択状態から目標コネクタを計算して、IsHighlighted フラグの差分を取りつつ更新する。</summary>
     public void Apply()
     {
         var selected = _diagram.SelectedItems.Value;
@@ -44,40 +45,37 @@ public sealed class NodeHighlightController : IDisposable
             }
         }
 
-        // 過去に強調してたが今回対象外: 復元
-        var toRestore = new List<ConnectorBaseViewModel>();
-        foreach (var c in _stash.Keys)
-            if (!targets.Contains(c)) toRestore.Add(c);
-        foreach (var c in toRestore)
+        // 過去に強調してたが今回対象外: IsHighlighted を false に
+        var toClear = new List<ConnectorBaseViewModel>();
+        foreach (var c in _highlighted)
+            if (!targets.Contains(c)) toClear.Add(c);
+        foreach (var c in toClear)
         {
-            var (origBrush, origThickness) = _stash[c];
-            c.EdgeBrush.Value = origBrush;
-            c.EdgeThickness.Value = origThickness;
-            _stash.Remove(c);
+            c.IsHighlighted.Value = false;
+            _highlighted.Remove(c);
         }
 
-        // 新規対象: stash に保存して強調
+        // 新規対象: IsHighlighted を true に (派生プロパティが描画値を更新)
         foreach (var c in targets)
         {
-            if (_stash.ContainsKey(c)) continue;
-            _stash[c] = (c.EdgeBrush.Value, c.EdgeThickness.Value);
-            c.EdgeBrush.Value = InvertBrush(c.EdgeBrush.Value);
-            c.EdgeThickness.Value = c.EdgeThickness.Value * ThicknessMultiplier;
+            if (_highlighted.Contains(c)) continue;
+            _highlighted.Add(c);
+            c.IsHighlighted.Value = true;
         }
     }
 
     public void Dispose()
     {
         _subscription?.Dispose();
-        // Dispose 時点で残ってる強調表示は復元しておく
-        foreach (var kv in _stash)
-        {
-            kv.Key.EdgeBrush.Value = kv.Value.Brush;
-            kv.Key.EdgeThickness.Value = kv.Value.Thickness;
-        }
-        _stash.Clear();
+        // Dispose 時点で残ってる強調表示は解除する (フラグ降ろすだけ、元値の復元は不要)
+        foreach (var c in _highlighted) c.IsHighlighted.Value = false;
+        _highlighted.Clear();
     }
 
+    /// <summary>
+    /// SolidColorBrush の RGB 反転 (Alpha 保持)。SolidColorBrush 以外は変更せず返す。
+    /// EffectiveEdgeBrush の派生計算でも使うので internal で公開。
+    /// </summary>
     internal static Brush InvertBrush(Brush b)
     {
         if (b is SolidColorBrush scb)

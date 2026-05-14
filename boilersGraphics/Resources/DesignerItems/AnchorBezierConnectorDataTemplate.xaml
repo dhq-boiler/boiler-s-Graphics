@@ -6,17 +6,19 @@
          PathGeometryNoRotate.Value を絶対座標で描画する。 -->
     <DataTemplate DataType="{x:Type connectors:AnchorBezierConnectorViewModel}">
         <Canvas Background="Transparent">
+            <!-- Phase 3.5 (#4): Stroke / StrokeThickness は EffectiveEdgeBrush / EffectiveEdgeThickness にバインド。
+                 ノード強調表示中もユーザ手動編集 (EdgeBrush 等) を尊重するため、派生プロパティ経由で描画する。 -->
             <Path
                 Data="{Binding PathGeometryNoRotate.Value}"
                 Effect="{Binding GlowEffect.Value}"
                 IsHitTestVisible="True"
-                Stroke="{Binding EdgeBrush.Value}"
+                Stroke="{Binding EffectiveEdgeBrush.Value}"
                 StrokeDashArray="{Binding StrokeDashArray.Value}"
                 StrokeEndLineCap="{Binding StrokeEndLineCap.Value}"
                 StrokeLineJoin="{Binding StrokeLineJoin.Value}"
                 StrokeMiterLimit="{Binding StrokeMiterLimit.Value}"
                 StrokeStartLineCap="{Binding StrokeStartLineCap.Value}"
-                StrokeThickness="{Binding EdgeThickness.Value}" />
+                StrokeThickness="{Binding EffectiveEdgeThickness.Value}" />
         </Canvas>
     </DataTemplate>
 </ResourceDictionary>
