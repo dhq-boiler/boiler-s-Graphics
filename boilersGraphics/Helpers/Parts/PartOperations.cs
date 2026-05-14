@@ -29,10 +29,22 @@ internal static class PartOperations
         // Definition.Items and make subsequent edits in PartEditor throw
         // ObjectDisposedException at the first ReactiveProperty access.
         // Detach / Clone follow the same defensive-clone pattern.
+        //
+        // BUG FIX: clones must be re-anchored to the selection bounds
+        // (subtract bounds.X / bounds.Y). PartInstanceDesignerItemData
+        // Template binds Canvas.Left/Top straight to item.Left/Top, and
+        // the Canvas itself is positioned at PartInstance.Left/Top.
+        // Without this normalization the original absolute coords add
+        // up with PartInstance.Left/Top and the part appears shifted by
+        // (bounds.X, bounds.Y) after Promote.
         foreach (var item in items)
         {
             if (item.Clone() is DesignerItemViewModelBase clone)
+            {
+                clone.Left.Value -= bounds.X;
+                clone.Top.Value -= bounds.Y;
                 definition.Items.Add(clone);
+            }
         }
 
         var instance = new PartInstanceViewModel(definition.Id.Value)
@@ -60,11 +72,19 @@ internal static class PartOperations
             throw new InvalidOperationException(
                 "PartInstance.DefinitionId does not match the supplied definition.");
 
+        // Inverse of the Promote normalization: Definition.Items hold
+        // bounds-relative Left/Top, so when Detaching back into the
+        // layer we need to re-apply instance.Left/Top to land each
+        // child at its original world position.
         var detached = new List<DesignerItemViewModelBase>(definition.Items.Count);
+        var offsetX = instance.Left.Value;
+        var offsetY = instance.Top.Value;
         foreach (var item in definition.Items)
         {
             if (item.Clone() is DesignerItemViewModelBase clone)
             {
+                clone.Left.Value += offsetX;
+                clone.Top.Value += offsetY;
                 clone.Owner = instance.Owner;
                 detached.Add(clone);
             }

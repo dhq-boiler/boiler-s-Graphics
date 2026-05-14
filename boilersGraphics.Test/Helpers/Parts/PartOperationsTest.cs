@@ -237,4 +237,72 @@ public class PartOperationsTest
             var ___ = def.Items[0].IsSelected.Value;
         });
     }
+
+    // 「パーツ化したときにずれます」バグ修正のリグレッション。
+    // PartInstanceDesignerItemDataTemplate が item.Left/Top をそのまま Canvas.Left/Top に bind し、
+    // Canvas 自体は PartInstance.Left/Top に置かれるので、Definition.Items の Left/Top は
+    // bounds の左上を 0 にした「相対座標」でなければ world 上で (bounds.X, bounds.Y) ぶんずれる。
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void Promote_Definition内のItemsはbounds左上を起点にした相対座標()
+    {
+        var r1 = new NRectangleViewModel(100, 200, 30, 40);
+        var r2 = new NRectangleViewModel(150, 250, 30, 40);
+
+        var result = PartOperations.Promote(new DesignerItemViewModelBase[] { r1, r2 }, "P");
+
+        // bounds = (100, 200, 80, 90)。各 item の Left/Top は (0,0) と (50,50) になっているはず。
+        Assert.That(result.Definition.Items[0].Left.Value, Is.EqualTo(0));
+        Assert.That(result.Definition.Items[0].Top.Value, Is.EqualTo(0));
+        Assert.That(result.Definition.Items[1].Left.Value, Is.EqualTo(50));
+        Assert.That(result.Definition.Items[1].Top.Value, Is.EqualTo(50));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void Promote_オリジナル図形のLeftTopは触らない()
+    {
+        var r1 = new NRectangleViewModel(100, 200, 30, 40);
+
+        var result = PartOperations.Promote(new DesignerItemViewModelBase[] { r1 }, "P");
+
+        // 元の r1 は Clone してから操作するので不変
+        Assert.That(r1.Left.Value, Is.EqualTo(100));
+        Assert.That(r1.Top.Value, Is.EqualTo(200));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void Detach_Definitionの相対座標をinstance位置で絶対座標に戻す()
+    {
+        var r1 = new NRectangleViewModel(100, 200, 30, 40);
+        var r2 = new NRectangleViewModel(150, 250, 30, 40);
+        var result = PartOperations.Promote(new DesignerItemViewModelBase[] { r1, r2 }, "P");
+        // PartInstance を別位置に動かしてから Detach (移動先で復元するパス)
+        result.Instance.Left.Value = 500;
+        result.Instance.Top.Value = 600;
+
+        var detached = PartOperations.Detach(result.Instance, result.Definition);
+
+        // 相対 (0,0) と (50,50) に、instance の (500,600) が加算されて (500,600) と (550,650)
+        Assert.That(detached, Has.Count.EqualTo(2));
+        Assert.That(detached[0].Left.Value, Is.EqualTo(500));
+        Assert.That(detached[0].Top.Value, Is.EqualTo(600));
+        Assert.That(detached[1].Left.Value, Is.EqualTo(550));
+        Assert.That(detached[1].Top.Value, Is.EqualTo(650));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void Promote_Detach_ラウンドトリップでLeftTopが復元される()
+    {
+        // Promote → そのままの位置で Detach すれば元の絶対座標に戻る
+        var r1 = new NRectangleViewModel(100, 200, 30, 40);
+        var r2 = new NRectangleViewModel(150, 250, 30, 40);
+        var result = PartOperations.Promote(new DesignerItemViewModelBase[] { r1, r2 }, "P");
+
+        var detached = PartOperations.Detach(result.Instance, result.Definition);
+
+        Assert.That(detached[0].Left.Value, Is.EqualTo(100));
+        Assert.That(detached[0].Top.Value, Is.EqualTo(200));
+        Assert.That(detached[1].Left.Value, Is.EqualTo(150));
+        Assert.That(detached[1].Top.Value, Is.EqualTo(250));
+    }
 }
