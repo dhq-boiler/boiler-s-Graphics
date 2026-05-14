@@ -49,6 +49,26 @@ public abstract class ConnectorBaseViewModel : SelectableDesignerItemViewModelBa
 
     public IReadOnlyBindableReactiveProperty<Thickness> ResizeHandleMargin { get; set; }
 
+    /// <summary>
+    /// Phase 3.5 (#4): ノード強調表示状態。<see cref="boilersGraphics.Helpers.Anchors.NodeHighlightController"/>
+    /// が IsNode 経由の関連コネクタに対して true/false を立てる。直接 EdgeBrush/EdgeThickness を書き換えない
+    /// 設計に変更したので、強調表示中のユーザ手動編集 (EdgeBrush 変更等) も EffectiveEdgeBrush に反映される。
+    /// </summary>
+    public BindableReactiveProperty<bool> IsHighlighted { get; } = new(false);
+
+    /// <summary>
+    /// Phase 3.5: 描画用の派生プロパティ。IsHighlighted=true なら EdgeBrush を反転、それ以外はそのまま返す。
+    /// DataTemplate の Stroke はこちらにバインドする。
+    /// </summary>
+    public IReadOnlyBindableReactiveProperty<Brush> EffectiveEdgeBrush { get; private set; }
+
+    /// <summary>
+    /// Phase 3.5: 描画用の派生プロパティ。IsHighlighted=true なら EdgeThickness ×
+    /// <see cref="boilersGraphics.Helpers.Anchors.NodeHighlightController.ThicknessMultiplier"/>、
+    /// それ以外はそのまま返す。
+    /// </summary>
+    public IReadOnlyBindableReactiveProperty<double> EffectiveEdgeThickness { get; private set; }
+
     public virtual void PostProcess_AddPointP1(Point p1)
     {
     }
@@ -136,6 +156,16 @@ public abstract class ConnectorBaseViewModel : SelectableDesignerItemViewModelBa
         PenLineCaps.Add(PenLineCap.Square);
         PenLineCaps.Add(PenLineCap.Triangle);
         ResizeHandleMargin = Observable.Return(3).Select(size => new Thickness(-size, -size, -size, -size))
+            .ToReadOnlyBindableReactiveProperty();
+
+        // Phase 3.5 (#4): EdgeBrush / EdgeThickness / IsHighlighted の CombineLatest で
+        // 強調表示中の見た目を派生プロパティに集約する。NodeHighlightController は IsHighlighted を
+        // トグルするだけになり、強調表示中の手動編集 (EdgeBrush 変更) も即座に反映される。
+        EffectiveEdgeBrush = EdgeBrush
+            .CombineLatest(IsHighlighted, (b, h) => h ? boilersGraphics.Helpers.Anchors.NodeHighlightController.InvertBrush(b) : b)
+            .ToReadOnlyBindableReactiveProperty();
+        EffectiveEdgeThickness = EdgeThickness
+            .CombineLatest(IsHighlighted, (t, h) => h ? t * boilersGraphics.Helpers.Anchors.NodeHighlightController.ThicknessMultiplier : t)
             .ToReadOnlyBindableReactiveProperty();
     }
 
