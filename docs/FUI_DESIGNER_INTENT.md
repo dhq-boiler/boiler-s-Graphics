@@ -156,12 +156,24 @@ FUI は「世界観」を統一することで完成度が決まる。
 - 設計仕様: [`fui/phase4-styles-themes.md`](./fui/phase4-styles-themes.md) (Q-1 〜 Q-12 確定版)
 - チュートリアル: [`fui/phase4-tutorial.md`](./fui/phase4-tutorial.md)
 
-### Phase 5: モーション / アニメーション (After Effects 代替の最初の一歩)
-ここから先は野心的。最低限のタイムラインベースアニメーション。
-- **キーフレームベースのプロパティアニメーション** (位置、回転、不透明度、線の長さなど)
-- **トリムパス (パスの一部だけを描画) アニメーション**: ローディング表現に必須
-- **数値カウンタアニメーション**: 0 → 1234.56 などをイージング付きで表示
-- **書き出し**: PNG 連番、MP4 (FFmpeg 連携)、Lottie JSON (可能なら)
+### Phase 5: モーション / アニメーション (After Effects 代替の最初の一歩) — 完了 ✅
+タイムラインベースの最小実装が一巡。サブフェーズ:
+- **5-a**: 仕様書 `fui/phase5-motion-animation.md` v1.0 確定 (Q-1〜Q-12 全件決定)
+- **5-b**: データモデル + シリアライズ (`Keyframe` / `AnimationTrack` / `TimelineViewModel` / `TimelineSerializer`)
+- **5-c**: 補間エンジン (`Interpolator` / `EasingFunctions` 12 種 × 3 モード / `PropertyApplier`)
+- **5-d**: UI (`TimelinePane.xaml` + Detail の ◇ キーフレームボタン)
+- **5-e**: 再生 (`PlaybackEngine` Snapshot/Restore/ApplyAt + DispatcherTimer + Play/Pause/Stop コマンド + Loop 折返し)
+- **5-f**: PNG 連番書出 (`PngSequenceExportDialog` + `PngSequenceExporter` + `Renderer.Render` + `PngBitmapEncoder`)
+- **5-g**: チュートリアル `fui/phase5-tutorial.md` + `IAnimationExporter` インターフェース (Phase 5.5 への布石)
+
+未対応で将来枠に持ち越したもの:
+- **MP4 (FFmpeg 連携) / Lottie JSON 出力** — Phase 5 では PNG 連番のみ確定 (Q-11 案 A)
+- **トリムパス (DrawProgress) / 数値カウンタアニメ** — Stroke 系図形に派生プロパティ追加 + テキスト系 Block 対応が必要
+- **Opacity アニメ** — `SelectableDesignerItemViewModelBase` に Opacity プロパティが無いため未対応
+
+#### 関連ドキュメント
+- 設計仕様: [`fui/phase5-motion-animation.md`](./fui/phase5-motion-animation.md) (Q-1 〜 Q-12 確定版)
+- チュートリアル: [`fui/phase5-tutorial.md`](./fui/phase5-tutorial.md)
 
 ### Phase 5.5: XAML アニメーション出力 (WPF / .NET MAUI 連携) 🌟 重点
 **`boilersGraphics` の最大の独自性となる機能**。
