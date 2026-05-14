@@ -143,4 +143,49 @@ public class ThemeApplierTest
         copy.Add(99);
         Assert.That(stepped.StrokeDashArray.Count, Is.EqualTo(4), "原本は触らない");
     }
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void ResolveGlow_テーマnullは0_0_null()
+    {
+        var (r, i, c) = ThemeApplier.ResolveGlow(null);
+        Assert.That(r, Is.EqualTo(0));
+        Assert.That(i, Is.EqualTo(0));
+        Assert.That(c, Is.Null);
+    }
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void ResolveGlow_Bladerunnerの値が返る()
+    {
+        var theme = ThemeRepository.CreateBuiltIn().First(t => t.Name == "Bladerunner");
+        var (r, i, c) = ThemeApplier.ResolveGlow(theme);
+        Assert.That(r, Is.EqualTo(6));
+        Assert.That(i, Is.EqualTo(0.6).Within(1e-6));
+        Assert.That(c, Is.EqualTo((Color)ColorConverter.ConvertFromString("#FF5733")));
+    }
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void ResolveKernelSize_radius0は1()
+    {
+        Assert.That(ThemeApplier.ResolveKernelSize(0), Is.EqualTo(1));
+    }
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void ResolveKernelSize_radius3は7()
+    {
+        // 3 * 2 + 1 = 7 (奇数)
+        Assert.That(ThemeApplier.ResolveKernelSize(3), Is.EqualTo(7));
+    }
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void ResolveKernelSize_負値は1にクランプ()
+    {
+        Assert.That(ThemeApplier.ResolveKernelSize(-5), Is.EqualTo(1));
+    }
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void ResolveKernelSize_radius2_5は四捨五入で2_2_1_5()
+    {
+        // Math.Round(2.5) = 2 (バンカーズラウンディング)、2 * 2 + 1 = 5
+        Assert.That(ThemeApplier.ResolveKernelSize(2.5), Is.EqualTo(5));
+    }
 }

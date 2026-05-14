@@ -79,4 +79,28 @@ public static class ThemeApplier
         }
         return copy;
     }
+
+    /// <summary>
+    /// Phase 4-e: テーマのデフォルトグロー設定を (radius, intensity, color) のタプルに変換する pure 関数。
+    /// テーマ / DefaultGlow が null なら 0/0/null を返す。
+    /// </summary>
+    public static (double radius, double intensity, System.Windows.Media.Color? color) ResolveGlow(Theme theme)
+    {
+        if (theme?.DefaultGlow == null) return (0, 0, null);
+        var g = theme.DefaultGlow;
+        return (g.Radius, g.Intensity, g.Color);
+    }
+
+    /// <summary>
+    /// Phase 4-e: ぼかし半径 (px) から OpenCV GaussianBlur 用の kernel サイズ (奇数) を返す pure 関数。
+    /// radius 0 の場合は 1 (kernel 1x1、実質処理なし)。
+    /// </summary>
+    public static int ResolveKernelSize(double radius)
+    {
+        var raw = (int)System.Math.Max(0, System.Math.Round(radius));
+        var size = raw * 2 + 1;
+        if (size < 1) size = 1;
+        if (size % 2 == 0) size++;
+        return size;
+    }
 }

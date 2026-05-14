@@ -107,6 +107,17 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
     public R3.BindableReactiveProperty<DoubleCollection> StrokeDashArray { get; private set; } = new();
     public R3.BindableReactiveProperty<double> StrokeMiterLimit { get; private set; } = new();
 
+    // Phase 4-e / Q-8 案 C / Q-9 案 A: 全派生 (線・図形・テキスト) で擬似グロー設定を保持する。
+    // 0 でグロー無効、GlowColor=null なら EdgeBrush と同色で合成 (描画は Phase 4-e-2 で DataTemplate 拡張)。
+    /// <summary>Phase 4-e: グローのぼかし半径 (px)。0 でグロー無効。</summary>
+    public R3.BindableReactiveProperty<double> GlowRadius { get; private set; } = new(0d);
+
+    /// <summary>Phase 4-e: グロー加算合成の強度 (0..1)。</summary>
+    public R3.BindableReactiveProperty<double> GlowIntensity { get; private set; } = new(0.5d);
+
+    /// <summary>Phase 4-e: グロー色。null なら EdgeBrush と同色で合成。</summary>
+    public R3.BindableReactiveProperty<Color?> GlowColor { get; private set; } = new();
+
     public string Name { get; set; }
 
     public Guid ID { get; set; } = Guid.NewGuid();

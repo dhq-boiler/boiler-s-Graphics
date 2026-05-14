@@ -93,6 +93,13 @@
                 SelectedItem="{Binding SelectedLineStyle.Value, Mode=TwoWay}"
                 DisplayMemberPath="Name" />
 
+            <CheckBox
+                x:Name="ApplyGlowCheckBox"
+                AutomationProperties.AutomationId="ThemeApplyGlowCheckBox"
+                Margin="0,12,0,0"
+                Content="グロー設定を適用 (DefaultGlow → GlowRadius/Intensity/Color)"
+                IsChecked="{Binding ApplyGlow.Value, Mode=TwoWay}" />
+
             <TextBlock
                 Margin="0,12,0,0"
                 FontSize="11"

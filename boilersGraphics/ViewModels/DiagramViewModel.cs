@@ -1844,18 +1844,21 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         var scope = result.Parameters.GetValue<boilersGraphics.Models.Themes.ThemeApplyScope>("Scope");
         var target = result.Parameters.GetValue<boilersGraphics.Models.Themes.ThemeApplyTarget>("Target");
         var lineStyle = result.Parameters.GetValue<boilersGraphics.Models.Themes.LineStyle>("LineStyle");
-        ApplyThemeToScope(theme, scope, target, lineStyle);
+        var applyGlow = result.Parameters.GetValue<bool>("ApplyGlow");
+        ApplyThemeToScope(theme, scope, target, lineStyle, applyGlow);
     }
 
     /// <summary>
     /// Phase 4-c / Q-3 案 A: 指定スコープの図形の EdgeBrush / FillBrush をテーマで直接書換。
     /// Phase 4-d: lineStyle が non-null なら StrokeDashArray / StrokeLineJoin も書換。
+    /// Phase 4-e / Q-9 案 A: applyGlow=true なら DefaultGlow を各図形の GlowRadius/Intensity/Color に流し込む。
     /// </summary>
     private void ApplyThemeToScope(
         boilersGraphics.Models.Themes.Theme theme,
         boilersGraphics.Models.Themes.ThemeApplyScope scope,
         boilersGraphics.Models.Themes.ThemeApplyTarget target,
-        boilersGraphics.Models.Themes.LineStyle lineStyle)
+        boilersGraphics.Models.Themes.LineStyle lineStyle,
+        bool applyGlow)
     {
         if (theme == null) return;
         var (edge, fill) = boilersGraphics.Helpers.Themes.ThemeApplier.ResolveBrushes(theme, target);
@@ -1881,6 +1884,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         var targets = boilersGraphics.Helpers.Themes.ThemeApplier.ResolveScope(
             scope, selected, activeLayerItems, allItems);
 
+        var (glowRadius, glowIntensity, glowColor) = boilersGraphics.Helpers.Themes.ThemeApplier.ResolveGlow(theme);
         foreach (var item in targets)
         {
             if (edge != null) item.EdgeBrush.Value = edge;
@@ -1890,6 +1894,13 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             {
                 item.StrokeDashArray.Value = boilersGraphics.Helpers.Themes.ThemeApplier.CopyDashArray(lineStyle);
                 item.StrokeLineJoin.Value = lineStyle.StrokeLineJoin;
+            }
+            // Phase 4-e: グロー設定を流し込む (DataTemplate での視覚化は 4-e-2 で対応)。
+            if (applyGlow)
+            {
+                item.GlowRadius.Value = glowRadius;
+                item.GlowIntensity.Value = glowIntensity;
+                item.GlowColor.Value = glowColor;
             }
         }
         ActiveTheme.Value = theme;

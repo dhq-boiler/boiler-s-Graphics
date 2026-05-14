@@ -42,6 +42,7 @@ public class ThemeManagerViewModel : BindableBase, IDialogAware, IDisposable
                 { "Scope", SelectedScope.Value },
                 { "Target", SelectedTarget.Value },
                 { "LineStyle", SelectedLineStyle.Value },
+                { "ApplyGlow", ApplyGlow.Value },
             };
             var ret = new DialogResult(ButtonResult.OK, parameters);
             RequestClose?.Invoke(ret);
@@ -72,6 +73,9 @@ public class ThemeManagerViewModel : BindableBase, IDialogAware, IDisposable
 
     /// <summary>Phase 4-d: 選択中の線種プリセット。null なら線種は変更しない。</summary>
     public BindableReactiveProperty<LineStyle> SelectedLineStyle { get; } = new();
+
+    /// <summary>Phase 4-e: テーマの DefaultGlow を選択範囲の図形に流し込むかどうか。</summary>
+    public BindableReactiveProperty<bool> ApplyGlow { get; } = new(false);
 
     public ReactiveCommand ApplyCommand { get; }
     public ReactiveCommand CancelCommand { get; }
