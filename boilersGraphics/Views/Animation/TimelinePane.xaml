@@ -1,0 +1,238 @@
+<UserControl
+    x:Class="boilersGraphics.Views.Animation.TimelinePane"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="clr-namespace:boilersGraphics.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="200"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <converter:TimeToXConverter x:Key="TimeToX" />
+    </UserControl.Resources>
+
+    <Expander
+        x:Name="RootExpander"
+        Background="#FF252526"
+        ExpandDirection="Up"
+        Foreground="#FFCCCCCC"
+        IsExpanded="True">
+        <Expander.Header>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Timeline" FontWeight="Bold" />
+                <TextBlock Margin="12,0,0,0" Foreground="#FF9CDCFE">
+                    <Run Text="{Binding Now.Value, StringFormat=F2, Mode=OneWay}" />
+                    <Run Text=" / " />
+                    <Run Text="{Binding Duration.Value, StringFormat=F2, Mode=OneWay}" />
+                    <Run Text=" s" />
+                </TextBlock>
+                <TextBlock Margin="12,0,0,0" Foreground="#FFB0B0B0">
+                    <Run Text="Tracks: " />
+                    <Run Text="{Binding Tracks.Count, Mode=OneWay}" />
+                </TextBlock>
+            </StackPanel>
+        </Expander.Header>
+
+        <DockPanel Background="#FF1E1E1E" Height="200">
+
+            <!--  Transport bar (UI only; commands wired in Phase 5-e)  -->
+            <Border
+                DockPanel.Dock="Top"
+                Background="#FF2D2D30"
+                BorderBrush="#FF3F3F46"
+                BorderThickness="0,0,0,1"
+                Height="34">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="6,0">
+                    <Button
+                        x:Name="PlayButton"
+                        AutomationProperties.AutomationId="TimelinePlay"
+                        Content="&#x25B6;"
+                        Width="28"
+                        Height="24"
+                        Margin="2,0"
+                        Background="#FF3E3E42"
+                        BorderBrush="#FF555555"
+                        Foreground="#FF00CC00"
+                        IsEnabled="False"
+                        ToolTip="Play (Phase 5-e)" />
+                    <Button
+                        x:Name="PauseButton"
+                        AutomationProperties.AutomationId="TimelinePause"
+                        Content="&#x2759;&#x2759;"
+                        Width="28"
+                        Height="24"
+                        Margin="2,0"
+                        Background="#FF3E3E42"
+                        BorderBrush="#FF555555"
+                        Foreground="#FFCCCCCC"
+                        IsEnabled="False"
+                        ToolTip="Pause (Phase 5-e)" />
+                    <Button
+                        x:Name="StopButton"
+                        AutomationProperties.AutomationId="TimelineStop"
+                        Content="&#x25A0;"
+                        Width="28"
+                        Height="24"
+                        Margin="2,0"
+                        Background="#FF3E3E42"
+                        BorderBrush="#FF555555"
+                        Foreground="#FFCC3333"
+                        IsEnabled="False"
+                        ToolTip="Stop (Phase 5-e)" />
+
+                    <Separator Margin="6,0" />
+
+                    <TextBlock VerticalAlignment="Center" Foreground="#FFCCCCCC">
+                        <Run Text="Now " />
+                        <Run Text="{Binding Now.Value, StringFormat=F2, Mode=OneWay}" />
+                        <Run Text=" s" />
+                    </TextBlock>
+
+                    <Separator Margin="6,0" />
+
+                    <TextBlock VerticalAlignment="Center" Foreground="#FFB0B0B0">
+                        <Run Text="Fps " />
+                        <Run Text="{Binding Fps.Value, Mode=OneWay}" />
+                    </TextBlock>
+
+                    <Separator Margin="6,0" />
+
+                    <CheckBox
+                        AutomationProperties.AutomationId="TimelineLoop"
+                        Content="Loop"
+                        Foreground="#FFCCCCCC"
+                        IsChecked="{Binding Loop.Value, Mode=TwoWay}"
+                        VerticalAlignment="Center" />
+                </StackPanel>
+            </Border>
+
+            <!--  Time axis (ruler + Now indicator)  -->
+            <Canvas
+                x:Name="TimeAxisCanvas"
+                DockPanel.Dock="Bottom"
+                Background="#FF252526"
+                Height="20">
+                <Canvas.Resources>
+                    <converter:TimeToXConverter x:Key="AxisTimeToX" />
+                </Canvas.Resources>
+                <!--  Now indicator line  -->
+                <Line
+                    Y1="0"
+                    Y2="20"
+                    Stroke="#FFFF4444"
+                    StrokeThickness="1">
+                    <Line.X1>
+                        <MultiBinding Converter="{StaticResource AxisTimeToX}">
+                            <Binding Path="Now.Value" />
+                            <Binding Path="Duration.Value" />
+                            <Binding Path="ActualWidth" ElementName="TimeAxisCanvas" />
+                        </MultiBinding>
+                    </Line.X1>
+                    <Line.X2>
+                        <MultiBinding Converter="{StaticResource AxisTimeToX}">
+                            <Binding Path="Now.Value" />
+                            <Binding Path="Duration.Value" />
+                            <Binding Path="ActualWidth" ElementName="TimeAxisCanvas" />
+                        </MultiBinding>
+                    </Line.X2>
+                </Line>
+            </Canvas>
+
+            <!--  Tracks  -->
+            <ScrollViewer
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+                <ItemsControl
+                    x:Name="TracksItemsControl"
+                    AutomationProperties.AutomationId="TimelineTracks"
+                    ItemsSource="{Binding Tracks}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Height="24" Margin="0,1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="220" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border
+                                    Grid.Column="0"
+                                    Background="#FF2D2D30"
+                                    BorderBrush="#FF3F3F46"
+                                    BorderThickness="0,0,1,0">
+                                    <TextBlock
+                                        Margin="6,0"
+                                        VerticalAlignment="Center"
+                                        Foreground="#FFCCCCCC"
+                                        Text="{Binding Target.PropertyPath}"
+                                        TextTrimming="CharacterEllipsis"
+                                        ToolTip="{Binding Target.PropertyPath}" />
+                                </Border>
+
+                                <Canvas
+                                    x:Name="TrackCanvas"
+                                    Grid.Column="1"
+                                    Background="#FF3E3E42"
+                                    ClipToBounds="True">
+                                    <!--  Now indicator inside the track row  -->
+                                    <Line
+                                        Y1="0"
+                                        Y2="24"
+                                        Stroke="#FFFF4444"
+                                        StrokeThickness="1">
+                                        <Line.X1>
+                                            <MultiBinding Converter="{StaticResource TimeToX}">
+                                                <Binding ElementName="RootExpander" Path="DataContext.Now.Value" />
+                                                <Binding ElementName="RootExpander" Path="DataContext.Duration.Value" />
+                                                <Binding ElementName="TrackCanvas" Path="ActualWidth" />
+                                            </MultiBinding>
+                                        </Line.X1>
+                                        <Line.X2>
+                                            <MultiBinding Converter="{StaticResource TimeToX}">
+                                                <Binding ElementName="RootExpander" Path="DataContext.Now.Value" />
+                                                <Binding ElementName="RootExpander" Path="DataContext.Duration.Value" />
+                                                <Binding ElementName="TrackCanvas" Path="ActualWidth" />
+                                            </MultiBinding>
+                                        </Line.X2>
+                                    </Line>
+
+                                    <!--  Keyframe diamonds  -->
+                                    <ItemsControl ItemsSource="{Binding Keyframes}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <Canvas />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemContainerStyle>
+                                            <Style TargetType="ContentPresenter">
+                                                <Setter Property="Canvas.Top" Value="8" />
+                                                <Setter Property="Canvas.Left">
+                                                    <Setter.Value>
+                                                        <MultiBinding Converter="{StaticResource TimeToX}">
+                                                            <Binding Path="Time.Value" />
+                                                            <Binding ElementName="RootExpander" Path="DataContext.Duration.Value" />
+                                                            <Binding ElementName="TrackCanvas" Path="ActualWidth" />
+                                                        </MultiBinding>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </ItemsControl.ItemContainerStyle>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Path
+                                                    Data="M 4,0 L 8,4 L 4,8 L 0,4 Z"
+                                                    Fill="#FFFFCC00"
+                                                    Stroke="#FF000000"
+                                                    StrokeThickness="0.5" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Canvas>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </DockPanel>
+    </Expander>
+</UserControl>

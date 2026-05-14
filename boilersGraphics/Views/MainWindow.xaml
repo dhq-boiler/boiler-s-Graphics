@@ -10,6 +10,7 @@
     xmlns:nlog="clr-namespace:NLog;assembly=NLog"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:usercontrol="clr-namespace:boilersGraphics.UserControls"
+    xmlns:animview="clr-namespace:boilersGraphics.Views.Animation"
     x:Name="MainWindowInstance"
     Title="{Binding Title.Value}"
     prism:ViewModelLocator.AutoWireViewModel="True"
@@ -2542,6 +2543,13 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </DockPanel>
+
+        <!--  Animation Timeline (Phase 5-d-2: UI only, transport wired in Phase 5-e)  -->
+        <animview:TimelinePane
+            x:Name="TimelinePane"
+            AutomationProperties.AutomationId="TimelinePane"
+            DataContext="{Binding DiagramViewModel.Timeline}"
+            DockPanel.Dock="Bottom" />
 
         <!--  Diagram Control  -->
         <usercontrol:DiagramControl
