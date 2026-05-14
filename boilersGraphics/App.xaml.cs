@@ -249,6 +249,12 @@ public partial class App : PrismApplication
         containerRegistry.RegisterDialog<DetailMosaic, DetailMosaicViewModel>();
         containerRegistry.RegisterDialog<DetailBlur, DetailBlurViewModel>();
         containerRegistry.RegisterDialog<DetailPartInstance, boilersGraphics.ViewModels.Parts.DetailPartInstanceViewModel>();
+        // プロパティダイアログ拡充: Phase 3 / Phase 2.5 で SupportsPropertyDialog=false だった型の Detail ダイアログ。
+        containerRegistry.RegisterDialog<DetailAnchor, DetailAnchorViewModel>();
+        containerRegistry.RegisterDialog<DetailOrthogonalConnector, DetailOrthogonalConnectorViewModel>();
+        containerRegistry.RegisterDialog<DetailAnchorBezierConnector, DetailAnchorBezierConnectorViewModel>();
+        containerRegistry.RegisterDialog<DetailTextMatrix, DetailTextMatrixViewModel>();
+        containerRegistry.RegisterDialog<DetailTextOnPath, DetailTextOnPathViewModel>();
 
         containerRegistry.RegisterForNavigation<Views.ColorCorrect.Hsv, ViewModels.ColorCorrect.HsvViewModel>();
         containerRegistry.RegisterForNavigation<Views.ColorCorrect.ToneCurve, ViewModels.ColorCorrect.ToneCurveViewModel>();

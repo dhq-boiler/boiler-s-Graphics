@@ -109,7 +109,7 @@ public class OrthogonalConnectorViewModel : ConnectorBaseViewModel
         PathGeometryNoRotate.Value = GeometryCreator.CreateOrthogonal(Points[0], mids, Points[1], CornerRadius.Value);
     }
 
-    public override bool SupportsPropertyDialog => false;
+    public override bool SupportsPropertyDialog => true;
 
     public override Type GetViewType() => typeof(Path);
 
@@ -138,7 +138,15 @@ public class OrthogonalConnectorViewModel : ConnectorBaseViewModel
 
     public override void OpenPropertyDialog()
     {
-        // Phase 3-c では Detail ダイアログ未提供 (Phase 3.5 以降で検討)
+        // プロパティダイアログ拡充: DetailOrthogonalConnector を Prism Dialog として起動。
+        if (System.Windows.Application.Current is not Prism.Unity.PrismApplication app) return;
+        if (app.Container is not Prism.Ioc.IContainerExtension container) return;
+        var dialogService = new Prism.Services.Dialogs.DialogService(container);
+        Prism.Services.Dialogs.IDialogResult result = null;
+        dialogService.Show(
+            nameof(boilersGraphics.Views.DetailOrthogonalConnector),
+            new Prism.Services.Dialogs.DialogParameters { { "ViewModel", this } },
+            ret => result = ret);
     }
 
     /// <summary>Manual モードでなくとも参照可能な「実効 MidPoints」を <see cref="OrthogonalRouter"/> で求める。</summary>
