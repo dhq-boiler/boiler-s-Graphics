@@ -63,7 +63,20 @@ public class TextMatrixBlockViewModel : TextElementBaseViewModel
 
     public override bool IsResizable => true;
 
-    public override bool SupportsPropertyDialog => false;
+    public override bool SupportsPropertyDialog => true;
+
+    public override void OpenPropertyDialog()
+    {
+        // プロパティダイアログ拡充: DetailTextMatrix を Prism Dialog として起動。
+        if (System.Windows.Application.Current is not Prism.Unity.PrismApplication app) return;
+        if (app.Container is not Prism.Ioc.IContainerExtension container) return;
+        var dialogService = new Prism.Services.Dialogs.DialogService(container);
+        Prism.Services.Dialogs.IDialogResult result = null;
+        dialogService.Show(
+            nameof(boilersGraphics.Views.DetailTextMatrix),
+            new Prism.Services.Dialogs.DialogParameters { { "ViewModel", this } },
+            ret => result = ret);
+    }
 
     public override object Clone()
     {

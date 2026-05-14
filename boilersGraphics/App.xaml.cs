@@ -253,6 +253,7 @@ public partial class App : PrismApplication
         containerRegistry.RegisterDialog<DetailAnchor, DetailAnchorViewModel>();
         containerRegistry.RegisterDialog<DetailOrthogonalConnector, DetailOrthogonalConnectorViewModel>();
         containerRegistry.RegisterDialog<DetailAnchorBezierConnector, DetailAnchorBezierConnectorViewModel>();
+        containerRegistry.RegisterDialog<DetailTextMatrix, DetailTextMatrixViewModel>();
 
         containerRegistry.RegisterForNavigation<Views.ColorCorrect.Hsv, ViewModels.ColorCorrect.HsvViewModel>();
         containerRegistry.RegisterForNavigation<Views.ColorCorrect.ToneCurve, ViewModels.ColorCorrect.ToneCurveViewModel>();
