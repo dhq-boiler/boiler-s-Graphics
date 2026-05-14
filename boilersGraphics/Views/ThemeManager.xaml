@@ -84,6 +84,15 @@
                 ItemsSource="{Binding Source={StaticResource TargetValues}}"
                 SelectedItem="{Binding SelectedTarget.Value, Mode=TwoWay}" />
 
+            <Label Content="線種 (Phase 4-d、未選択で変更しない)" Margin="0,12,0,0" />
+            <ComboBox
+                x:Name="LineStyleComboBox"
+                AutomationProperties.AutomationId="ThemeLineStyleComboBox"
+                MinHeight="28"
+                ItemsSource="{Binding AvailableLineStyles}"
+                SelectedItem="{Binding SelectedLineStyle.Value, Mode=TwoWay}"
+                DisplayMemberPath="Name" />
+
             <TextBlock
                 Margin="0,12,0,0"
                 FontSize="11"

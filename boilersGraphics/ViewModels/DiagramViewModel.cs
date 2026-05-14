@@ -1843,16 +1843,19 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         var theme = result.Parameters.GetValue<boilersGraphics.Models.Themes.Theme>("Theme");
         var scope = result.Parameters.GetValue<boilersGraphics.Models.Themes.ThemeApplyScope>("Scope");
         var target = result.Parameters.GetValue<boilersGraphics.Models.Themes.ThemeApplyTarget>("Target");
-        ApplyThemeToScope(theme, scope, target);
+        var lineStyle = result.Parameters.GetValue<boilersGraphics.Models.Themes.LineStyle>("LineStyle");
+        ApplyThemeToScope(theme, scope, target, lineStyle);
     }
 
     /// <summary>
     /// Phase 4-c / Q-3 案 A: 指定スコープの図形の EdgeBrush / FillBrush をテーマで直接書換。
+    /// Phase 4-d: lineStyle が non-null なら StrokeDashArray / StrokeLineJoin も書換。
     /// </summary>
     private void ApplyThemeToScope(
         boilersGraphics.Models.Themes.Theme theme,
         boilersGraphics.Models.Themes.ThemeApplyScope scope,
-        boilersGraphics.Models.Themes.ThemeApplyTarget target)
+        boilersGraphics.Models.Themes.ThemeApplyTarget target,
+        boilersGraphics.Models.Themes.LineStyle lineStyle)
     {
         if (theme == null) return;
         var (edge, fill) = boilersGraphics.Helpers.Themes.ThemeApplier.ResolveBrushes(theme, target);
@@ -1882,6 +1885,12 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         {
             if (edge != null) item.EdgeBrush.Value = edge;
             if (fill != null) item.FillBrush.Value = fill;
+            // Phase 4-d: 線種プリセットがあれば StrokeDashArray / StrokeLineJoin を書換 (テーマ側参照は共有しない)。
+            if (lineStyle != null)
+            {
+                item.StrokeDashArray.Value = boilersGraphics.Helpers.Themes.ThemeApplier.CopyDashArray(lineStyle);
+                item.StrokeLineJoin.Value = lineStyle.StrokeLineJoin;
+            }
         }
         ActiveTheme.Value = theme;
     }

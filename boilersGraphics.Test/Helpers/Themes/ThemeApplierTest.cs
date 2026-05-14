@@ -108,4 +108,39 @@ public class ThemeApplierTest
         var result = ThemeApplier.ResolveScope<int>(ThemeApplyScope.SelectedItems, null, null, null);
         Assert.That(result, Is.Empty);
     }
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void CopyDashArray_新しいインスタンスを返す()
+    {
+        var ls = new LineStyle { StrokeDashArray = new System.Windows.Media.DoubleCollection { 4, 2 } };
+        var copy = ThemeApplier.CopyDashArray(ls);
+        Assert.That(copy, Is.Not.SameAs(ls.StrokeDashArray));
+        Assert.That(copy, Is.EquivalentTo(new[] { 4.0, 2.0 }));
+    }
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void CopyDashArray_nullには空コレクション()
+    {
+        var copy = ThemeApplier.CopyDashArray(null);
+        Assert.That(copy, Is.Not.Null);
+        Assert.That(copy, Is.Empty);
+    }
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void CopyDashArray_StrokeDashArrayがnullなら空コレクション()
+    {
+        var ls = new LineStyle { StrokeDashArray = null };
+        var copy = ThemeApplier.CopyDashArray(ls);
+        Assert.That(copy, Is.Not.Null);
+        Assert.That(copy, Is.Empty);
+    }
+
+    [Test, Apartment(ApartmentState.STA)]
+    public void CopyDashArray_組込Steppedをコピーすると元と独立()
+    {
+        var stepped = ThemeRepository.CreateBuiltInLineStyles().First(ls => ls.Name == "Stepped");
+        var copy = ThemeApplier.CopyDashArray(stepped);
+        copy.Add(99);
+        Assert.That(stepped.StrokeDashArray.Count, Is.EqualTo(4), "原本は触らない");
+    }
 }

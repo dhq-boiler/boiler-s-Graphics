@@ -20,6 +20,17 @@ public class ThemeManagerViewModel : BindableBase, IDialogAware, IDisposable
 
     public ThemeManagerViewModel()
     {
+        // Phase 4-d: 選択テーマ変更時に利用可能線種を入れ替え。
+        SelectedTheme.Subscribe(theme =>
+        {
+            AvailableLineStyles.Clear();
+            if (theme?.LineStyles != null)
+            {
+                foreach (var ls in theme.LineStyles) AvailableLineStyles.Add(ls);
+            }
+            SelectedLineStyle.Value = null;
+        }).AddTo(_disposables);
+
         ApplyCommand = SelectedTheme
             .Select(t => t != null)
             .ToReactiveCommand();
@@ -30,6 +41,7 @@ public class ThemeManagerViewModel : BindableBase, IDialogAware, IDisposable
                 { "Theme", SelectedTheme.Value },
                 { "Scope", SelectedScope.Value },
                 { "Target", SelectedTarget.Value },
+                { "LineStyle", SelectedLineStyle.Value },
             };
             var ret = new DialogResult(ButtonResult.OK, parameters);
             RequestClose?.Invoke(ret);
@@ -54,6 +66,12 @@ public class ThemeManagerViewModel : BindableBase, IDialogAware, IDisposable
 
     /// <summary>適用対象 (デフォルト: 両方)。</summary>
     public BindableReactiveProperty<ThemeApplyTarget> SelectedTarget { get; } = new(ThemeApplyTarget.Both);
+
+    /// <summary>Phase 4-d: 選択テーマに紐づく線種プリセット一覧 (テーマ切替で入れ替わる)。</summary>
+    public ObservableList<LineStyle> AvailableLineStyles { get; } = new();
+
+    /// <summary>Phase 4-d: 選択中の線種プリセット。null なら線種は変更しない。</summary>
+    public BindableReactiveProperty<LineStyle> SelectedLineStyle { get; } = new();
 
     public ReactiveCommand ApplyCommand { get; }
     public ReactiveCommand CancelCommand { get; }

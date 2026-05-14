@@ -64,4 +64,19 @@ public static class ThemeApplier
             _ => new List<T>(),
         };
     }
+
+    /// <summary>
+    /// Phase 4-d: 線種プリセットから、StrokeDashArray の Frozen 化済みコピーを返す pure 関数。
+    /// 元の <see cref="LineStyle.StrokeDashArray"/> はテーマ側の共有参照なので、書換時は必ずコピーする。
+    /// </summary>
+    public static DoubleCollection CopyDashArray(LineStyle style)
+    {
+        if (style?.StrokeDashArray == null) return new DoubleCollection();
+        var copy = new DoubleCollection();
+        foreach (var v in style.StrokeDashArray)
+        {
+            copy.Add(v);
+        }
+        return copy;
+    }
 }
