@@ -8,6 +8,7 @@
         <Canvas Background="Transparent">
             <Path
                 Data="{Binding PathGeometryNoRotate.Value}"
+                Effect="{Binding GlowEffect.Value}"
                 IsHitTestVisible="True"
                 Stroke="{Binding EdgeBrush.Value}"
                 StrokeDashArray="{Binding StrokeDashArray.Value}"
