@@ -224,6 +224,8 @@ public partial class App : PrismApplication
         containerRegistry.RegisterDialog<ThemeManager, ThemeManagerViewModel>();
         // Phase 5-f-2: PNG 連番書出ダイアログ
         containerRegistry.RegisterDialog<boilersGraphics.Views.Animation.PngSequenceExportDialog, boilersGraphics.ViewModels.Animation.PngSequenceExportDialogViewModel>();
+        // Phase 5.5-c: WPF Storyboard XAML 書出ダイアログ
+        containerRegistry.RegisterDialog<boilersGraphics.Views.Animation.WpfXamlExportDialog, boilersGraphics.ViewModels.Animation.WpfXamlExportDialogViewModel>();
         containerRegistry.RegisterDialog<Export, ExportViewModel>();
         containerRegistry.RegisterDialog<PolygonSetting, PolygonSettingViewModel>();
         containerRegistry.RegisterDialog<Layers, LayersViewModel>();
