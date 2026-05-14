@@ -1,3 +1,4 @@
+using boilersGraphics.Helpers.Animation;
 using Prism.Mvvm;
 using System;
 using System.Collections.ObjectModel;
@@ -18,8 +19,9 @@ public class AnimationTrack : BindableBase, IDisposable
     }
 
     /// <summary>
-    /// Phase 5-c で Helpers/Animation/Interpolator + EasingFunctions に置換予定。
-    /// 5-b の段階では Double 型のみ線形補間、それ以外は離散ジャンプ (前の値を返す) のスタブ実装。
+    /// 指定時刻における補間値を返す。
+    /// Phase 5-c から <see cref="Interpolator"/> + <see cref="EasingFunctions"/> による正式実装。
+    /// イージング (kind/mode) は「区間左側のキーフレーム」のものを使う (AE / WPF KeyFrame と同じ流儀)。
     /// </summary>
     public object EvaluateAt(double t)
     {
@@ -37,16 +39,11 @@ public class AnimationTrack : BindableBase, IDisposable
             var k1 = sorted[i + 1];
             if (t >= k0.Time.Value && t <= k1.Time.Value)
             {
-                if (Target.ValueType == AnimatedValueType.Double
-                    && k0.Value.Value is double v0
-                    && k1.Value.Value is double v1)
-                {
-                    var span = k1.Time.Value - k0.Time.Value;
-                    if (span <= 0) return v1;
-                    var localT = (t - k0.Time.Value) / span;
-                    return v0 + (v1 - v0) * localT;
-                }
-                return k0.Value.Value;
+                var span = k1.Time.Value - k0.Time.Value;
+                if (span <= 0) return k1.Value.Value;
+                var localT = (t - k0.Time.Value) / span;
+                var easedT = EasingFunctions.Apply(k0.Easing.Value, k0.Mode.Value, localT);
+                return Interpolator.Interpolate(Target.ValueType, k0.Value.Value, k1.Value.Value, easedT);
             }
         }
         return sorted[^1].Value.Value;
