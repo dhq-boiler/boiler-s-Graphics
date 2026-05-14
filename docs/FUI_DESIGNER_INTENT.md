@@ -175,10 +175,18 @@ FUI は「世界観」を統一することで完成度が決まる。
 - 設計仕様: [`fui/phase5-motion-animation.md`](./fui/phase5-motion-animation.md) (Q-1 〜 Q-12 確定版)
 - チュートリアル: [`fui/phase5-tutorial.md`](./fui/phase5-tutorial.md)
 
-### Phase 5.5: XAML アニメーション出力 (WPF / .NET MAUI 連携) 🌟 重点
+### Phase 5.5: XAML アニメーション出力 (WPF / .NET MAUI 連携) 🌟 重点 — 仕様書 v1.0 確定 ✅ / 実装中
 **`boilersGraphics` の最大の独自性となる機能**。
 
 作者は WPF / .NET MAUI で実アプリを開発しているため、`boilersGraphics` で作った FUI アニメーションを **そのまま自身のアプリへ組み込める形で出力できる** ことに極めて高い価値がある。これは Illustrator / After Effects では実現困難な領域であり、本ツールの差別化要因とする。
+
+**設計仕様書 [`fui/phase5-5-xaml-export.md`](./fui/phase5-5-xaml-export.md) v1.0 確定** (2026-05-15、Q-1〜Q-12 全件「推奨案」で承認)。サブフェーズ進捗:
+
+- **5.5-a** 設計仕様書 — **完了** ✅
+- **5.5-b** WPF `Storyboard` XAML 出力 純粋ロジック (`WpfStoryboardXamlBuilder`) — 未着手
+- **5.5-c** `WpfStoryboardXamlExporter` (IAnimationExporter 実装) + 出力ダイアログ + 配線 — 未着手
+- **5.5-d** MAUI Animation XAML 出力 + Exporter + ダイアログ — 未着手
+- **5.5-e** チュートリアル + サンプル出力 — 未着手
 
 #### 5.5.1 出力ターゲット
 1. **WPF (System.Windows.Media.Animation)**
