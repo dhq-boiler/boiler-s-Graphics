@@ -143,12 +143,18 @@ FUI らしさの肝は「微細な技術テキスト」と「データっぽい�
 - 設計仕様: [`fui/phase3-connectors.md`](./fui/phase3-connectors.md) (Q-1 〜 Q-11 確定版)
 - チュートリアル: [`fui/phase3-tutorial.md`](./fui/phase3-tutorial.md)
 
-### Phase 4: スタイル・テーマ・カラー
+### Phase 4: スタイル・テーマ・カラー ✅ 完了
 FUI は「世界観」を統一することで完成度が決まる。
-- **カラーパレット管理**: 「Bladerunner 系」「Matrix 系」「医療系青白」「アンバーCRT」など、テーマ単位でパレットを保存・適用
-- **線種ライブラリ**: 破線・点線・段階線・グロー風線
-- **グロー / ブルーム風エフェクト** (簡易): 加算合成の擬似グロー
-- **エフェクト適用は破壊的にしない** (元の図形は保持し、表示時にエフェクト合成)
+- **カラーパレット管理** (`ColorPalette`): 「Bladerunner」「Matrix」「MedicalBlueWhite」「AmberCrt」の組込 4 テーマ。固定 5 セマンティックスロット (primary/accent/warning/info/background、Q-2 案 A)
+- **線種ライブラリ** (`LineStyle`): Solid/Dash/Dot/DashDot/LongDash/Stepped の組込 6 種。完全新規型で StrokeDashArray + StrokeLineJoin + 任意グローを束ねる (Q-5 案 B)
+- **グロー / ブルーム風エフェクト** (簡易): `SelectableDesignerItemViewModelBase` に GlowRadius/Intensity/Color を持たせ、WPF `DropShadowEffect` で擬似グロー化 (Q-7 案 A MVP)。OpenCV ガウシアン + 加算合成版は Phase 4.5 後送り
+- **エフェクト適用は破壊的にしない** (Q-9 案 A): 元の EdgeBrush/FillBrush は保持、Glow は別プロパティで保持
+- **テーマ切替の範囲選択** (Q-10 案 C): SelectedItems / ActiveLayer / EntireProject から選択可能
+- **パーツ機構統合** (Q-11 案 A): Glow 3 プロパティを `ExposedProperty` で公開可能化
+
+#### 関連ドキュメント
+- 設計仕様: [`fui/phase4-styles-themes.md`](./fui/phase4-styles-themes.md) (Q-1 〜 Q-12 確定版)
+- チュートリアル: [`fui/phase4-tutorial.md`](./fui/phase4-tutorial.md)
 
 ### Phase 5: モーション / アニメーション (After Effects 代替の最初の一歩)
 ここから先は野心的。最低限のタイムラインベースアニメーション。
@@ -296,5 +302,5 @@ WPF 出力イメージ:
 
 ---
 
-*Last updated: 2026-05-14 (Phase 3 完了 / phase3-tutorial.md 追加)*
+*Last updated: 2026-05-14 (Phase 4 完了 / phase4-tutorial.md 追加)*
 *Author: dhq_boiler*
