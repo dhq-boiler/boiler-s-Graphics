@@ -40,6 +40,13 @@ public static class PropertyToXamlMapper
         "GlowRadius.Value" => MakeDouble("(UIElement.Effect).(DropShadowEffect.BlurRadius)"),
         "GlowIntensity.Value" => MakeDouble("(UIElement.Effect).(DropShadowEffect.Opacity)"),
         "GlowColor.Value" => MakeColor("(UIElement.Effect).(DropShadowEffect.Color)"),
+
+        // Phase 6: テキスト系 TextElementBase 派生のアニメ対応プロパティ。
+        // Foreground は SolidColorBrush 経由なので Letter の FillBrush と同じ TargetProperty 形式。
+        "FontSize.Value" => MakeDouble("FontSize"),
+        "Foreground.Value" => MakeColor("(TextBlock.Foreground).(SolidColorBrush.Color)"),
+        "TextOpacity.Value" => MakeDouble("Opacity"),
+
         _ => null,
     };
 

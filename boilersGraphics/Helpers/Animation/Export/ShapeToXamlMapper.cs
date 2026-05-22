@@ -1,5 +1,6 @@
 using boilersGraphics.ViewModels;
 using boilersGraphics.ViewModels.Connectors;
+using boilersGraphics.ViewModels.Text;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -38,8 +39,209 @@ public static class ShapeToXamlMapper
             NEllipseViewModel e => BuildEllipse(e, indent, nl),
             StraightConnectorViewModel l => BuildLine(l, indent, nl),
             AbstractLetterDesignerItemViewModel t => BuildLetter(t, indent, nl),
+            // Phase 6: TextOnPath は Placements 個別配置のため Canvas + 個別 TextBlock 群
+            // で出力する。TextElementBaseViewModel ケースより先に判定する必要がある。
+            TextOnPathBlockViewModel top => BuildTextOnPath(top, settings, indentLevel),
+            TextElementBaseViewModel te => BuildText(te, indent, nl),
             _ => null,
         };
+    }
+
+    /// <summary>
+    /// Phase 6: <see cref="TextElementBaseViewModel"/> 派生 (MonoText / DataGenerator / NumberSequence / TextMatrix)
+    /// を WPF <c>TextBlock</c> XAML 文字列に変換する。Generator 系は前に <c>&lt;!-- Generator: ... --&gt;</c>
+    /// コメントを出力して、出力後に同じ条件で値を再生成したいユーザーが情報を失わないようにする (仕様書 Q-3)。
+    /// </summary>
+    private static string BuildText(TextElementBaseViewModel t, string indent, string nl)
+    {
+        var sb = new StringBuilder();
+        var inner = indent + new string(' ', 4);
+        var generatorComment = BuildGeneratorComment(t);
+        if (generatorComment is not null)
+        {
+            sb.Append(indent).Append(generatorComment).Append(nl);
+        }
+        var text = EncodeTextAttribute(t.Text.Value ?? string.Empty);
+        sb.Append(indent).Append("<TextBlock x:Name=\"").Append(MakeXName(t.ID)).Append('"').Append(nl);
+        AppendCanvasLeftTop(sb, t, inner, nl);
+        if (t.Width.Value > 0 || t.Height.Value > 0)
+        {
+            AppendWidthHeightAlways(sb, t, inner, nl);
+        }
+        AppendTextAppearance(sb, t, inner, nl);
+        sb.Append(inner).Append("Text=\"").Append(text).Append('"').Append(nl);
+        CloseOrOpenAndChildren(sb, t, "TextBlock", indent, inner, nl);
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// Phase 6 (Q-5 案 A): TextOnPathBlock を <c>Canvas</c> + Placements 個数分の子 <c>TextBlock</c> 群に展開する。
+    /// 親 Canvas のみ x:Name を持ち、Storyboard.TargetName で参照可能 (子 TextBlock 単位のアニメは未対応)。
+    /// </summary>
+    private static string BuildTextOnPath(TextOnPathBlockViewModel top, XamlExportSettings settings, int indentLevel)
+    {
+        var indent = new string(' ', settings.IndentWidth * Math.Max(0, indentLevel));
+        var nl = settings.NewLine;
+        var inner = indent + new string(' ', 4);
+        var charIndent = inner;
+        var charInnerIndent = inner + new string(' ', 4);
+
+        var sb = new StringBuilder();
+        var generatorComment = BuildGeneratorComment(top);
+        if (generatorComment is not null)
+        {
+            sb.Append(indent).Append(generatorComment).Append(nl);
+        }
+        sb.Append(indent).Append("<Canvas x:Name=\"").Append(MakeXName(top.ID)).Append('"').Append(nl);
+        AppendCanvasLeftTop(sb, top, inner, nl);
+        if (top.Width.Value > 0 || top.Height.Value > 0)
+        {
+            AppendWidthHeightAlways(sb, top, inner, nl);
+        }
+        var hasTransform = !IsZeroAngle(top.RotationAngle.Value);
+        if (!hasTransform && top.Placements.Count == 0)
+        {
+            sb.Append(indent).Append("/>");
+            return sb.ToString();
+        }
+        sb.Append(indent).Append(">").Append(nl);
+        if (hasTransform)
+        {
+            AppendRenderTransform(sb, top.RotationAngle.Value, "Canvas", inner, nl);
+        }
+
+        // 各文字を Canvas.Left/Top + RenderTransform で配置。
+        // フォント設定は親と同じ。x:Name は付与しない (TargetName 解決は親 Canvas のみ)。
+        var fontFamily = ShortenFontFamily(top.FontFamily.Value);
+        foreach (var p in top.Placements)
+        {
+            sb.Append(charIndent).Append("<TextBlock").Append(nl);
+            sb.Append(charInnerIndent).Append("Canvas.Left=\"").Append(FormatDouble(p.X)).Append("\" Canvas.Top=\"").Append(FormatDouble(p.Y)).Append('"').Append(nl);
+            if (t_HasFontSize(top))
+            {
+                sb.Append(charInnerIndent).Append("FontSize=\"").Append(FormatDouble(top.FontSize.Value)).Append('"').Append(nl);
+            }
+            if (!string.IsNullOrEmpty(fontFamily))
+            {
+                sb.Append(charInnerIndent).Append("FontFamily=\"").Append(EscapeXmlAttribute(fontFamily)).Append('"').Append(nl);
+            }
+            if (top.Foreground.Value is { } fg)
+            {
+                sb.Append(charInnerIndent).Append("Foreground=\"").Append(FormatBrush(fg)).Append('"').Append(nl);
+            }
+            sb.Append(charInnerIndent).Append("Text=\"").Append(EncodeTextAttribute(p.Char ?? string.Empty)).Append('"').Append(nl);
+            if (IsZeroAngle(p.Angle))
+            {
+                sb.Append(charIndent).Append("/>").Append(nl);
+            }
+            else
+            {
+                sb.Append(charInnerIndent).Append("RenderTransformOrigin=\"0,0\">").Append(nl);
+                sb.Append(charInnerIndent).Append("<TextBlock.RenderTransform>").Append(nl);
+                sb.Append(charInnerIndent).Append("    <RotateTransform Angle=\"").Append(FormatDouble(p.Angle)).Append("\" />").Append(nl);
+                sb.Append(charInnerIndent).Append("</TextBlock.RenderTransform>").Append(nl);
+                sb.Append(charIndent).Append("</TextBlock>").Append(nl);
+            }
+        }
+        sb.Append(indent).Append("</Canvas>");
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// 共通テキスト属性 (FontSize / FontFamily / Foreground / Background / Opacity / LineHeight / TextWrapping)。
+    /// </summary>
+    private static void AppendTextAppearance(StringBuilder sb, TextElementBaseViewModel t, string inner, string nl)
+    {
+        if (t_HasFontSize(t))
+        {
+            sb.Append(inner).Append("FontSize=\"").Append(FormatDouble(t.FontSize.Value)).Append('"').Append(nl);
+        }
+        var fontFamily = ShortenFontFamily(t.FontFamily.Value);
+        if (!string.IsNullOrEmpty(fontFamily))
+        {
+            sb.Append(inner).Append("FontFamily=\"").Append(EscapeXmlAttribute(fontFamily)).Append('"').Append(nl);
+        }
+        if (t.Foreground.Value is { } fg)
+        {
+            sb.Append(inner).Append("Foreground=\"").Append(FormatBrush(fg)).Append('"').Append(nl);
+        }
+        if (t.Background.Value is { } bg)
+        {
+            sb.Append(inner).Append("Background=\"").Append(FormatBrush(bg)).Append('"').Append(nl);
+        }
+        if (Math.Abs(t.TextOpacity.Value - 1.0) > 1e-9)
+        {
+            sb.Append(inner).Append("Opacity=\"").Append(FormatDouble(t.TextOpacity.Value)).Append('"').Append(nl);
+        }
+        if (t.LineHeight.Value is { } lh && lh > 0)
+        {
+            sb.Append(inner).Append("LineHeight=\"").Append(FormatDouble(lh)).Append('"').Append(nl);
+        }
+        sb.Append(inner).Append("TextWrapping=\"").Append(t.IsWordWrap.Value ? "Wrap" : "NoWrap").Append('"').Append(nl);
+    }
+
+    private static bool t_HasFontSize(TextElementBaseViewModel t) => t.FontSize.Value > 0;
+
+    /// <summary>
+    /// pack:// URI 形式の FontFamily を短縮名のみに変換する (仕様書 Q-2)。
+    /// 例: <c>pack://application:,,,/...;component/Fonts/#JetBrains Mono</c> → <c>JetBrains Mono</c>
+    /// '#' がなければそのまま返す。
+    /// </summary>
+    public static string ShortenFontFamily(string raw)
+    {
+        if (string.IsNullOrEmpty(raw)) return raw;
+        var idx = raw.LastIndexOf('#');
+        if (idx >= 0 && idx + 1 < raw.Length) return raw.Substring(idx + 1);
+        return raw;
+    }
+
+    /// <summary>
+    /// XAML 属性内のテキストエンコード。改行は <c>&amp;#x0A;</c> に変換 (TextMatrix の行区切り対応)。
+    /// </summary>
+    public static string EncodeTextAttribute(string s)
+    {
+        if (string.IsNullOrEmpty(s)) return s;
+        return s.Replace("&", "&amp;")
+                .Replace("\"", "&quot;")
+                .Replace("<", "&lt;")
+                .Replace(">", "&gt;")
+                .Replace("\r\n", "&#x0A;")
+                .Replace("\n", "&#x0A;")
+                .Replace("\r", "&#x0A;");
+    }
+
+    /// <summary>
+    /// DataGenerator / NumberSequence / TextMatrix / TextOnPath の場合に、生成パラメータを
+    /// XAML コメントとして残す (仕様書 Q-3)。MonoText 等パラメータ無しの場合は null。
+    /// MAUI 側 <see cref="MauiShapeToXamlMapper"/> でも同じ書式を再利用する。
+    /// </summary>
+    internal static string BuildGeneratorComment(TextElementBaseViewModel t)
+    {
+        return t switch
+        {
+            DataGeneratorTextBlockViewModel dg =>
+                $"<!-- Generator: DataGenerator (Type={dg.Type.Value}, Seed={dg.Seed.Value}, Count={dg.Count.Value}, Separator=\"{EscapeForComment(dg.Separator.Value)}\", Layout={dg.Layout.Value}) -->",
+            NumberSequenceBlockViewModel ns =>
+                $"<!-- Generator: NumberSequence (Start={FormatDouble(ns.Start.Value)}, End={FormatDouble(ns.End.Value)}, Step={FormatDouble(ns.Step.Value)}, Format=\"{EscapeForComment(ns.Format.Value)}\", Separator=\"{EscapeForComment(ns.Separator.Value)}\", Direction={ns.Direction.Value}, GridRows={ns.GridRows.Value}, GridColumns={ns.GridColumns.Value}) -->",
+            TextMatrixBlockViewModel tm =>
+                $"<!-- Generator: TextMatrix (Rows={tm.Rows.Value}, Columns={tm.Columns.Value}, CellMode={tm.CellMode.Value}, Separator=\"{EscapeForComment(tm.Separator.Value)}\", SequenceStart={tm.SequenceStart.Value}, SequenceFormat=\"{EscapeForComment(tm.SequenceFormat.Value)}\", DataGenType={tm.DataGenType.Value}, DataGenSeed={tm.DataGenSeed.Value}) -->",
+            TextOnPathBlockViewModel top =>
+                $"<!-- Generator: TextOnPath (PathRefId={top.PathReferenceId.Value?.ToString("N") ?? "null"}, StartOffset={FormatDouble(top.StartOffset.Value)}, Spacing={FormatDouble(top.Spacing.Value)}, Side={top.Side.Value}, Rotation={top.Rotation.Value}, Placements={top.Placements.Count}) -->",
+            _ => null,
+        };
+    }
+
+    /// <summary>
+    /// XAML コメント内 (<c>&lt;!-- ... --&gt;</c>) で安全な文字列に整形する。連続ハイフン (-) はコメント終端と
+    /// 区別できないため空白を入れる。改行は <c>\n</c> リテラル表記に置換。
+    /// </summary>
+    private static string EscapeForComment(string s)
+    {
+        if (string.IsNullOrEmpty(s)) return s ?? string.Empty;
+        return s.Replace("--", "- -")
+                .Replace("\r\n", "\\n")
+                .Replace("\n", "\\n")
+                .Replace("\r", "\\n");
     }
 
     /// <summary>

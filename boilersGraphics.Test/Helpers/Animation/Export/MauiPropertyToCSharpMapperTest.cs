@@ -100,4 +100,33 @@ public class MauiPropertyToCSharpMapperTest
             Assert.That(MauiPropertyToCSharpMapper.TryMap(p), Is.Not.Null, $"{p} should be mapped");
         }
     }
+
+    // ---- Phase 6: テキスト系プロパティのアニメ対応 ----
+
+    [Test]
+    public void Phase6_FontSize_は_Double_FontSize代入_テンプレ()
+    {
+        var m = MauiPropertyToCSharpMapper.TryMap("FontSize.Value");
+        Assert.That(m, Is.Not.Null);
+        Assert.That(m.Kind, Is.EqualTo(MauiAnimationKind.Double));
+        Assert.That(m.DoubleCallbackTemplate, Is.EqualTo("{0}.FontSize = d;"));
+    }
+
+    [Test]
+    public void Phase6_Foreground_は_Color_TextColor代入_テンプレ()
+    {
+        var m = MauiPropertyToCSharpMapper.TryMap("Foreground.Value");
+        Assert.That(m, Is.Not.Null);
+        Assert.That(m.Kind, Is.EqualTo(MauiAnimationKind.Color));
+        Assert.That(m.ColorCallbackTemplate, Is.EqualTo("{0}.TextColor = c;"));
+    }
+
+    [Test]
+    public void Phase6_TextOpacity_は_Double_Opacity代入_テンプレ()
+    {
+        var m = MauiPropertyToCSharpMapper.TryMap("TextOpacity.Value");
+        Assert.That(m, Is.Not.Null);
+        Assert.That(m.Kind, Is.EqualTo(MauiAnimationKind.Double));
+        Assert.That(m.DoubleCallbackTemplate, Is.EqualTo("{0}.Opacity = d;"));
+    }
 }

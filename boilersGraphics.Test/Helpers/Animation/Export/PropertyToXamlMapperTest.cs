@@ -75,4 +75,33 @@ public class PropertyToXamlMapperTest
             Assert.That(PropertyToXamlMapper.TryMapWpf(p), Is.Not.Null, $"{p} should be mapped");
         }
     }
+
+    // ---- Phase 6: テキスト系プロパティのアニメ対応 ----
+
+    [Test]
+    public void Phase6_FontSize_は_FontSize_DoubleAnimation()
+    {
+        var m = PropertyToXamlMapper.TryMapWpf("FontSize.Value");
+        Assert.That(m, Is.Not.Null);
+        Assert.That(m.TargetProperty, Is.EqualTo("FontSize"));
+        Assert.That(m.AnimationElementName, Is.EqualTo("DoubleAnimationUsingKeyFrames"));
+    }
+
+    [Test]
+    public void Phase6_Foreground_は_TextBlock_Foreground_ColorAnimation()
+    {
+        var m = PropertyToXamlMapper.TryMapWpf("Foreground.Value");
+        Assert.That(m, Is.Not.Null);
+        Assert.That(m.TargetProperty, Is.EqualTo("(TextBlock.Foreground).(SolidColorBrush.Color)"));
+        Assert.That(m.AnimationElementName, Is.EqualTo("ColorAnimationUsingKeyFrames"));
+    }
+
+    [Test]
+    public void Phase6_TextOpacity_は_Opacity_DoubleAnimation()
+    {
+        var m = PropertyToXamlMapper.TryMapWpf("TextOpacity.Value");
+        Assert.That(m, Is.Not.Null);
+        Assert.That(m.TargetProperty, Is.EqualTo("Opacity"));
+        Assert.That(m.AnimationElementName, Is.EqualTo("DoubleAnimationUsingKeyFrames"));
+    }
 }

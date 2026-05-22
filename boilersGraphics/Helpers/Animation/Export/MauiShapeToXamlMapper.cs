@@ -1,5 +1,6 @@
 using boilersGraphics.ViewModels;
 using boilersGraphics.ViewModels.Connectors;
+using boilersGraphics.ViewModels.Text;
 using System;
 using System.Globalization;
 using System.Text;
@@ -32,8 +33,132 @@ public static class MauiShapeToXamlMapper
             NEllipseViewModel e => BuildEllipse(e, indent, nl),
             StraightConnectorViewModel l => BuildLine(l, indent, nl),
             AbstractLetterDesignerItemViewModel t => BuildLabel(t, indent, nl),
+            // Phase 6: TextOnPath は AbsoluteLayout + 個別 Label 群で展開する。
+            // TextElementBaseViewModel ケースより先に判定する必要がある。
+            TextOnPathBlockViewModel top => BuildTextOnPathMaui(top, settings, indentLevel),
+            TextElementBaseViewModel te => BuildLabelText(te, indent, nl),
             _ => null,
         };
+    }
+
+    /// <summary>
+    /// Phase 6: <see cref="TextElementBaseViewModel"/> 派生を MAUI <c>Label</c> XAML に変換する。
+    /// </summary>
+    private static string BuildLabelText(TextElementBaseViewModel t, string indent, string nl)
+    {
+        var sb = new StringBuilder();
+        var inner = indent + new string(' ', 4);
+        var generatorComment = ShapeToXamlMapper.BuildGeneratorComment(t);
+        if (generatorComment is not null)
+        {
+            sb.Append(indent).Append(generatorComment).Append(nl);
+        }
+        var text = ShapeToXamlMapper.EncodeTextAttribute(t.Text.Value ?? string.Empty);
+        sb.Append(indent).Append("<Label x:Name=\"").Append(MakeXName(t.ID)).Append('"').Append(nl);
+        AppendAbsoluteLayoutBounds(sb, t, inner, nl);
+        AppendLabelAppearance(sb, t, inner, nl);
+        sb.Append(inner).Append("Text=\"").Append(text).Append('"').Append(nl);
+        AppendRotationAndShadow(sb, t, indent, inner, nl, hasClosingTag: true, shapeTag: "Label");
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// Phase 6: TextOnPathBlock を <c>AbsoluteLayout</c> + Placements 個数分の子 <c>Label</c> 群に展開する。
+    /// </summary>
+    private static string BuildTextOnPathMaui(TextOnPathBlockViewModel top, XamlExportSettings settings, int indentLevel)
+    {
+        var indent = new string(' ', settings.IndentWidth * Math.Max(0, indentLevel));
+        var nl = settings.NewLine;
+        var inner = indent + new string(' ', 4);
+        var charIndent = inner;
+        var charInnerIndent = inner + new string(' ', 4);
+
+        var sb = new StringBuilder();
+        var generatorComment = ShapeToXamlMapper.BuildGeneratorComment(top);
+        if (generatorComment is not null)
+        {
+            sb.Append(indent).Append(generatorComment).Append(nl);
+        }
+        sb.Append(indent).Append("<AbsoluteLayout x:Name=\"").Append(MakeXName(top.ID)).Append('"').Append(nl);
+        AppendAbsoluteLayoutBounds(sb, top, inner, nl);
+        var hasRotation = !IsZeroAngle(top.RotationAngle.Value);
+        if (hasRotation)
+        {
+            sb.Append(inner).Append("Rotation=\"").Append(FormatDouble(top.RotationAngle.Value)).Append('"').Append(nl);
+        }
+        if (top.Placements.Count == 0)
+        {
+            sb.Append(indent).Append("/>");
+            return sb.ToString();
+        }
+        sb.Append(indent).Append(">").Append(nl);
+
+        var fontFamily = ShapeToXamlMapper.ShortenFontFamily(top.FontFamily.Value);
+        foreach (var p in top.Placements)
+        {
+            sb.Append(charIndent).Append("<Label").Append(nl);
+            sb.Append(charInnerIndent).Append("AbsoluteLayout.LayoutBounds=\"")
+              .Append(FormatDouble(p.X)).Append(',').Append(FormatDouble(p.Y)).Append(",AutoSize,AutoSize\"").Append(nl);
+            sb.Append(charInnerIndent).Append("AbsoluteLayout.LayoutFlags=\"None\"").Append(nl);
+            if (top.FontSize.Value > 0)
+            {
+                sb.Append(charInnerIndent).Append("FontSize=\"").Append(FormatDouble(top.FontSize.Value)).Append('"').Append(nl);
+            }
+            if (!string.IsNullOrEmpty(fontFamily))
+            {
+                sb.Append(charInnerIndent).Append("FontFamily=\"").Append(EscapeXmlAttribute(fontFamily)).Append('"').Append(nl);
+            }
+            if (top.Foreground.Value is { } fg)
+            {
+                sb.Append(charInnerIndent).Append("TextColor=\"").Append(FormatBrush(fg)).Append('"').Append(nl);
+            }
+            sb.Append(charInnerIndent).Append("Text=\"").Append(ShapeToXamlMapper.EncodeTextAttribute(p.Char ?? string.Empty)).Append('"').Append(nl);
+            if (!IsZeroAngle(p.Angle))
+            {
+                sb.Append(charInnerIndent).Append("Rotation=\"").Append(FormatDouble(p.Angle)).Append('"').Append(nl);
+            }
+            sb.Append(charIndent).Append("/>").Append(nl);
+        }
+        sb.Append(indent).Append("</AbsoluteLayout>");
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// 共通テキスト属性 (FontSize / FontFamily / TextColor / BackgroundColor / Opacity / LineHeight /
+    /// LineBreakMode / CharacterSpacing)。
+    /// </summary>
+    private static void AppendLabelAppearance(StringBuilder sb, TextElementBaseViewModel t, string inner, string nl)
+    {
+        if (t.FontSize.Value > 0)
+        {
+            sb.Append(inner).Append("FontSize=\"").Append(FormatDouble(t.FontSize.Value)).Append('"').Append(nl);
+        }
+        var fontFamily = ShapeToXamlMapper.ShortenFontFamily(t.FontFamily.Value);
+        if (!string.IsNullOrEmpty(fontFamily))
+        {
+            sb.Append(inner).Append("FontFamily=\"").Append(EscapeXmlAttribute(fontFamily)).Append('"').Append(nl);
+        }
+        if (t.Foreground.Value is { } fg)
+        {
+            sb.Append(inner).Append("TextColor=\"").Append(FormatBrush(fg)).Append('"').Append(nl);
+        }
+        if (t.Background.Value is { } bg)
+        {
+            sb.Append(inner).Append("BackgroundColor=\"").Append(FormatBrush(bg)).Append('"').Append(nl);
+        }
+        if (Math.Abs(t.TextOpacity.Value - 1.0) > 1e-9)
+        {
+            sb.Append(inner).Append("Opacity=\"").Append(FormatDouble(t.TextOpacity.Value)).Append('"').Append(nl);
+        }
+        if (t.LineHeight.Value is { } lh && lh > 0)
+        {
+            sb.Append(inner).Append("LineHeight=\"").Append(FormatDouble(lh)).Append('"').Append(nl);
+        }
+        if (Math.Abs(t.LetterSpacing.Value) > 1e-9)
+        {
+            sb.Append(inner).Append("CharacterSpacing=\"").Append(FormatDouble(t.LetterSpacing.Value)).Append('"').Append(nl);
+        }
+        sb.Append(inner).Append("LineBreakMode=\"").Append(t.IsWordWrap.Value ? "WordWrap" : "NoWrap").Append('"').Append(nl);
     }
 
     public static string TryMapMauiPath(SelectableDesignerItemViewModelBase item, PathGeometry geometry, XamlExportSettings settings, int indentLevel = 0)

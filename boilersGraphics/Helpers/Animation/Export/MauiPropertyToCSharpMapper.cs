@@ -42,6 +42,12 @@ public static class MauiPropertyToCSharpMapper
         "FillBrush.Value" => Color("{0}.Fill = new SolidColorBrush(c);"),
         "GlowColor.Value" => Color("if ({0}.Shadow != null) {0}.Shadow.Brush = new SolidColorBrush(c);"),
 
+        // Phase 6: テキスト系 (Mono/DataGen/NumSeq/TextMatrix/TextOnPath) のアニメ対応プロパティ。
+        // MAUI Label.TextColor は Color 直値、FontSize/Opacity は double 直値。
+        "FontSize.Value" => Double("{0}.FontSize = d;"),
+        "Foreground.Value" => Color("{0}.TextColor = c;"),
+        "TextOpacity.Value" => Double("{0}.Opacity = d;"),
+
         _ => null,
     };
 
