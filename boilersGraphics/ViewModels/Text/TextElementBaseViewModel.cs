@@ -26,6 +26,14 @@ public abstract class TextElementBaseViewModel : DesignerItemViewModelBase
     public BindableReactiveProperty<double> TextOpacity { get; }
     public BindableReactiveProperty<bool> IsWordWrap { get; }
 
+    /// <summary>
+    /// Phase 6.5: テキスト系図形のキャンバス上ダブルクリックで OpenPropertyDialog を発火させる Command。
+    /// DataTemplate 側で <c>{Binding MouseDoubleClickCommand}</c> として InvokeCommandAction に渡される。
+    /// SupportsPropertyDialog=False の派生 (Mono/DataGen/NumSeq) では OpenPropertyDialog が no-op、
+    /// True の TextMatrix/TextOnPath では Detail dialog が起動する。
+    /// </summary>
+    public ReactiveCommand MouseDoubleClickCommand { get; } = new();
+
     protected TextElementBaseViewModel(TextElementBase model)
     {
         Model = model ?? throw new ArgumentNullException(nameof(model));
@@ -49,6 +57,10 @@ public abstract class TextElementBaseViewModel : DesignerItemViewModelBase
         LetterSpacing.Subscribe(v => Model.LetterSpacing = v).AddTo(_CompositeDisposable);
         TextOpacity.Subscribe(v => Model.TextOpacity = v).AddTo(_CompositeDisposable);
         IsWordWrap.Subscribe(v => Model.IsWordWrap = v).AddTo(_CompositeDisposable);
+
+        // Phase 6.5: ダブルクリック -> OpenPropertyDialog 経路を有効化する。
+        // NRectangleViewModel と同じ pattern。SupportsPropertyDialog の判定は OpenPropertyDialog 実装側で行う。
+        MouseDoubleClickCommand.Subscribe(_ => OpenPropertyDialog()).AddTo(_CompositeDisposable);
     }
 
     public override System.Windows.Media.PathGeometry CreateGeometry(bool flag = false)
