@@ -1,12 +1,23 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:text="clr-namespace:boilersGraphics.ViewModels.Text"
     xmlns:textModels="clr-namespace:boilersGraphics.Models.Text">
     <DataTemplate DataType="{x:Type text:TextOnPathBlockViewModel}">
         <!-- PolyBezier 座標系 (キャンバス全体) で配置された 1 文字ずつを Canvas に並べる。
-             各 ContentPresenter は CharPlacement の X/Y/Angle で位置決め + 回転される。-->
-        <Canvas Width="{Binding Width.Value}" Height="{Binding Height.Value}" Background="{Binding Background.Value}">
+             各 ContentPresenter は CharPlacement の X/Y/Angle で位置決め + 回転される。
+             Phase 6.5: ダブルクリックで OpenPropertyDialog (DetailTextOnPath) を起動。-->
+        <ContentControl Background="Transparent">
+            <ContentControl.InputBindings>
+                <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding MouseDoubleClickCommand}" />
+            </ContentControl.InputBindings>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <i:InvokeCommandAction Command="{Binding MouseDoubleClickCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <Canvas Width="{Binding Width.Value}" Height="{Binding Height.Value}" Background="{Binding Background.Value}">
             <ItemsControl ItemsSource="{Binding Placements}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -36,6 +47,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-        </Canvas>
+            </Canvas>
+        </ContentControl>
     </DataTemplate>
 </ResourceDictionary>

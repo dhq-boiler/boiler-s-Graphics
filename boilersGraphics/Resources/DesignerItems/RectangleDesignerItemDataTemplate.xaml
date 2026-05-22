@@ -6,7 +6,10 @@
     xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
     <convereter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
     <DataTemplate DataType="{x:Type viewModel:NRectangleViewModel}">
-        <ContentControl>
+        <ContentControl Background="Transparent">
+            <ContentControl.InputBindings>
+                <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding MouseDoubleClickCommand}" />
+            </ContentControl.InputBindings>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDoubleClick">
                     <i:InvokeCommandAction Command="{Binding MouseDoubleClickCommand}" />

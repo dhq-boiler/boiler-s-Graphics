@@ -2,19 +2,30 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="clr-namespace:boilersGraphics.Converters"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:text="clr-namespace:boilersGraphics.ViewModels.Text">
     <converters:BoolToTextWrappingConverter x:Key="BoolToTextWrappingConverter" />
     <DataTemplate DataType="{x:Type text:DataGeneratorTextBlockViewModel}">
-        <Grid Width="{Binding Width.Value}" Height="{Binding Height.Value}">
-            <Border Background="{Binding Background.Value}" />
-            <TextBlock
-                Padding="2"
-                FontFamily="{Binding FontFamily.Value}"
-                FontSize="{Binding FontSize.Value}"
-                Foreground="{Binding Foreground.Value}"
-                Opacity="{Binding TextOpacity.Value}"
-                Text="{Binding Text.Value}"
-                TextWrapping="{Binding IsWordWrap.Value, Converter={StaticResource BoolToTextWrappingConverter}}" />
-        </Grid>
+        <ContentControl Background="Transparent">
+            <ContentControl.InputBindings>
+                <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding MouseDoubleClickCommand}" />
+            </ContentControl.InputBindings>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <i:InvokeCommandAction Command="{Binding MouseDoubleClickCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <Grid Width="{Binding Width.Value}" Height="{Binding Height.Value}" Background="Transparent">
+                <Border Background="{Binding Background.Value}" />
+                <TextBlock
+                    Padding="2"
+                    FontFamily="{Binding FontFamily.Value}"
+                    FontSize="{Binding FontSize.Value}"
+                    Foreground="{Binding Foreground.Value}"
+                    Opacity="{Binding TextOpacity.Value}"
+                    Text="{Binding Text.Value}"
+                    TextWrapping="{Binding IsWordWrap.Value, Converter={StaticResource BoolToTextWrappingConverter}}" />
+            </Grid>
+        </ContentControl>
     </DataTemplate>
 </ResourceDictionary>
