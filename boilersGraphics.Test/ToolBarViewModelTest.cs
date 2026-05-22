@@ -322,5 +322,51 @@ namespace boilersGraphics.Test
             bar.ReinitializeToolItems();
             Assert.That(bar.ToolItems.Count, Is.EqualTo(before));
         }
+
+        // ---- H-0: 排他グループ動作 ----
+
+        [Test, RequiresThread(ApartmentState.STA)]
+        public void IsChecked直接設定で排他制御が効く_他のItemがfalseに()
+        {
+            var bar = ToolBar();
+            var rect = bar.ToolItems.Single(t => t.Name.Value == "rectangle");
+            rect.IsChecked = true;
+            var ellipse = bar.ToolItems.Single(t => t.Name.Value == "ellipse");
+            ellipse.IsChecked = true;
+
+            Assert.That(rect.IsChecked, Is.False, "rectangle should be unchecked after ellipse becomes checked");
+            Assert.That(ellipse.IsChecked, Is.True);
+            foreach (var other in bar.ToolItems.Where(t => t.Name.Value != "ellipse"))
+                Assert.That(other.IsChecked, Is.False, $"{other.Name.Value} should be unchecked");
+        }
+
+        [Test, RequiresThread(ApartmentState.STA)]
+        public void ToolItems2は排他制御の対象外_独立トグル動作()
+        {
+            var bar = ToolBar();
+            var minimap = bar.ToolItems2.Single(t => t.Name.Value == "minimap");
+            var combine = bar.ToolItems2.Single(t => t.Name.Value == "combine");
+
+            minimap.IsChecked = true;
+            combine.IsChecked = true;
+
+            Assert.That(minimap.IsChecked, Is.True);
+            Assert.That(combine.IsChecked, Is.True);
+        }
+
+        [Test, RequiresThread(ApartmentState.STA)]
+        public void ReinitializeToolItems後も排他制御が機能()
+        {
+            var bar = ToolBar();
+            bar.ReinitializeToolItems();
+
+            var rect = bar.ToolItems.Single(t => t.Name.Value == "rectangle");
+            rect.IsChecked = true;
+            var ellipse = bar.ToolItems.Single(t => t.Name.Value == "ellipse");
+            ellipse.IsChecked = true;
+
+            Assert.That(rect.IsChecked, Is.False);
+            Assert.That(ellipse.IsChecked, Is.True);
+        }
     }
 }

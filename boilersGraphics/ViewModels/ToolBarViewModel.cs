@@ -374,6 +374,12 @@ public class ToolBarViewModel
                 if (!Behaviors.Contains(CanvasModifierBehavior)) Behaviors.Add(CanvasModifierBehavior);
                 SelectOneToolItem("canvasModifier");
             })));
+
+        // H-0 対策: ToolItems 内の全項目を同じ排他グループに割り当てる。
+        // これにより UIA Toggle Pattern 経由など Command を経由しないクリックでも
+        // IsChecked=true で他項目が自動で false になり、排他制御が保証される。
+        foreach (var item in ToolItems)
+            item.ExclusiveGroup = ToolItems;
     }
 
     private void InitializeToolItems2()
