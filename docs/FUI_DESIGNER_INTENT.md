@@ -191,6 +191,26 @@ FUI は「世界観」を統一することで完成度が決まる。
 - **5.5-d** MAUI Animation XAML 出力 + Exporter + ダイアログ (Easing/Property/Shape mapper + XamlBuilder + CodeBehindBuilder + Exporter) — **完了** ✅
 - **5.5-e** チュートリアル + サンプル出力 — **完了** ✅
 
+#### Phase 6: テキスト系図形 XAML 出力 拡張 — 完了 ✅
+Phase 5.5 の Q-8 で範囲外と確定したテキスト系 5 種 (MonoText / DataGenerator / NumberSequence / TextMatrix / TextOnPath) を Phase 5.5 の Mapper / Builder に統合して、WPF Storyboard / MAUI Animation XAML 出力でテキスト系もそのまま吐けるようにする。
+
+**設計仕様書 [`fui/phase6-text-xaml-export.md`](./fui/phase6-text-xaml-export.md) v1.0 確定** (2026-05-22、Q-1〜Q-9 全件「推奨案」で承認)。
+**チュートリアル [`fui/phase6-tutorial.md`](./fui/phase6-tutorial.md)** (2026-05-22)。
+
+サブフェーズ進捗:
+
+- **6-a** 設計仕様書 — **完了** ✅
+- **6-b** `ShapeToXamlMapper` / `MauiShapeToXamlMapper` / `PropertyToXamlMapper` / `MauiPropertyToCSharpMapper` 拡張 + pure テスト — **完了** ✅
+- **6-c** WPF Builder dispatch テスト — **完了** ✅
+- **6-d** MAUI Builder dispatch テスト — **完了** ✅
+- **6-e** チュートリアル + intent 反映 — **完了** ✅
+
+設計の要点:
+- フォント Family は `#` 以降の System フォント名に短縮して出力 (pack URI は出力先で解決できないため)。
+- DataGenerator / NumberSequence / TextMatrix / TextOnPath は **値スナップショット** + `<!-- Generator: ... -->` コメントで生成元パラメータを残す。
+- TextOnPath は Placements を **Canvas / AbsoluteLayout + 個別 TextBlock / Label 群**として展開。
+- 新規アニメ対応プロパティ: `FontSize.Value` / `Foreground.Value` / `TextOpacity.Value` の 3 つ。
+
 #### 5.5.1 出力ターゲット
 1. **WPF (System.Windows.Media.Animation)**
    - `Storyboard` + `DoubleAnimation` / `ColorAnimation` / `PointAnimation` / `DoubleAnimationUsingKeyFrames`

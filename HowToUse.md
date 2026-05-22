@@ -353,6 +353,7 @@ Phase 4 で「組込 4 テーマ (Bladerunner / Matrix / MedicalBlueWhite / Ambe
 
 - [`docs/fui/phase5-tutorial.md`](docs/fui/phase5-tutorial.md) — Timeline / Track / Keyframe / 再生 / PNG 連番書出
 - [`docs/fui/phase5-5-tutorial.md`](docs/fui/phase5-5-tutorial.md) — WPF Storyboard / MAUI Animation XAML 出力
+- [`docs/fui/phase6-tutorial.md`](docs/fui/phase6-tutorial.md) — テキスト系 5 種 (MonoText / DataGen / NumSeq / TextMatrix / TextOnPath) の XAML 出力対応
 
 要点:
 
