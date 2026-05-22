@@ -105,6 +105,51 @@
                         IsChecked="{Binding Loop.Value, Mode=TwoWay}"
                         VerticalAlignment="Center" />
 
+                    <Separator Margin="6,0" />
+
+                    <!--  Phase 6.6: Duration / PlayRange の数値入力。モデル層 (TimelineViewModel) は既に対応済み。  -->
+                    <TextBlock VerticalAlignment="Center" Foreground="#FFB0B0B0" Text="Dur " />
+                    <TextBox
+                        AutomationProperties.AutomationId="TimelineDuration"
+                        Width="50"
+                        Height="22"
+                        Margin="0,0,4,0"
+                        VerticalContentAlignment="Center"
+                        TextAlignment="Right"
+                        Background="#FF1E1E1E"
+                        Foreground="#FFCCCCCC"
+                        BorderBrush="#FF555555"
+                        Text="{Binding Duration.Value, Mode=TwoWay, StringFormat=F2, UpdateSourceTrigger=LostFocus}"
+                        ToolTip="タイムラインの総尺 (秒)。再生 / アニメーション補間 / Now クランプの基準値" />
+
+                    <TextBlock VerticalAlignment="Center" Foreground="#FFB0B0B0" Text="Start " />
+                    <TextBox
+                        AutomationProperties.AutomationId="TimelinePlayRangeStart"
+                        Width="50"
+                        Height="22"
+                        Margin="0,0,4,0"
+                        VerticalContentAlignment="Center"
+                        TextAlignment="Right"
+                        Background="#FF1E1E1E"
+                        Foreground="#FFCCCCCC"
+                        BorderBrush="#FF555555"
+                        Text="{Binding PlayRangeStart.Value, Mode=TwoWay, StringFormat=F2, UpdateSourceTrigger=LostFocus}"
+                        ToolTip="再生開始時刻 (秒)。Play / Stop で Now がここへ巻き戻される" />
+
+                    <TextBlock VerticalAlignment="Center" Foreground="#FFB0B0B0" Text="End " />
+                    <TextBox
+                        AutomationProperties.AutomationId="TimelinePlayRangeEnd"
+                        Width="50"
+                        Height="22"
+                        Margin="0,0,4,0"
+                        VerticalContentAlignment="Center"
+                        TextAlignment="Right"
+                        Background="#FF1E1E1E"
+                        Foreground="#FFCCCCCC"
+                        BorderBrush="#FF555555"
+                        Text="{Binding PlayRangeEnd.Value, Mode=TwoWay, StringFormat=F2, UpdateSourceTrigger=LostFocus}"
+                        ToolTip="再生終了時刻 (秒)。0 以下なら Duration を使う。AdvanceBy はここで停止 / Loop=true なら Start に巻き戻し" />
+
                     <Separator Margin="12,0,6,0" />
 
                     <!--  Phase 5-f-2: PNG 連番書出ダイアログ起動  -->

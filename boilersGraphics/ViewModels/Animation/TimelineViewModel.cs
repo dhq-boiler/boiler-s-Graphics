@@ -70,6 +70,25 @@ public class TimelineViewModel : BindableBase, IDisposable
         PauseCommand.Subscribe(_ => Pause()).AddTo(_disposables);
         StopCommand = new ReactiveCommand();
         StopCommand.Subscribe(_ => Stop()).AddTo(_disposables);
+
+        // Phase 6.6: Duration / PlayRangeStart / PlayRangeEnd の双方向整合性連動。
+        // End を超えた値に Duration が短いと TimeAxis が表示できないので、End↑ で Duration を引っ張り、
+        // Duration↓ で End / Start をクランプする。BindableReactiveProperty の値同値ガードで無限ループしない。
+        // Skip(1) で初期化発火を抑止 (ctor 引数で既に整合済み)。
+        PlayRangeEnd.Skip(1).Subscribe(end =>
+        {
+            if (end > Duration.Value) Duration.Value = end;
+        }).AddTo(_disposables);
+        Duration.Skip(1).Subscribe(dur =>
+        {
+            if (PlayRangeEnd.Value > dur) PlayRangeEnd.Value = dur;
+            if (PlayRangeStart.Value > dur) PlayRangeStart.Value = dur;
+        }).AddTo(_disposables);
+        PlayRangeStart.Skip(1).Subscribe(start =>
+        {
+            if (start < 0) PlayRangeStart.Value = 0;
+            else if (PlayRangeEnd.Value > 0 && start > PlayRangeEnd.Value) PlayRangeStart.Value = PlayRangeEnd.Value;
+        }).AddTo(_disposables);
     }
 
     /// <summary>
