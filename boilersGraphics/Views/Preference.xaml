@@ -365,7 +365,7 @@
                 <StackPanel Orientation="Vertical">
                     <RadioButton
                         Margin="5"
-                        Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_AutoSaveEveryTimeYouChangeCamvas, Mode=OneWay}"
+                        Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_AutoSaveEveryTimeYouChangeCanvas, Mode=OneWay}"
                         IsChecked="{Binding EditTarget.Value.AutoSaveType.Value, Converter={StaticResource BoolToEnumConverter}, Mode=TwoWay, ConverterParameter=EveryTimeCampusChanges}" />
                     <RadioButton
                         Margin="5"

@@ -651,8 +651,8 @@
   <data name="String_AutoSave" xml:space="preserve">
     <value>Autosave</value>
   </data>
-  <data name="String_AutoSaveEveryTimeYouChangeCamvas" xml:space="preserve">
-    <value>Automatically save every camvas change</value>
+  <data name="String_AutoSaveEveryTimeYouChangeCanvas" xml:space="preserve">
+    <value>Automatically save every canvas change</value>
   </data>
   <data name="String_B" xml:space="preserve">
     <value>Blue</value>
@@ -893,6 +893,9 @@
   </data>
   <data name="String_WriteReproSteps" xml:space="preserve">
     <value>Providing the steps to reproduce the issue will help app developers identify and fix the bug more easily.</value>
+  </data>
+  <data name="ToolTip_AddNewCanvasPage" xml:space="preserve">
+    <value>Add new canvas page</value>
   </data>
   <data name="Title_ColorCorrection" xml:space="preserve">
     <value>Color correction</value>

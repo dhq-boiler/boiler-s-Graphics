@@ -75,7 +75,7 @@
                                         <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DiagramControl.ActualHeight, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                                         <Run Text=")" />
                                         <LineBreak />
-                                        <Run Text="キャンパス:(" />
+                                        <Run Text="キャンバス:(" />
                                         <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DesignerCanvas.ActualWidth, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                                         <Run Text="," />
                                         <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DesignerCanvas.ActualHeight, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />

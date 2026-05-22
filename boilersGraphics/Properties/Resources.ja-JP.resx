@@ -439,10 +439,10 @@
     <value>ブラシの太さ</value>
   </data>
   <data name="MenuItem_Canvas" xml:space="preserve">
-    <value>キャンパス(_C)</value>
+    <value>キャンバス(_C)</value>
   </data>
   <data name="MenuItem_ClearCanvas" xml:space="preserve">
-    <value>キャンパスをクリア</value>
+    <value>キャンバスをクリア</value>
   </data>
   <data name="MenuItem_Clip" xml:space="preserve">
     <value>画像を切り抜く</value>
@@ -586,7 +586,7 @@
     <value>インターネットに接続されていないため、最新のプライバシーポリシーを確認できませんでした。</value>
   </data>
   <data name="Message_CanvasWillDiscardedConfirm" xml:space="preserve">
-    <value>現在のキャンパスは破棄されますが、よろしいですか？</value>
+    <value>現在のキャンバスは破棄されますが、よろしいですか？</value>
   </data>
   <data name="Message_FileCannotOpenBecauseTooNew" xml:space="preserve">
     <value>ファイルが新しすぎて開けません。</value>
@@ -651,8 +651,8 @@
   <data name="String_AutoSave" xml:space="preserve">
     <value>自動保存</value>
   </data>
-  <data name="String_AutoSaveEveryTimeYouChangeCamvas" xml:space="preserve">
-    <value>キャンパス変更毎に自動保存する</value>
+  <data name="String_AutoSaveEveryTimeYouChangeCanvas" xml:space="preserve">
+    <value>キャンバス変更毎に自動保存する</value>
   </data>
   <data name="String_B" xml:space="preserve">
     <value>青(Blue)</value>
@@ -682,10 +682,10 @@
     <value>キャンバスの塗りつぶしブラシ</value>
   </data>
   <data name="String_CanvasHeight" xml:space="preserve">
-    <value>キャンパスの高さ</value>
+    <value>キャンバスの高さ</value>
   </data>
   <data name="String_CanvasWidth" xml:space="preserve">
-    <value>キャンパスの幅</value>
+    <value>キャンバスの幅</value>
   </data>
   <data name="String_Completed" xml:space="preserve">
     <value>完了</value>
@@ -893,6 +893,9 @@
   </data>
   <data name="String_WriteReproSteps" xml:space="preserve">
     <value>問題の再現手順を記していただけると、アプリ開発者がバグを特定して修正しやすくなります。</value>
+  </data>
+  <data name="ToolTip_AddNewCanvasPage" xml:space="preserve">
+    <value>新しいキャンバスページを追加</value>
   </data>
   <data name="Title_ColorCorrection" xml:space="preserve">
     <value>色調補正</value>

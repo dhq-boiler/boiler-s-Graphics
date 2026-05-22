@@ -1652,11 +1652,11 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
-        ///   Automatically save every camvas change に類似しているローカライズされた文字列を検索します。
+        ///   Automatically save every canvas change に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string String_AutoSaveEveryTimeYouChangeCamvas {
+        public static string String_AutoSaveEveryTimeYouChangeCanvas {
             get {
-                return ResourceManager.GetString(""String_AutoSaveEveryTimeYouChangeCamvas"", resourceCulture);
+                return ResourceManager.GetString(""String_AutoSaveEveryTimeYouChangeCanvas"", resourceCulture);
             }
         }
         
@@ -4123,11 +4123,11 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
-        ///   Automatically save every camvas change に類似しているローカライズされた文字列を検索します。
+        ///   Automatically save every canvas change に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string String_AutoSaveEveryTimeYouChangeCamvas {
+        public static string String_AutoSaveEveryTimeYouChangeCanvas {
             get {
-                return ResourceManager.GetString(""String_AutoSaveEveryTimeYouChangeCamvas"", resourceCulture);
+                return ResourceManager.GetString(""String_AutoSaveEveryTimeYouChangeCanvas"", resourceCulture);
             }
         }
         
@@ -6597,11 +6597,11 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
-        ///   Automatically save every camvas change に類似しているローカライズされた文字列を検索します。
+        ///   Automatically save every canvas change に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string String_AutoSaveEveryTimeYouChangeCamvas {
+        public static string String_AutoSaveEveryTimeYouChangeCanvas {
             get {
-                return ResourceManager.GetString(""String_AutoSaveEveryTimeYouChangeCamvas"", resourceCulture);
+                return ResourceManager.GetString(""String_AutoSaveEveryTimeYouChangeCanvas"", resourceCulture);
             }
         }
         
@@ -9068,11 +9068,11 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
-        ///   Automatically save every camvas change に類似しているローカライズされた文字列を検索します。
+        ///   Automatically save every canvas change に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string String_AutoSaveEveryTimeYouChangeCamvas {
+        public static string String_AutoSaveEveryTimeYouChangeCanvas {
             get {
-                return ResourceManager.GetString(""String_AutoSaveEveryTimeYouChangeCamvas"", resourceCulture);
+                return ResourceManager.GetString(""String_AutoSaveEveryTimeYouChangeCanvas"", resourceCulture);
             }
         }
         
