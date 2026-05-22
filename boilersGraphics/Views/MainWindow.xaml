@@ -843,10 +843,15 @@
                             DockPanel.Dock="Right"
                             Orientation="Horizontal">
                             <Button
+                                x:Name="MinimizeButton"
+                                AutomationProperties.AutomationId="MinimizeButton"
                                 Command="{x:Static SystemCommands.MinimizeWindowCommand}"
                                 Content="0"
                                 Foreground="Gray"
                                 Style="{DynamicResource CaptionButtonStyleKey}">
+                                <!-- L-2 修正: ウィンドウ操作ボタンの AutomationId を MinimizeButton/MaximizeButton/RestoreButton/CloseButton で統一。
+                                     SystemCommands.*WindowCommand を Command にすると WPF が AutomationId を Command 由来 ("MinimizeWindow") で
+                                     上書きするため、AutomationProperties.AutomationId を明示する。 -->
                                 <Button.ToolTip>
                                     <ToolTip FontFamily="メイリオ">
                                         <TextBlock Text="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Button_MinimizeWindow, Mode=OneWay}" />
@@ -923,6 +928,7 @@
                             </Button>
                             <Button
                                 x:Name="MaximizeButton"
+                                AutomationProperties.AutomationId="MaximizeButton"
                                 Command="{x:Static SystemCommands.MaximizeWindowCommand}"
                                 Content="1"
                                 Foreground="Gray"
@@ -1004,6 +1010,7 @@
                             </Button>
                             <Button
                                 x:Name="RestoreButton"
+                                AutomationProperties.AutomationId="RestoreButton"
                                 Command="{x:Static SystemCommands.RestoreWindowCommand}"
                                 Content="2"
                                 Foreground="Gray"
@@ -1085,6 +1092,7 @@
                             </Button>
                             <Button
                                 x:Name="CloseButton"
+                                AutomationProperties.AutomationId="CloseButton"
                                 Command="{x:Static SystemCommands.CloseWindowCommand}"
                                 Content="r"
                                 Foreground="Gray"
@@ -2419,11 +2427,17 @@
             <ToolBar ItemsSource="{Binding ToolBarViewModel.ToolItems}">
                 <ToolBar.ItemTemplate>
                     <DataTemplate>
+                        <!--
+                            L-1 修正:
+                            AutomationProperties.AutomationId: 安定したテスト識別子として英語キー (Name.Value: "pointer" 等) を使用。
+                            AutomationProperties.Name: スクリーンリーダー読み上げ用に日本語表示名 (Tooltip.Value) を使用。
+                        -->
                         <ToggleButton
                             Width="40"
                             Height="40"
                             Padding="3"
-                            AutomationProperties.Name="{Binding Name.Value}"
+                            AutomationProperties.AutomationId="{Binding Name.Value}"
+                            AutomationProperties.Name="{Binding Tooltip.Value}"
                             Background="Transparent"
                             BorderBrush="Transparent"
                             BorderThickness="0"
@@ -2492,7 +2506,7 @@
                         Background="#FF3E3E42" BorderBrush="#FF555555" />
                 <Button Content="+" Width="28" Margin="1,2"
                         Command="{Binding AddCanvasCommand}"
-                        ToolTip="Add new canvas page"
+                        ToolTip="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.ToolTip_AddNewCanvasPage, Mode=OneWay}"
                         FontSize="14" FontWeight="Bold" Foreground="White"
                         Background="#FF3E3E42" BorderBrush="#FF555555" />
             </StackPanel>

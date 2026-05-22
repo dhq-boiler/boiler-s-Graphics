@@ -54,4 +54,9 @@ public class CanvasPage : BindableBase
         get => _thumbnail;
         set => SetProperty(ref _thumbnail, value);
     }
+
+    // M-2 修正: UIA ツリー上で DataItem の AutomationName が型名 ("boilersGraphics.Models.CanvasPage")
+    // のまま流れていたため、スクリーンリーダーが上位 DataItem を読み上げると意味不明になっていた。
+    // Name を返すことで「Canvas 1」等が正しく読み上げられる。
+    public override string ToString() => _name;
 }

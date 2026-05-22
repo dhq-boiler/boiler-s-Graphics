@@ -78,19 +78,23 @@ namespace boilersGraphics.Test
         }
 
         [Test, RequiresThread(ApartmentState.STA)]
-        public void CanExecuteCut_レイヤー選択あり()
+        public void CanExecuteCut_アイテム未選択ならfalse()
         {
+            // H-3 修正: 旧仕様では「レイヤー選択あり」だけで true となり、
+            // 初期状態（アクティブレイヤーが常に1つ）でも常時 enabled になっていた。
+            // Copy と同じく「アイテム選択中」のみ true。
             var (d, _) = NewDiagram();
-            // レイヤーは初期状態で IsSelected=true → SelectedLayers.Value > 0
-            Assert.That(d.CanExecuteCut(), Is.True);
+            Assert.That(d.CanExecuteCut(), Is.False);
         }
 
         [Test, RequiresThread(ApartmentState.STA)]
-        public void CanExecuteCut_レイヤー未選択でfalse()
+        public void CanExecuteCut_アイテム選択でtrue()
         {
             var (d, layer) = NewDiagram();
-            layer.IsSelected.Value = false;
-            Assert.That(d.CanExecuteCut(), Is.False);
+            var item = new NRectangleViewModel();
+            d.AddItemCommand.Execute(item);
+            layer.Children[0].IsSelected.Value = true;
+            Assert.That(d.CanExecuteCut(), Is.True);
         }
 
         // ---- CanExecuteClip / Exclude / Xor / Intersect ----

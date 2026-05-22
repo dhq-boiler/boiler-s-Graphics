@@ -190,9 +190,11 @@ namespace boilersGraphics.Test
 
             Assert.That(viewModel.CanExecuteCut(), Is.True);
 
+            // H-3 修正: Cut は Copy と同じく「アイテム選択中」のみ true。
+            // アイテム選択解除でレイヤーだけ選択状態でも false。
             viewModel.Layers[0].Children[0].IsSelected.Value = false;
 
-            Assert.That(viewModel.CanExecuteCut(), Is.True);
+            Assert.That(viewModel.CanExecuteCut(), Is.False);
 
             layer1.IsSelected.Value = false;
 

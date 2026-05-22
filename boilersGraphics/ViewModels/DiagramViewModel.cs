@@ -1799,8 +1799,10 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     public bool CanExecuteCut()
     {
-        return (SelectedLayers.Value.AsValueEnumerable().Count() > 0 && SelectedItems.Value.AsValueEnumerable().Count() > 0)
-               || SelectedLayers.Value.AsValueEnumerable().Count() > 0;
+        // H-3 修正: 旧条件 (A=Layers>0 && Items>0) || (B=Layers>0) は A ⊂ B のため
+        // 実質「常時 Layers>0」となり、初期状態（アクティブレイヤー1つ）でも常に enabled となっていた。
+        // Copy と同じく「アイテム選択中」のみ true。
+        return SelectedItems.Value.Any();
     }
 
     private void ExecuteSettingCommand()

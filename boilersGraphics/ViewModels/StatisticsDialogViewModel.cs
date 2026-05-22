@@ -17,10 +17,15 @@ internal class StatisticsDialogViewModel : BindableBase, IDialogAware, IDisposab
     public StatisticsDialogViewModel()
     {
         LoadedCommand = new DelegateCommand(() => Load());
+        // M-1 修正: Esc キーで閉じるためのコマンド。
+        // View 側 (Statistics.xaml.cs) で Window.InputBindings に Esc とバインドする。
+        CloseDialogCommand = new DelegateCommand(() =>
+            RequestClose?.Invoke(new DialogResult(ButtonResult.Cancel)));
     }
 
     public MainWindowViewModel MainWindowViewModel { get; set; }
     public DelegateCommand LoadedCommand { get; }
+    public DelegateCommand CloseDialogCommand { get; }
 
     public BindableReactiveProperty<int> NumberOfBoots { get; } = new();
 
